@@ -42,6 +42,19 @@ class PairService {
     const orderBook = await this.exchangeApiClient.getOrderBookAsync(baseSymbol, quoteSymbol, orderType)
     return orderBook
   }
+
+  /**
+   * It gets the fee of the specified pair.
+   *
+   * @param {String} baseSymbol  The base symbol of the pair.
+   * @param {String} quoteSymbol The quote symbol of the pair.
+   *
+   * @throws {ExchangeApiLibError}  If there was an error during read model api call.
+   */
+  async getFeeAsync(baseSymbol, quoteSymbol) {
+    const fee = await this.exchangeApiClient.getFeeAsync(baseSymbol, quoteSymbol)
+    return fee
+  }
 }
 
 module.exports = PairService
