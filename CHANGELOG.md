@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Release date: 2019-02-REPLEACE_ME.
 
 
-## [v0.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/36389c...v1.0.0)
+## [v1.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/fa85a7...v1.1.0)
 
 Release date: 2019-02-12.
 
