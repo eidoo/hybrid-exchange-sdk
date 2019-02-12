@@ -1,0 +1,26 @@
+{
+    "env": {
+        "jest": true,
+        "node": true
+    },
+    "extends": "airbnb-base",
+    "rules": {
+        "max-len": [
+            "error",
+            120
+        ],
+        "no-shadow": "off",
+        "no-underscore-dangle": "off",
+        "object-curly-newline": [
+            "error",
+            {
+                "consistent": true
+            }
+        ],
+        "semi": [
+            "error",
+            "never"
+        ],
+        "space-before-function-paren": "off"
+    }
+}
