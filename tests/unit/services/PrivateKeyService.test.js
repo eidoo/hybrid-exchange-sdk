@@ -1,6 +1,6 @@
 /* global describe, expect, test */
 const logger = require('../../../src/logger')
-const { InvalidPrivateKeyFile, EthereumAddressError,
+const { InvalidPrivateKeyFile, InvalidMnemonicError,
   PrivateKeyService } = require('../../../src/services/PrivateKeyService')
 
 let privateKeyService
@@ -40,5 +40,19 @@ describe('getAddressFromPrivateKey', () => {
     } catch (err) {
       expect(err instanceof Error).toBe(true)
     }
+  })
+})
+
+describe('getPrivateKeyFromMnemonic', () => {
+  test('should get the private key', () => {
+    const expectedPrivateKey = 'a8345d27c6d41e4816163fe133daddf38298bb74c16ea5f8245727d03a5f85f8'
+    const mnemonic = 'cedibile elica espresso castello poltrona chicca settimana regalato gelatina bulbo microbo assurdo'
+    const result = privateKeyService.getPrivateKeyFromMnemonic(mnemonic)
+    expect(result).toEqual(expectedPrivateKey)
+  })
+
+  const invalidMnemonics = ['', undefined, 1, [], {}, 'not 12 words']
+  test.each(invalidMnemonics)('should raise InvalidMnemonicError with menmonic = %o', (invalidMnemonic) => {
+    expect(() => privateKeyService.getPrivateKeyFromMnemonic(invalidMnemonic)).toThrowError(InvalidMnemonicError)
   })
 })
