@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Release date: 2019-02-REPLEACE_ME.
 
+### Added
+
+- [Pair fee](https://github.com/eidoo/hybrid-exchange-sdk/issues/1): added `getFeeAsync` in `PairService`.
+
 
 ## [v1.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/fa85a7...v1.1.0)
 
