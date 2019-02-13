@@ -12,15 +12,15 @@ const transactionLibInstance = new TransactionLib()
 
 /**
    * Class representing a factory to build draft transaction object.
-   * @param  {Object} web3                                                 The web3 instance.
-   * @param  {Object} [exchangeSmartContract]                              The exchange smart contract object.
-   * @param  {Object} [exchangeSmartContract.exchangeSmartContractAddress] The exchange smart contract address.
-   * @param  {Object} [exchangeSmartContract.exchangeSmartContractAbi]     The exchange smart contract abi interface.
-   * @param  {Object} [tradingWalletSmartContractAbi]                      Thetrading wallet smart contract abi.
-   * @param  {Object} [transactionLib]                                     The transaction lib istance.
-   * @param  {Object} [logger]                                             The logger instance.
+   * @param  {Object} web3                                   The web3 instance.
+   * @param  {Object} [params]                               The params object.
+   * @param  {Object} [params.exchangeSmartContractAddress]  The exchange smart contract address.
+   * @param  {Object} [params.exchangeSmartContractAbi]      The exchange smart contract abi interface.
+   * @param  {Object} [params.tradingWalletSmartContractAbi] Thetrading wallet smart contract abi.
+   * @param  {Object} [params.transactionLib]                The transaction lib istance.
+   * @param  {Object} [params.logger]                        The logger instance.
    *
-   * @throws {TypeError}                                                    If exchangeSmart contract objecs is not initialized as expected.
+   * @throws {TypeError}                                     If exchangeSmart contract objecs is not initialized as expected.
    */
 class TradingWalletTransactionBuilder {
   constructor(web3, { exchangeSmartContractAbi = exchangeScAbi, exchangeSmartContractAddress = exchange.smartContractAddress,
@@ -32,7 +32,7 @@ class TradingWalletTransactionBuilder {
 
     if (!web3) {
       const errorMessage = `Invalid "web3" value: ${web3}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.web3 = web3
 
@@ -40,20 +40,20 @@ class TradingWalletTransactionBuilder {
 
     if (!exchangeSmartContractAbi) {
       const errorMessage = `Invalid "exchangeSmartContractAbi" value: ${exchangeSmartContractAbi}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.exchangeSmartContractInstance = this.web3.eth.contract(exchangeSmartContractAbi)
       .at(exchangeSmartContractAddress)
 
     if (!exchangeSmartContractAddress || this.checkEtherumAddress(exchangeSmartContractAddress)) {
       const errorMessage = `Invalid "exchangeSmartContractAddress" value: ${exchangeSmartContractAddress}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.exchangeSmartContractAddress = exchangeSmartContractAddress
 
     if (!tradingWalletSmartContractAbi) {
       const errorMessage = 'Invalid "tradingWalletSmartContractAbi"'
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.tradingWalletSmartContractAbi = tradingWalletSmartContractAbi
   }

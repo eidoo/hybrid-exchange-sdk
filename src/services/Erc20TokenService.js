@@ -1,12 +1,31 @@
+const Web3 = require('web3')
+
 const BaseService = require('./BaseService')
-const erc20TokenAbi = require('../../abi/erc20Token.json')
 const log = require('../logger')
-const { SmartContractInterfaceError } = require('../utils/errors')
-const { TransactionObjectDraftFactory } = require('../models/Transaction')
-const TransactionValidator = require('../validators/TransactionValidator')
+
 const { TransactionLib } = require('../lib/TransactionLib')
 
-const transactionLibInstance = new TransactionLib()
+const providerUrl = 'urlToProvider'
+const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
+
+const transactionLibInstance = new TransactionLib(web3, log)
+
+async function transactionExecutor(erc20TokenServiceInstance, privateKey,
+  transactionDraftBuilderName, transactionParams, { gasPrice, gas } = {}, nonce) {
+  const transactionObjectDraft = erc20TokenServiceInstance.erc20TokenTransactionBuilder[transactionDraftBuilderName](
+    ...transactionParams,
+  )
+  const transactionSignedHash = await erc20TokenServiceInstance.transactionLib.sign(
+    transactionObjectDraft,
+    privateKey,
+    nonce,
+    gas,
+    gasPrice,
+  )
+
+  const transactionHash = await erc20TokenServiceInstance.transactionLib.execute(transactionSignedHash)
+  return transactionHash
+}
 
 /**
  * Class representing a service to build sign and execute transaction related to a Erc20 token.
@@ -24,57 +43,21 @@ class Erc20TokenService extends BaseService {
      * @param  {Object}    [logger]                                               The logger instance.
      * @throws {TypeError}                                                        If exchangeSmart contract objecs is not initialized as expected.
      */
-  constructor(web3, { erc20TokenSmartContractAbi = erc20TokenAbi, erc20TokenSmartContractAddress },
-    transactionLib = transactionLibInstance, logger = log) {
+  constructor(web3, transactionLib = transactionLibInstance,
+    erc20TokenTransactionBuilder, logger = log) {
     super(logger, web3)
-    const transactionValidator = new TransactionValidator(logger)
-    this.transactionObjectDraftFactory = new TransactionObjectDraftFactory(transactionValidator)
+
+    if (!transactionLib) {
+      const errorMessage = `Invalid "transactionLib" value: ${transactionLib}`
+      throw new TypeError(errorMessage)
+    }
     this.transactionLib = transactionLib
 
-    if (!erc20TokenSmartContractAddress) {
-      const errorMessage = `Invalid "erc20TokenSmartContractAddress" value: ${erc20TokenSmartContractAddress}`
-      this.throwError(errorMessage)
+    if (!erc20TokenTransactionBuilder) {
+      const errorMessage = `Invalid "erc20TokenTransactionBuilder" value: ${erc20TokenTransactionBuilder}`
+      throw new TypeError(errorMessage)
     }
-    this.smartContractTokenAddress = erc20TokenSmartContractAddress
-
-    if (!erc20TokenSmartContractAbi) {
-      const errorMessage = `Invalid "erc20TokenSmartContractAbi" value: ${erc20TokenSmartContractAbi}`
-      this.throwError(errorMessage)
-    }
-    this.erc20TokenSmartContract = this.web3.eth.contract(erc20TokenSmartContractAbi)
-      .at(erc20TokenSmartContractAddress)
-  }
-
-  /**
-   * It gets the transaction object to be used for approve token trasfer on trading wallet.
-   * In order to approve token trasfer the `approve` method of erc20 token smart contract
-   * should be called.
-   *
-   * @param {String} personalWalletAddress The personal wallet address (EOA).
-   * @param {Number} quantity              The wei quantity of ether to deposit.
-   * @param {String} tradingWalletAddress  The trading wallet address.
-   *
-   * @throws {InvalidEthereumAddress}      If personalWalletAddress is not a valid ethereum address.
-   * @throws {SmartContractInterfaceError} If exchangeSmartContractInstance is not defined as expected.
-   */
-  getApproveTrasferTransactionDraft(personalWalletAddress, tradingWalletAddress, quantity) {
-    this.checkEtherumAddress(personalWalletAddress)
-    this.checkEtherumAddress(tradingWalletAddress)
-
-    let payloadData
-    try {
-      payloadData = this.erc20TokenSmartContract.approve.getData(tradingWalletAddress, quantity)
-    } catch (err) {
-      throw new SmartContractInterfaceError()
-    }
-
-    const transactionDraftParams = {
-      from: personalWalletAddress,
-      to: this.smartContractTokenAddress,
-      data: payloadData,
-    }
-    const transactionObjectDraft = this.transactionObjectDraftFactory.create(transactionDraftParams)
-    return transactionObjectDraft
+    this.erc20TokenTransactionBuilder = erc20TokenTransactionBuilder
   }
 
   /**
@@ -104,10 +87,12 @@ class Erc20TokenService extends BaseService {
    * @param {String} privateKey            The private key.
    */
   async approveTrasferAsync(personalWalletAddress, tradingWalletAddress, quantity, privateKey) {
-    const transactionObjectDraft = this.getApproveTrasferTransactionDraft(personalWalletAddress,
-      tradingWalletAddress, quantity)
-    const signedTransactionData = await this.getApproveTrasferSignedDataAsync(transactionObjectDraft, privateKey)
-    const transactionHash = await this.transactionLib.execute(signedTransactionData)
+    this.checkEtherumAddress(personalWalletAddress)
+    this.checkEtherumAddress(tradingWalletAddress)
+
+    const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity]
+    const transactionDraftBuilderName = 'buildApproveTrasferTransactionDraft'
+    const transactionHash = transactionExecutor(this, privateKey, transactionDraftBuilderName, transactionParams)
     return transactionHash
   }
 }
