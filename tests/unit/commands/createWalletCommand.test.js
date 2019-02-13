@@ -1,20 +1,34 @@
 /* eslint-env node, jest */
 const Web3 = require('web3')
 const sandbox = require('sinon').createSandbox()
+const { EidooEthApiLib } = require('@eidoo/ethapi-lib')
 
 const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
-const { exchange } = require('../../../src/config')
-const logger = require('../../../src/logger')
-const TradingWalletService = require('../../../src/services/TradingWalletService')
-const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
-const CreateWalletCommandValidator = require('../../../src/validators/CreateWalletCommandValidator')
+const { TransactionLib } = require('../../../src/lib/TransactionLib')
 const CreateWalletCommand = require('../../../src/commands/CreateWalletCommand')
+const CreateWalletCommandValidator = require('../../../src/validators/CreateWalletCommandValidator')
+const logger = require('../../../src/logger')
+const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
+const TradingWalletService = require('../../../src/services/TradingWalletService')
+const TradingWalletTransactionBuilder = require('../../../src/factories/TradingWalletTransactionBuilder')
 
 const providerUrl = 'urlToProvider'
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
-const tradingWalletService = new TradingWalletService(web3)
+
+const exchangeSmartContractAddress = '0xf1c525a488a848b58b95d79da48c21ce434290f7'
+const ethApiLibConf = {
+  host: 'http:host.eidoo.io',
+  port: 8080,
+  useTLS: false,
+}
+const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const transactionLibInstance = new TransactionLib(web3, logger, ethApiLib)
+const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
+  web3, { exchangeSmartContractAddress }, transactionLibInstance,
+)
+const tradingWalletService = new TradingWalletService(web3, transactionLibInstance, tradingWalletTransactionBuilder)
 
 const privateKeyValidator = new PrivateKeyValidator(logger)
 const privateKeyService = new PrivateKeyService(logger)
@@ -61,7 +75,7 @@ describe('tws create-trading-wallet', () => {
       const expectedTransactionObjectDraft = { data:
      '0xc1d5e84f0000000000000000000000009c858489661158d1721a66319f8683925d5a8b70',
       from: personalWalletAddress,
-      to: exchange.smartContractAddress,
+      to: exchangeSmartContractAddress,
       value: '0x0' }
 
       const result = await createWalletCommand

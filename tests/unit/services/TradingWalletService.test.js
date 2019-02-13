@@ -7,6 +7,7 @@ const TradingWalletService = require('../../../src/services/TradingWalletService
 const { SignTransactionError } = require('../../../src/utils/errors')
 const { TradingWalletNotFoundError } = require('../../../src/utils/errors')
 const { TransactionLib } = require('../../../src/lib/TransactionLib')
+const TradingWalletTransactionBuilder = require('../../../src/factories/TradingWalletTransactionBuilder')
 
 const MockTransactionDraftFactory = require('../../factories/MockTransactionDraftFactory')
 
@@ -16,6 +17,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 const tradingWalletSmartContractAddress = '0x0ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba'
 const validtokenAddress = '0xd67cb05ef66d1c7c952656ddf5096e02281e3d2e'
 
+const exchangeSmartContractAddress = '0xf1c525a488a848b58b95d79da48c21ce434290f7'
 const nonceResponse = {
   nonce: 4400,
 }
@@ -37,10 +39,13 @@ const ethApiLib = new EidooEthApiLib(ethApiLibConf)
 
 const transactionLibInstance = new TransactionLib(web3, log, ethApiLib)
 
+const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
+  web3, { exchangeSmartContractAddress }, transactionLibInstance,
+)
 let tradingWalletService
 
 beforeEach(() => {
-  tradingWalletService = new TradingWalletService(web3, transactionLibInstance)
+  tradingWalletService = new TradingWalletService(web3, transactionLibInstance, tradingWalletTransactionBuilder)
 })
 
 afterEach(() => {
