@@ -35,7 +35,7 @@ const hybridExchangeSdk = require('@eidoo/hybrid-exchange-sdk')
 
 ## Quick start
 To interact with the Eidoo hybrid exchange and submit an order based on what you would like to trade you need to check the [available pairs](./examples/lib/pair/listPair.js).<br>
-Once you have chosen the pair you can retrieve the associated [order book](./examples/lib/pair/getOrderBook.js) and eventually check the related pair [fee](./examples/lib/pair/getOrderBook.js).<br>
+Once you have chosen the pair you can retrieve the associated [order book](./examples/lib/pair/getOrderBook.js) and eventually check the related pair [fee](./examples/lib/pair/getOrderBook.js).<br> Since fees are paid in EDOxQuote token.
 
 As soon as you are ready you need a funded ethereum wallet address.
 
