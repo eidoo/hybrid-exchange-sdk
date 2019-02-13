@@ -85,7 +85,7 @@ describe('pairService', () => {
       })
   })
 
-  describe('getPriceAsync', () => {
+  describe('getLastPriceAsync', () => {
     const baseSymbol = 'EDO'
     const quoteSymbol = 'ETH'
 
@@ -95,7 +95,7 @@ describe('pairService', () => {
       const endpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/price`
       const callAsyncStub = sandbox.stub(exchangeApiLib, 'callAsync').returns(pairPriceResponse)
 
-      const price = await pairService.getPriceAsync(baseSymbol, quoteSymbol)
+      const price = await pairService.getLastPriceAsync(baseSymbol, quoteSymbol)
 
       callAsyncStub.calledOnceWith(method, endpoint)
       expect(price).toEqual(pairPriceResponse.data.last)
@@ -104,7 +104,7 @@ describe('pairService', () => {
     test('should raise ExchangeApiLibError if Exchange api call fails',
       async() => {
         sandbox.stub(exchangeApiLib, 'callAsync').throws(new ExchangeApiLibError())
-        return expect(pairService.getPriceAsync(baseSymbol, quoteSymbol)).rejects.toBeInstanceOf(ExchangeApiLibError)
+        return expect(pairService.getLastPriceAsync(baseSymbol, quoteSymbol)).rejects.toBeInstanceOf(ExchangeApiLibError)
       })
   })
 })

@@ -64,8 +64,8 @@ class PairService {
    *
    * @throws {ExchangeApiLibError}  If there was an error during read model api call.
    */
-  async getPriceAsync(baseSymbol, quoteSymbol) {
-    const price = await this.exchangeApiClient.getPriceAsync(baseSymbol, quoteSymbol)
+  async getLastPriceAsync(baseSymbol, quoteSymbol) {
+    const price = await this.exchangeApiClient.getLastPriceAsync(baseSymbol, quoteSymbol)
     return price
   }
 }

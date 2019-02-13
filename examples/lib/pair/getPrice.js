@@ -3,6 +3,6 @@
   const pairService = new PairService()
   const fromSymbol = 'EDO'
   const toSymbol = 'ETH'
-  const price = await pairService.getPriceAsync(fromSymbol, toSymbol)
+  const price = await pairService.getLastPriceAsync(fromSymbol, toSymbol)
   console.log(price)
 })()
