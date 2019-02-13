@@ -7,7 +7,7 @@ const OrderService = require('../../../src/services/OrderService')
 const logger = require('../../../src/logger')
 const MockOrderFactory = require('../../factories/MockOrderFactory')
 
-const ExchangeApiLibUrl = 'eidoo-dev-1.bchainapi.net'
+const ExchangeApiLibUrl = 'fakeurl'
 const exchangeApiLib = new ExchangeApiLib(ExchangeApiLibUrl)
 
 let orderService

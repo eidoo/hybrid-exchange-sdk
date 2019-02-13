@@ -78,6 +78,13 @@ class ExchangeApiLib extends IExchangeApiLib {
     return response.data.results
   }
 
+  async getFeeAsync(baseSymbol, quoteSymbol) {
+    const method = 'get'
+    const endpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/fee`
+    const response = await this.callAsync({ method, endpoint })
+    return response.data.fee
+  }
+
   async getOrderAsync(walletAddress, orderId) {
     const method = 'get'
     const endpoint = `/trading-wallet/v1/trading-wallets/${walletAddress}/orders/${orderId}`

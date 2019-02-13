@@ -5,7 +5,7 @@ const { ExchangeApiLib } = require('../../../../src/lib/ExchangeApiLib')
 const ExchangeApiLibError = require('../../../../src/lib/ExchangeApiLib/ExchangeApiLibError')
 const MockOrderFactory = require('../../../factories/MockOrderFactory')
 
-const ExchangeApiLibUrl = 'eidoo-dev-1.bchainapi.net'
+const ExchangeApiLibUrl = 'fakeurl'
 const exchangeApiLib = new ExchangeApiLib(ExchangeApiLibUrl)
 
 afterEach(() => {
@@ -149,5 +149,27 @@ describe('createOrderAsync', () => {
 
     expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint, body: order })).toBe(true)
     expect(orderCreate).toMatchObject(createOrderResponse.result)
+  })
+})
+
+
+describe('getFeeAsync', () => {
+  const baseSymbol = 'EDO'
+  const quoteSymbol = 'ETH'
+  test('returns expected response', async () => {
+    const expectedMethod = 'get'
+    const expectedEndpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/fee`
+    const getFeeAsyncResponse = {
+      status: 'success',
+      data: {
+        fee: 0,
+      },
+    }
+    const callAsyncMock = sandbox.stub(exchangeApiLib, 'callAsync').returns(getFeeAsyncResponse)
+
+    const result = await exchangeApiLib.getFeeAsync(baseSymbol, quoteSymbol)
+
+    expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint })).toBe(true)
+    expect(result).toEqual(getFeeAsyncResponse.data.fee)
   })
 })
