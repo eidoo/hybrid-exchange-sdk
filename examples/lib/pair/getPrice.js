@@ -1,8 +1,8 @@
 (async () => {
   const { PairService } = require('@eidoo/hybrid-exchange-sdk').services
   const pairService = new PairService()
-  const fromSymbol = 'EDO'
-  const toSymbol = 'ETH'
-  const price = await pairService.getLastPriceAsync(fromSymbol, toSymbol)
+  const baseSymbol = 'EDO'
+  const quoteSymbol = 'ETH'
+  const price = await pairService.getLastPriceAsync(baseSymbol, quoteSymbol)
   console.log(price)
 })()
