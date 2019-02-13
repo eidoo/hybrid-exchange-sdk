@@ -5,6 +5,7 @@ const logger = require('../../../src/logger')
 const MockFeeFactory = require('../../factories/MockFeeFactory')
 const MockListPairFactory = require('../../factories/MockListPairFactory')
 const MockOrderBookFactory = require('../../factories/MockOrderBookFactory')
+const MockPairPriceFactory = require('../../factories/MockPairPriceFactory')
 const PairService = require('../../../src/services/PairService')
 
 const ExchangeApiLibUrl = 'FAKE_URL'
@@ -81,6 +82,29 @@ describe('pairService', () => {
         sandbox.stub(exchangeApiLib, 'callAsync').throws(new ExchangeApiLibError())
         return expect(pairService.getOrderBookAsync('baseSymbol', 'quoteSymbol'))
           .rejects.toBeInstanceOf(ExchangeApiLibError)
+      })
+  })
+
+  describe('getLastPriceAsync', () => {
+    const baseSymbol = 'EDO'
+    const quoteSymbol = 'ETH'
+
+    test('should return the expected fee', async () => {
+      const pairPriceResponse = MockPairPriceFactory.build()
+      const method = 'get'
+      const endpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/price`
+      const callAsyncStub = sandbox.stub(exchangeApiLib, 'callAsync').returns(pairPriceResponse)
+
+      const price = await pairService.getLastPriceAsync(baseSymbol, quoteSymbol)
+
+      callAsyncStub.calledOnceWith(method, endpoint)
+      expect(price).toEqual(pairPriceResponse.data.last)
+    })
+
+    test('should raise ExchangeApiLibError if Exchange api call fails',
+      async() => {
+        sandbox.stub(exchangeApiLib, 'callAsync').throws(new ExchangeApiLibError())
+        return expect(pairService.getLastPriceAsync(baseSymbol, quoteSymbol)).rejects.toBeInstanceOf(ExchangeApiLibError)
       })
   })
 })

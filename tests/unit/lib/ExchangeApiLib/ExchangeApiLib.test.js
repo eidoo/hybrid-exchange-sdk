@@ -152,7 +152,6 @@ describe('createOrderAsync', () => {
   })
 })
 
-
 describe('getFeeAsync', () => {
   const baseSymbol = 'EDO'
   const quoteSymbol = 'ETH'
@@ -171,5 +170,37 @@ describe('getFeeAsync', () => {
 
     expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint })).toBe(true)
     expect(result).toEqual(getFeeAsyncResponse.data.fee)
+  })
+})
+
+describe('getLastPriceAsync', () => {
+  const baseSymbol = 'EDO'
+  const quoteSymbol = 'ETH'
+  test('returns expected response', async () => {
+    const expectedMethod = 'get'
+    const expectedEndpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/price`
+    const getLastPriceAsyncResponse = {
+      status: 'success',
+      data: {
+        change: {
+          '1h': {
+            perc: 0,
+          },
+          '1d': {
+            perc: 0,
+          },
+          '1w': {
+            perc: -3.99,
+          },
+        },
+        last: '6097560000000000',
+      },
+    }
+    const callAsyncMock = sandbox.stub(exchangeApiLib, 'callAsync').returns(getLastPriceAsyncResponse)
+
+    const result = await exchangeApiLib.getLastPriceAsync(baseSymbol, quoteSymbol)
+
+    expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint })).toBe(true)
+    expect(result).toEqual(getLastPriceAsyncResponse.data.last)
   })
 })
