@@ -1,11 +1,13 @@
 const customJoiValidator = require('../utils/customJoiValidator')
 const BaseValidator = require('./BaseValidator')
 
+const mnemonicSchema = customJoiValidator.mnemonic().ethereumValidMnemonic().required()
+
 const privateKeySchema = customJoiValidator.object().keys({
   privateKey: customJoiValidator.privateKey().ethereumValidPrivateKey().required(),
 })
 
-const privateKeyPathSchema = customJoiValidator.object().keys({
+const privateKeyFilePathSchema = customJoiValidator.object().keys({
   privateKeyPath: customJoiValidator.path()
     .existFile().required(),
 })
@@ -15,9 +17,13 @@ class PrivateKeyValidator extends BaseValidator {
     return this.constructor.validate(privateKey, privateKeySchema)
   }
 
-  validatePath(privateKeyPath) {
-    this.constructor.validate(privateKeyPath, privateKeyPathSchema)
-    return privateKeyPath
+  validateFilePath(privateKeyFilePath) {
+    this.constructor.validate(privateKeyFilePath, privateKeyFilePathSchema)
+    return privateKeyFilePath
+  }
+
+  validateMenmonic(mnemonic) {
+    return this.constructor.validate(mnemonic, mnemonicSchema)
   }
 }
 

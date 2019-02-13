@@ -87,7 +87,7 @@ class ABaseCommand {
    *
    */
   async extractPrivateKey (privateKeyPath) {
-    this.privateKeyValidator.validatePath({ privateKeyPath })
+    this.privateKeyValidator.validateFilePath({ privateKeyPath })
     const privateKey = await this.privateKeyService.getPrivateKeyAsync(privateKeyPath)
     this.privateKeyValidator.validatePrivateKey({ privateKey })
     return privateKey
