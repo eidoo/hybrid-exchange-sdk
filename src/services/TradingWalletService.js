@@ -33,7 +33,7 @@ class TradingWalletService extends BaseTransactionService {
    */
   constructor(web3, transactionLib = transactionLibInstance,
     transactionBuilder = tradingWalletTransactionBuilderInstance, logger = log) {
-    super(logger, web3, transactionLib, transactionBuilder)
+    super(web3, transactionLib, transactionBuilder, logger)
   }
 
   /**

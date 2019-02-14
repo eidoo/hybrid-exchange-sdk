@@ -28,7 +28,7 @@ class Erc20TokenService extends BaseTransactionService {
      */
   constructor(web3, transactionLib = transactionLibInstance,
     transactionBuilder, logger = log) {
-    super(logger, web3, transactionLib, transactionBuilder)
+    super(web3, transactionLib, transactionBuilder, logger)
   }
 
 

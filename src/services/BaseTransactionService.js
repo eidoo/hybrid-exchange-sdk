@@ -9,13 +9,13 @@ const { InvalidEthereumAddress } = require('../utils/errors')
 class BaseTransactionService {
   /**
      * Create a base service.
-     * @param  {Object}    logger             The logger instance.
      * @param  {Object}    web3               The web3 instance.
      * @param  {Object}    transactionLib     The transaction lib istance.
      * @param  {Object}    transactionBuilder The trading wallet transaction builder lib istance.
+     * @param  {Object}    logger             The logger instance.
      * @throws {TypeError}                    If some required property is missing.
      */
-  constructor(logger, web3, transactionLib, transactionBuilder) {
+  constructor(web3, transactionLib, transactionBuilder, logger) {
     if (!logger) {
       throw new TypeError(`Invalid "logger" value: ${logger}`)
     }
