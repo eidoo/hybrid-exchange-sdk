@@ -187,6 +187,29 @@ const extensions = [
       },
     ],
   },
+  {
+    name: 'mnemonic',
+    language: {
+      invalidLength: 'should be of 12 words',
+      notString: 'should be a string',
+    },
+    rules: [
+      {
+        name: 'ethereumValidMnemonic',
+        validate(params, value, state, options) {
+          if (!(typeof value === 'string')) {
+            return this.createError('mnemonic.notString', {}, state, options)
+          }
+          const words = value.trim().split(' ')
+          if (Array.isArray(words) && words.length !== 12) {
+            return this.createError('mnemonic.invalidLength', {}, state, options)
+          }
+
+          return value
+        },
+      },
+    ],
+  },
 ]
 
 const customJoiValidator = Joi.extend(extensions)
