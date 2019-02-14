@@ -101,7 +101,7 @@ class GetAddressCommand extends ABaseCommand {
     }
 
     if (draft) {
-      return this.tradingWalletService.tradingWalletTransactionBuilder.buildTradingWalletAddressTransactionDraft(personalWalletAddressRetrived)
+      return this.tradingWalletService.transactionBuilder.buildTradingWalletAddressTransactionDraft(personalWalletAddressRetrived)
     }
 
     const result = await this.tradingWalletService

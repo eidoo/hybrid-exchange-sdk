@@ -2,7 +2,7 @@ const Web3 = require('web3')
 
 const { TransactionLib } = require('../lib/TransactionLib')
 const { TradingWalletNotFoundError } = require('../utils/errors')
-const BaseService = require('./BaseService')
+const BaseTransactionService = require('./BaseTransactionService')
 const log = require('../logger')
 const TradingWalletTransactionBuilder = require('../factories/TradingWalletTransactionBuilder')
 
@@ -17,53 +17,23 @@ const transactionLibInstance = new TransactionLib(web3, log)
 
 const tradingWalletTransactionBuilderInstance = new TradingWalletTransactionBuilder(web3)
 
-async function transactionExecutor(tradingWalletServiceInstance, privateKey,
-  transactionDraftBuilderName, transactionParams, { gasPrice, gas } = {}, nonce) {
-  const transactionObjectDraft = tradingWalletServiceInstance
-    .tradingWalletTransactionBuilder[transactionDraftBuilderName](
-      ...transactionParams,
-    )
-  const transactionSignedHash = await tradingWalletServiceInstance.transactionLib.sign(
-    transactionObjectDraft,
-    privateKey,
-    nonce,
-    gas,
-    gasPrice,
-  )
-
-  const transactionHash = await tradingWalletServiceInstance.transactionLib.execute(transactionSignedHash)
-  return transactionHash
-}
-
 /**
  * Class representing a service to create trading, deposit and withdraw token or ether.
- * @extends BaseService
+ * @extends BaseTransactionService
  */
-class TradingWalletService extends BaseService {
+class TradingWalletService extends BaseTransactionService {
   /**
    * Create a new instance of TradingWalletService.
    *
-   * @param  {Object}    web3                              The web3 instance.
-   * @param  {Object}    [transactionLib]                  The transaction lib istance.
-   * @param  {Object}    [tradingWalletTransactionBuilder] The trading wallet transaction builder lib istance.
-   * @param  {Object}    [logger]                          The logger instance.
-   * @throws {TypeError}                                   If exchangeSmart contract objecs is not initialized as expected.
+   * @param  {Object}    web3                 The web3 instance.
+   * @param  {Object}    [transactionLib]     The transaction lib istance.
+   * @param  {Object}    [transactionBuilder] The trading wallet transaction builder lib istance.
+   * @param  {Object}    [logger]             The logger instance.
+   * @throws {TypeError}                      If exchangeSmart contract objecs is not initialized as expected.
    */
   constructor(web3, transactionLib = transactionLibInstance,
-    tradingWalletTransactionBuilder = tradingWalletTransactionBuilderInstance, logger = log) {
-    super(logger, web3)
-
-    if (!transactionLib) {
-      const errorMessage = `Invalid "transactionLib" value: ${transactionLib}`
-      this.throwError(errorMessage)
-    }
-    this.transactionLib = transactionLib
-
-    if (!tradingWalletTransactionBuilder) {
-      const errorMessage = `Invalid "tradingWalletTransactionBuilder" value: ${tradingWalletTransactionBuilder}`
-      this.throwError(errorMessage)
-    }
-    this.tradingWalletTransactionBuilder = tradingWalletTransactionBuilder
+    transactionBuilder = tradingWalletTransactionBuilderInstance, logger = log) {
+    super(web3, transactionLib, transactionBuilder, logger)
   }
 
   /**
@@ -99,7 +69,7 @@ class TradingWalletService extends BaseService {
     this.checkEtherumAddress(personalWalletAddress)
     const transactionParams = [personalWalletAddress]
     const transactionDraftBuilderName = 'buildCreateWalletTransactionDraft'
-    const transactionHash = transactionExecutor(this, privateKey, transactionDraftBuilderName, transactionParams)
+    const transactionHash = this.transactionExecutor(privateKey, transactionDraftBuilderName, transactionParams)
 
     return transactionHash
   }
@@ -123,7 +93,7 @@ class TradingWalletService extends BaseService {
 
     const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity]
     const transactionDraftBuilderName = 'buildDepositEtherTransactionDraft'
-    const transactionHash = transactionExecutor(this, privateKey, transactionDraftBuilderName, transactionParams)
+    const transactionHash = this.transactionExecutor(privateKey, transactionDraftBuilderName, transactionParams)
 
     return transactionHash
   }
@@ -147,7 +117,7 @@ class TradingWalletService extends BaseService {
 
     const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity, tokenAddress]
     const transactionDraftBuilderName = 'buildDepositTokenTransactionDraft'
-    const transactionHash = transactionExecutor(this, privateKey, transactionDraftBuilderName, transactionParams)
+    const transactionHash = this.transactionExecutor(privateKey, transactionDraftBuilderName, transactionParams)
 
     return transactionHash
   }
@@ -172,8 +142,7 @@ class TradingWalletService extends BaseService {
     const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity, tokenAddress]
     const transactionDraftBuilderName = 'buildWithdrawTransactionDraft'
     const gas = 100000
-    const transactionHash = transactionExecutor(
-      this,
+    const transactionHash = this.transactionExecutor(
       privateKey,
       transactionDraftBuilderName,
       transactionParams,
@@ -195,7 +164,7 @@ class TradingWalletService extends BaseService {
     let tradingWalletAddress
 
     try {
-      const transactionObjectDraft = this.tradingWalletTransactionBuilder
+      const transactionObjectDraft = this.transactionBuilder
         .buildTradingWalletAddressTransactionDraft(personalWalletAddress)
       const tradingWalletAddressFromCall = await this.transactionLib.call(transactionObjectDraft)
       const tradingWalletAddressWellFormed = `0x${tradingWalletAddressFromCall.substr(
@@ -241,7 +210,7 @@ class TradingWalletService extends BaseService {
       throw new TradingWalletNotFoundError(`No trading wallet address for: ${personalWalletAddress}`)
     }
 
-    const transactionObjectDraft = this.tradingWalletTransactionBuilder.buildAssetBalanceTransactionDraft(
+    const transactionObjectDraft = this.transactionBuilder.buildAssetBalanceTransactionDraft(
       personalWalletAddress,
       tradingWalletAddress,
       tokenAddress,

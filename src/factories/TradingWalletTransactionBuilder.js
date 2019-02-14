@@ -1,10 +1,8 @@
-const ethereumUtil = require('ethereumjs-util')
-
+const BaseTransactionBuilder = require('./BaseTransactionBuilder')
 const exchangeScAbi = require('../../abi/exchange.json')
 const log = require('../logger')
 const tradingScAbi = require('../../abi/tradingWallet.json')
 
-const { InvalidEthereumAddress } = require('../utils/errors')
 const { TransactionLib } = require('../lib/TransactionLib')
 const { exchange } = require('../config')
 
@@ -12,48 +10,37 @@ const transactionLibInstance = new TransactionLib()
 
 /**
    * Class representing a factory to build draft transaction object.
-   * @param  {Object} web3                                                 The web3 instance.
-   * @param  {Object} [exchangeSmartContract]                              The exchange smart contract object.
-   * @param  {Object} [exchangeSmartContract.exchangeSmartContractAddress] The exchange smart contract address.
-   * @param  {Object} [exchangeSmartContract.exchangeSmartContractAbi]     The exchange smart contract abi interface.
-   * @param  {Object} [tradingWalletSmartContractAbi]                      Thetrading wallet smart contract abi.
-   * @param  {Object} [transactionLib]                                     The transaction lib istance.
-   * @param  {Object} [logger]                                             The logger instance.
+   * @param  {Object} web3                                   The web3 instance.
+   * @param  {Object} [params]                               The params object.
+   * @param  {Object} [params.exchangeSmartContractAddress]  The exchange smart contract address.
+   * @param  {Object} [params.exchangeSmartContractAbi]      The exchange smart contract abi interface.
+   * @param  {Object} [params.tradingWalletSmartContractAbi] Thetrading wallet smart contract abi.
+   * @param  {Object} [params.transactionLib]                The transaction lib istance.
+   * @param  {Object} [params.logger]                        The logger instance.
    *
-   * @throws {TypeError}                                                    If exchangeSmart contract objecs is not initialized as expected.
+   * @throws {TypeError}                                     If exchangeSmart contract objecs is not initialized as expected.
    */
-class TradingWalletTransactionBuilder {
+class TradingWalletTransactionBuilder extends BaseTransactionBuilder {
   constructor(web3, { exchangeSmartContractAbi = exchangeScAbi, exchangeSmartContractAddress = exchange.smartContractAddress,
     transactionLib = transactionLibInstance, tradingWalletSmartContractAbi = tradingScAbi, logger = log } = {}) {
-    if (!logger) {
-      throw new TypeError(`Invalid "logger" value: ${logger}`)
-    }
-    this.log = logger.child({ module: this.constructor.name })
-
-    if (!web3) {
-      const errorMessage = `Invalid "web3" value: ${web3}`
-      this.throwError(errorMessage)
-    }
-    this.web3 = web3
-
-    this.transactionLib = transactionLib
+    super(logger, web3, transactionLib)
 
     if (!exchangeSmartContractAbi) {
       const errorMessage = `Invalid "exchangeSmartContractAbi" value: ${exchangeSmartContractAbi}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.exchangeSmartContractInstance = this.web3.eth.contract(exchangeSmartContractAbi)
       .at(exchangeSmartContractAddress)
 
-    if (!exchangeSmartContractAddress || this.checkEtherumAddress(exchangeSmartContractAddress)) {
+    if (!exchangeSmartContractAddress || this.constructor.checkEtherumAddress(exchangeSmartContractAddress)) {
       const errorMessage = `Invalid "exchangeSmartContractAddress" value: ${exchangeSmartContractAddress}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.exchangeSmartContractAddress = exchangeSmartContractAddress
 
     if (!tradingWalletSmartContractAbi) {
       const errorMessage = 'Invalid "tradingWalletSmartContractAbi"'
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.tradingWalletSmartContractAbi = tradingWalletSmartContractAbi
   }
@@ -68,7 +55,7 @@ class TradingWalletTransactionBuilder {
      * @throws {SmartContractInterfaceError} If exchangeSmartContractInstance is not defined as expected.
      */
   buildCreateWalletTransactionDraft(personalWalletAddress) {
-    this.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
 
     const smartContractMethodName = 'addNewUser'
     const smartContractParams = [personalWalletAddress]
@@ -96,8 +83,8 @@ class TradingWalletTransactionBuilder {
    * @throws {SmartContractInterfaceError} If exchangeSmartContractInstance is not defined as expected.
    */
   buildDepositEtherTransactionDraft(personalWalletAddress, tradingWalletAddress, quantity) {
-    this.checkEtherumAddress(personalWalletAddress)
-    this.checkEtherumAddress(tradingWalletAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
 
     const tradingWalletIstance = this.web3.eth.contract(this.tradingWalletSmartContractAbi).at(tradingWalletAddress)
 
@@ -129,9 +116,9 @@ class TradingWalletTransactionBuilder {
    * @throws {SmartContractInterfaceError} If exchangeSmartContractInstance is not defined as expected.
    */
   buildDepositTokenTransactionDraft(personalWalletAddress, tradingWalletAddress, quantity, tokenAddress) {
-    this.checkEtherumAddress(personalWalletAddress)
-    this.checkEtherumAddress(tradingWalletAddress)
-    this.checkEtherumAddress(tokenAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
+    this.constructor.checkEtherumAddress(tokenAddress)
 
     const tradingWalletIstance = this.web3.eth.contract(this.tradingWalletSmartContractAbi).at(tradingWalletAddress)
 
@@ -159,9 +146,9 @@ class TradingWalletTransactionBuilder {
    * @param {String} tokenAddress          The address of the token asset to withdraw.
    */
   buildWithdrawTransactionDraft(personalWalletAddress, tradingWalletAddress, quantity, tokenAddress) {
-    this.checkEtherumAddress(personalWalletAddress)
-    this.checkEtherumAddress(tradingWalletAddress)
-    this.checkEtherumAddress(tokenAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
+    this.constructor.checkEtherumAddress(tokenAddress)
 
     const tradingWalletIstance = this.web3.eth.contract(this.tradingWalletSmartContractAbi).at(tradingWalletAddress)
 
@@ -188,7 +175,7 @@ class TradingWalletTransactionBuilder {
      * @throws {SmartContractInterfaceError} If exchangeSmartContractInstance is not defined as expected.
      */
   buildTradingWalletAddressTransactionDraft(personalWalletAddress) {
-    this.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
     const smartContractMethodName = 'retrieveWallet'
     const smartContractParams = [personalWalletAddress]
     const transactionParams = {
@@ -215,9 +202,9 @@ class TradingWalletTransactionBuilder {
    * @throws {SmartContractInterfaceError}  If tradingWalletSmartContract is not defined as expected.
    */
   buildAssetBalanceTransactionDraft(personalWalletAddress, tradingWalletAddress, tokenAddress) {
-    this.checkEtherumAddress(personalWalletAddress)
-    this.checkEtherumAddress(tradingWalletAddress)
-    this.checkEtherumAddress(tokenAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
+    this.constructor.checkEtherumAddress(tokenAddress)
 
     const smartContractMethodName = 'tokenBalances_'
     const smartContractParams = [tokenAddress]
@@ -233,17 +220,6 @@ class TradingWalletTransactionBuilder {
     this.log.debug({ transactionDraft, fn: 'getAssetBalanceTransactionDraft' },
       'Asset balance transaction draft created successfully.')
     return transactionDraft
-  }
-
-  /**
-   * It checks if the address is a valid ethereum address.
-   * @param {String} address The address to check
-   */
-  // eslint-disable-next-line class-methods-use-this
-  checkEtherumAddress(address) {
-    if (!ethereumUtil.isValidAddress(address)) {
-      throw new InvalidEthereumAddress(`The address: ${address} is not an ethereum valid address.`)
-    }
   }
 }
 

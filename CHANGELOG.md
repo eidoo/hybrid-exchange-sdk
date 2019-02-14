@@ -10,6 +10,7 @@ Release date: 2019-02-REPLEACE_ME.
 
 ### Added
 
+- [Allowance](https://github.com/eidoo/hybrid-exchange-sdk/issues/7).
 - [Pair fee](https://github.com/eidoo/hybrid-exchange-sdk/issues/1).
 - [Pair last price](https://github.com/eidoo/hybrid-exchange-sdk/issues/3).
 
