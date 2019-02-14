@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 
-const BaseService = require('./BaseService')
+const BaseTransactionService = require('./BaseTransactionService')
 const log = require('../logger')
 
 const { TransactionLib } = require('../lib/TransactionLib')
@@ -10,28 +10,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
 const transactionLibInstance = new TransactionLib(web3, log)
 
-async function transactionExecutor(erc20TokenServiceInstance, privateKey,
-  transactionDraftBuilderName, transactionParams, { gasPrice, gas } = {}, nonce) {
-  const transactionObjectDraft = erc20TokenServiceInstance.erc20TokenTransactionBuilder[transactionDraftBuilderName](
-    ...transactionParams,
-  )
-  const transactionSignedHash = await erc20TokenServiceInstance.transactionLib.sign(
-    transactionObjectDraft,
-    privateKey,
-    nonce,
-    gas,
-    gasPrice,
-  )
-
-  const transactionHash = await erc20TokenServiceInstance.transactionLib.execute(transactionSignedHash)
-  return transactionHash
-}
-
 /**
  * Class representing a service to build sign and execute transaction related to a Erc20 token.
- * @extends BaseService
+ * @extends BaseTransactionService
  */
-class Erc20TokenService extends BaseService {
+class Erc20TokenService extends BaseTransactionService {
   /**
      * Create a new instance of Erc20TokenService.
      *
@@ -44,20 +27,8 @@ class Erc20TokenService extends BaseService {
      * @throws {TypeError}                                                        If exchangeSmart contract objecs is not initialized as expected.
      */
   constructor(web3, transactionLib = transactionLibInstance,
-    erc20TokenTransactionBuilder, logger = log) {
-    super(logger, web3)
-
-    if (!transactionLib) {
-      const errorMessage = `Invalid "transactionLib" value: ${transactionLib}`
-      throw new TypeError(errorMessage)
-    }
-    this.transactionLib = transactionLib
-
-    if (!erc20TokenTransactionBuilder) {
-      const errorMessage = `Invalid "erc20TokenTransactionBuilder" value: ${erc20TokenTransactionBuilder}`
-      throw new TypeError(errorMessage)
-    }
-    this.erc20TokenTransactionBuilder = erc20TokenTransactionBuilder
+    transactionBuilder, logger = log) {
+    super(logger, web3, transactionLib, transactionBuilder)
   }
 
   /**
@@ -92,7 +63,7 @@ class Erc20TokenService extends BaseService {
 
     const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity]
     const transactionDraftBuilderName = 'buildApproveTrasferTransactionDraft'
-    const transactionHash = transactionExecutor(this, privateKey, transactionDraftBuilderName, transactionParams)
+    const transactionHash = this.transactionExecutor(privateKey, transactionDraftBuilderName, transactionParams)
     return transactionHash
   }
 }

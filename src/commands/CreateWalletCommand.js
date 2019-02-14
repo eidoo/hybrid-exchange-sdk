@@ -100,7 +100,7 @@ class CreateWalletCommand extends ABaseCommand {
     let personalWalletAddressRetrived = personalWalletAddress
     const privateKey = await this.extractPrivateKey(privateKeyPath)
     personalWalletAddressRetrived = this.getAddressFromPrivateKey(personalWalletAddress, privateKey)
-    const transactionObjectDraft = this.tradingWalletService.tradingWalletTransactionBuilder
+    const transactionObjectDraft = this.tradingWalletService.transactionBuilder
       .buildCreateWalletTransactionDraft(personalWalletAddressRetrived, privateKey)
 
     if (draft) {
