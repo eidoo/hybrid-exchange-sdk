@@ -23,20 +23,20 @@ class BaseTransactionService {
 
     if (!web3) {
       const errorMessage = `Invalid "web3" value: ${web3}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
 
     this.web3 = web3
 
     if (!transactionLib) {
       const errorMessage = `Invalid "transactionLib" value: ${transactionLib}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.transactionLib = transactionLib
 
     if (!transactionBuilder) {
       const errorMessage = `Invalid "transactionBuilder" value: ${transactionBuilder}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.transactionBuilder = transactionBuilder
   }
