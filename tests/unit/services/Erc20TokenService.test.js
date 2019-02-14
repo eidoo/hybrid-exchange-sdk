@@ -13,7 +13,7 @@ const { TransactionLib } = require('../../../src/lib/TransactionLib')
 const providerUrl = 'FAKE_PROVIDER_URL'
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
-const tradingWalletSmartContractAddress = '0x0ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba'
+const tradingWalletAddress = '0x0ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba'
 const tokenAddress = '0xd67cb05ef66d1c7c952656ddf5096e02281e3d2d'
 
 const ethApiLibConf = {
@@ -64,7 +64,36 @@ describe('approveTrasferAsync', () => {
     sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     const transactionHash = await erc20TokenService.approveTrasferAsync(personalWalletAddress,
-      tradingWalletSmartContractAddress, quantity, tokenAddress, privateKey)
+      tradingWalletAddress, quantity, tokenAddress, privateKey)
+
+    expect(transactionHash).toEqual(expectedTransactionHash)
+  })
+})
+
+describe('getAllowanceAsync', () => {
+  const personalWalletAddress = '0x52daf0caee4cf4e66a9c90dad58c3f0cc4cbf785'
+  test('calls correctly ethapi sendRawTransaction correctly', async() => {
+    const expectedTransactionHash = '0xTransactionHash'
+    const nonceResponse = {
+      nonce: 4400,
+    }
+    const gasEstimationResponse = {
+      gas: 21000,
+      gasPrices: {
+        high: '0',
+        medium: '25395',
+        low: '0',
+      },
+    }
+    sandbox.stub(transactionLib, 'sign')
+    sandbox.stub(ethApiLib, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
+    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+
+    const transactionHash = await erc20TokenService.approveTrasferAsync(
+      personalWalletAddress,
+      tradingWalletAddress,
+    )
 
     expect(transactionHash).toEqual(expectedTransactionHash)
   })
