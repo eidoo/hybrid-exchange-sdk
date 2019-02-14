@@ -45,12 +45,12 @@ You can [create](./examples/lib/tradingWallet/createWallet/createWallet.js) it u
 If you already have a trading wallet connected to your ethereum wallet you can also just [retrieve its address](./examples/lib/tradingWallet/getAddress/getAddress.js).
 
 You can manage the trading wallet by depositing and withdrawing funds.
-You can deposit both [ether](./examples/lib/tradingWallet/depositEth/depositEther.js) and [ERC20 token](./examples/lib/tradingWallet/depositToken/depositToken.js). 
-Please note that if you are going to deposit ERC20 token, you can [approve](./examples/lib/tradingWallet/approve/approve.js) manually the transfer of ERC20 token. 
-If you have trouble during deposit ERC20 token please check [allowance](./examples/lib/tradingWallet/allowance/getAllowance.js).
+You can deposit both [ether](./examples/lib/tradingWallet/depositEth/depositEther.js) and [ERC20 token](./examples/lib/tradingWallet/depositToken/depositToken.js).<br>
 
-Please note that in order to deposit the above assets your ethereum wallet needs to be funded.<br>
-Before depositing the wanted ERC20 token amount you have to [approve](./examples/lib/tradingWallet/approve/approve.js) the transfer from your ethereum wallet to the connected trading wallet.
+In order to deposit the above assets your ethereum wallet needs to be funded.<br>
+
+Please note that as soon as you are ready to deposit some ERC20 token you must [approve](./examples/lib/tradingWallet/approve/approve.js) your trading wallet as spender of the deposit amount since the trading wallet will perform a `transferFrom` of the token from your ethereum wallet to itself.<br>
+You can check the status of the approval verifying the [allowance](./examples/lib/tradingWallet/allowance/getAllowance.js).
 
 You will always be the only one able to withdraw [ERC20 token](./examples/lib/tradingWallet/withdraw/withdraw.js) and [ether](./examples/lib/tradingWallet/withdraw/withdraw.js) from your trading wallet to the connected ethereum wallet.
 
