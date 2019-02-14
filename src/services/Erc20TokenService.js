@@ -31,7 +31,6 @@ class Erc20TokenService extends BaseTransactionService {
     super(web3, transactionLib, transactionBuilder, logger)
   }
 
-
   /**
    * It approves the trasfer of token quantity from trading to pesonal wallet.
    *
