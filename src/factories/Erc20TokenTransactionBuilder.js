@@ -67,6 +67,26 @@ class Erc20TokenTransactionBuilder extends BaseTransactionBuilder {
     )
     return transactionDraft
   }
+
+  buildGetAllowanceTransactionDraft(personalWalletAddress, tradingWalletAddress) {
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
+
+    const smartContractMethodName = 'allowance'
+    const smartContractParams = [personalWalletAddress, tradingWalletAddress]
+    const transactionParams = {
+      from: personalWalletAddress,
+      to: this.erc20TokenSmartContractAddress,
+    }
+
+    const transactionDraft = this.transactionLib.buildDraft(this.erc20TokenSmartContractInstance,
+      transactionParams, smartContractMethodName, smartContractParams)
+    this.log.debug(
+      { fn: 'buildGetAllowanceTransactionDraft', personalWalletAddress, tradingWalletAddress },
+      'Erc20 token get allowance transaction draft builded successfully.',
+    )
+    return transactionDraft
+  }
 }
 
 module.exports = Erc20TokenTransactionBuilder

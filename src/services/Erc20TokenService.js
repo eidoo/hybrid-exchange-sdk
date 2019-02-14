@@ -31,22 +31,6 @@ class Erc20TokenService extends BaseTransactionService {
     super(logger, web3, transactionLib, transactionBuilder)
   }
 
-  /**
-   * It gets the signed transaction data to execute the transaction to withdraw ehter/token.
-   *
-   * @param {Object} transactionDraftObject        The transactionDraftObject.
-   * @param {Object} transactionDraftObject.from   The from transaction parameter.
-   * @param {Object} transactionDraftObject.to     The to transaction parameter.
-   * @param {Object} transactionDraftObject.value] The value transaction parameter.
-   * @param {Object} transactionDraftObject.data   The data transaction parameter.
-   * @param {String} privateKey                    The private key.
-   *
-   * @throws {SignTransactionError}                If there was an error signing the transaction to create the wallet.
-   */
-  async getApproveTrasferSignedDataAsync(transactionDraftObject, privateKey) {
-    const signedTransactionData = await this.transactionLib.sign(transactionDraftObject, privateKey)
-    return signedTransactionData
-  }
 
   /**
    * It approves the trasfer of token quantity from trading to pesonal wallet.
