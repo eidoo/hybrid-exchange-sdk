@@ -1,9 +1,7 @@
-const ethereumUtil = require('ethereumjs-util')
-
+const BaseTransactionBuilder = require('./BaseTransactionBuilder')
 const erc20TokenAbi = require('../../abi/erc20Token.json')
 const log = require('../logger')
 
-const { InvalidEthereumAddress } = require('../utils/errors')
 const { TransactionLib } = require('../lib/TransactionLib')
 
 const transactionLibInstance = new TransactionLib()
@@ -19,25 +17,10 @@ const transactionLibInstance = new TransactionLib()
    *
    * @throws {TypeError}                                      If Erc20TokenTransactionBuilder object is not initialized as expected.
    */
-class Erc20TokenTransactionBuilder {
+class Erc20TokenTransactionBuilder extends BaseTransactionBuilder {
   constructor(web3, { erc20TokenSmartContractAddress, erc20TokenSmartContractAbi = erc20TokenAbi,
     transactionLib = transactionLibInstance, logger = log } = {}) {
-    if (!logger) {
-      throw new TypeError(`Invalid "logger" value: ${logger}`)
-    }
-    this.log = logger.child({ module: this.constructor.name })
-
-    if (!web3) {
-      const errorMessage = `Invalid "web3" value: ${web3}`
-      throw new TypeError(errorMessage)
-    }
-    this.web3 = web3
-
-    if (!transactionLib) {
-      const errorMessage = `Invalid "transactionLib" value: ${transactionLib}`
-      throw new TypeError(errorMessage)
-    }
-    this.transactionLib = transactionLib
+    super(logger, web3, transactionLib)
 
     if (!erc20TokenSmartContractAddress) {
       const errorMessage = `Invalid "erc20TokenSmartContractAddress" value: ${erc20TokenSmartContractAddress}`
@@ -66,8 +49,8 @@ class Erc20TokenTransactionBuilder {
    * @throws {SmartContractInterfaceError} If exchangeSmartContractInstance is not defined as expected.
    */
   buildApproveTrasferTransactionDraft(personalWalletAddress, tradingWalletAddress, quantity) {
-    this.checkEtherumAddress(personalWalletAddress)
-    this.checkEtherumAddress(tradingWalletAddress)
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
 
     const smartContractMethodName = 'approve'
     const smartContractParams = [tradingWalletAddress, quantity]
@@ -83,17 +66,6 @@ class Erc20TokenTransactionBuilder {
       'Erc20 token approve transaction draft successfully.',
     )
     return transactionDraft
-  }
-
-  /**
-   * It checks if the address is a valid ethereum address.
-   * @param {String} address The address to check
-   */
-  // eslint-disable-next-line class-methods-use-this
-  checkEtherumAddress(address) {
-    if (!ethereumUtil.isValidAddress(address)) {
-      throw new InvalidEthereumAddress(`The address: ${address} is not an ethereum valid address.`)
-    }
   }
 }
 
