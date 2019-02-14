@@ -83,4 +83,49 @@ describe('Erc20TokenTransactionBuilder', () => {
         }
       })
   })
+
+  describe('buildGetAllowanceTransactionDraft', () => {
+    test('returns correct transaction object', () => {
+      const encodedDataForApproveMethod = '0xdd62ed3e000000000000000000000000d57cb05ef66d2c7c952656ddf5096e02281e3d2e0000000000000000000000000ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba'
+
+      const expectedTransactionObjectDraft = MockTransactionDraftFactory
+        .build({ from: personalWalletAddress, data: encodedDataForApproveMethod, to: erc20TokenSmartContractAddress })
+
+      const result = erc20TokenTransactionBuilder.buildGetAllowanceTransactionDraft(
+        personalWalletAddress,
+        tradingWalletSmartContractAddress,
+        quantity,
+      )
+
+      expect(result).toMatchObject(expectedTransactionObjectDraft)
+    })
+
+    const invalidPersonalWalletAddresses = [{}, [], 'I am not a valid ethereum address', 1, undefined, NaN, '0xNOOP']
+    test.each(invalidPersonalWalletAddresses)('raise InvalidEthereumAddress error if the personalWalletAddress is not a valid ethereum address %s',
+      (invalidPersonalWalletAddress) => {
+        try {
+          erc20TokenTransactionBuilder.buildGetAllowanceTransactionDraft(
+            invalidPersonalWalletAddress,
+            tradingWalletSmartContractAddress,
+            quantity,
+          )
+        } catch (e) {
+          expect(e instanceof InvalidEthereumAddress).toBe(true)
+        }
+      })
+
+    const invalidTradingWalletAddresses = [{}, [], 'I am not a valid ethereum address', 1, undefined, NaN, '0xNOOP']
+    test.each(invalidTradingWalletAddresses)('raise InvalidEthereumAddress error if the tradingWalletAddress is not a valid ethereum address %s',
+      (invalidTradingWalletAddress) => {
+        try {
+          erc20TokenTransactionBuilder.buildGetAllowanceTransactionDraft(
+            personalWalletAddress,
+            invalidTradingWalletAddress,
+            quantity,
+          )
+        } catch (e) {
+          expect(e instanceof InvalidEthereumAddress).toBe(true)
+        }
+      })
+  })
 })
