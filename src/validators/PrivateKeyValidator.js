@@ -22,7 +22,7 @@ class PrivateKeyValidator extends BaseValidator {
     return privateKeyFilePath
   }
 
-  validateMenmonic(mnemonic) {
+  validateMnemonic(mnemonic) {
     return this.constructor.validate(mnemonic, mnemonicSchema)
   }
 }

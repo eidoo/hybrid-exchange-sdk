@@ -18,22 +18,27 @@ class InvalidPrivateKeyError extends BaseError {}
 class InvalidPrivateKeyFile extends BaseError {}
 class InvalidMnemonicError extends BaseError {}
 
+const HD_PATH = "m/44'/60'/0/0"
 const encoding = 'utf8'
 /**
  * Class representing a service that manage private key.
  */
 class PrivateKeyService {
-  constructor(logger = log, privateKeyValidator = privateKeyValidatorInstance) {
-    if (!logger) {
-      throw new TypeError(`Invalid "logger" value: ${logger}`)
-    }
-    this.log = logger.child({ module: this.constructor.name })
+  constructor(privateKeyValidator = privateKeyValidatorInstance, logger = log, hdPath = HD_PATH) {
     if (!privateKeyValidator) {
       throw new TypeError(`Invalid "privateKeyValidator" value: ${privateKeyValidator}`)
     }
     this.privateKeyValidator = privateKeyValidator
 
-    this.hdPath = "m/44'/60'/0/0"
+    if (!logger) {
+      throw new TypeError(`Invalid "logger" value: ${logger}`)
+    }
+    this.log = logger.child({ module: this.constructor.name })
+
+    if (!hdPath) {
+      throw new TypeError(`Invalid "hdPath" value: ${hdPath}`)
+    }
+    this.hdPath = hdPath
   }
 
   /**
@@ -90,7 +95,7 @@ class PrivateKeyService {
    */
   getPrivateKeyFromMnemonic(mnemonic) {
     try {
-      const validMnemonic = this.privateKeyValidator.validateMenmonic(mnemonic)
+      const validMnemonic = this.privateKeyValidator.validateMnemonic(mnemonic)
       const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeed(validMnemonic))
       const wallet = hdwallet.derivePath(this.hdPath).getWallet()
       const privateKey = wallet._privKey.toString('hex')

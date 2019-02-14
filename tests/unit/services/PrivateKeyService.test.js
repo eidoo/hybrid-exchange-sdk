@@ -6,7 +6,7 @@ const { InvalidPrivateKeyFile, InvalidMnemonicError,
 let privateKeyService
 
 beforeEach(() => {
-  privateKeyService = new PrivateKeyService(logger)
+  privateKeyService = new PrivateKeyService()
 })
 
 describe('getPrivateKey', () => {
