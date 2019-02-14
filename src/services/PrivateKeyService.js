@@ -92,7 +92,7 @@ class PrivateKeyService {
     try {
       const validMnemonic = this.privateKeyValidator.validateMenmonic(mnemonic)
       const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeed(validMnemonic))
-      const wallet = hdwallet.derivePath(`${this.hdPath}0`).getWallet()
+      const wallet = hdwallet.derivePath(this.hdPath).getWallet()
       const privateKey = wallet._privKey.toString('hex')
       this.log.debug({ fn: 'getPrivateKeyFromMnemonic' }, 'Retrieve private key from mnemonic.')
       return privateKey
