@@ -45,7 +45,7 @@ const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
 let tradingWalletService
 
 beforeEach(() => {
-  tradingWalletService = new TradingWalletService(web3, transactionLibInstance, tradingWalletTransactionBuilder)
+  tradingWalletService = new TradingWalletService(web3, transactionLibInstance, tradingWalletTransactionBuilder, log)
 })
 
 afterEach(() => {
