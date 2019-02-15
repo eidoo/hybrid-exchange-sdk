@@ -1,5 +1,3 @@
-const Web3 = require('web3')
-
 const logger = require('../logger')
 const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
 const GetAddressCommand = require('../commands/GetAddressCommand')
@@ -10,17 +8,15 @@ const { PrivateKeyService } = require('../services/PrivateKeyService')
 const PrivateKeyValidator = require('../validators/PrivateKeyValidator')
 const OrderSignCommandValidator = require('../validators/OrderSignCommandValidator')
 const OrderSignerHelper = require('../helpers/OrderSignerHelper')
-const TradingWalletService = require('../services/TradingWalletService')
+const TradingWalletServiceBuilder = require('../factories/TradingWalletServiceBuilder')
 
-const providerUrl = 'urlToProvider'
-const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const privateKeyValidator = new PrivateKeyValidator(logger)
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 
-const tradingWalletService = new TradingWalletService(web3)
+const tradingWalletService = TradingWalletServiceBuilder.build()
 const privateKeyService = new PrivateKeyService(logger)
 const ordersignerHelper = new OrderSignerHelper(logger)
 
