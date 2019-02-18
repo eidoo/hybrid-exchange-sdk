@@ -19,6 +19,11 @@ const providerUrl = 'urlToProvider'
 const web3Instance = new Web3(new Web3.providers.HttpProvider(providerUrl))
 const ethApiLibClient = new EidooEthApiLib(ethApi)
 
+
+function waitForMsAsync (time) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
 /**
  * It gets nonce from input address.
  *
@@ -250,6 +255,44 @@ class TransactionLib extends ITransactionLib {
       this.log.error({ err, fn: 'call', transactionObjectDraft }, 'Error executing transaction call.')
       throw new TransactionCallError(err)
     }
+  }
+
+  async getTransactionReceipt(hash, fromAddress) {
+    try {
+      const { transactions } = await this.ethApiClient.getAccountTxsDetailsAsync(fromAddress)
+
+      const transactionReceipt = _.find(transactions, item => item.transactionReceipt.transactionHash === hash)
+      return transactionReceipt || null
+    } catch (err) {
+      throw new Error(`Error retriving transaction Receipt: ${hash}`)
+    }
+  }
+
+  /**
+   * It checks if the transaction is mined.
+   *
+   * @param {String} hash The transaction hash
+   */
+  async isTransactionMined (hash, fromAddress) {
+    const maxWaitAllowedInMs = 5 * 1000
+    const startedAt = new Date()
+    let transactionReceipit = this.getTransactionReceipt(hash, fromAddress)
+    let isEnd = false
+    while (transactionReceipit !== null && !isEnd) {
+      const now = new Date()
+      isEnd = (+now - +startedAt) > maxWaitAllowedInMs
+      transactionReceipit = this.getTransactionReceipt(hash, fromAddress)
+      this.log.info({
+        fn: 'isTransactionMined',
+        hash,
+        transactionReceipit,
+      },
+      'Checking transaction...')
+      await waitForMsAsync(1000)
+    }
+
+    const isMined = !!transactionReceipit
+    return isMined
   }
 }
 
