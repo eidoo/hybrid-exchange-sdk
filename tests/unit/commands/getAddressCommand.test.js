@@ -1,21 +1,18 @@
 /* eslint-env node, jest */
-const Web3 = require('web3')
 const sandbox = require('sinon').createSandbox()
 
 const { exchange } = require('../../../src/config')
 const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
 
 const logger = require('../../../src/logger')
-const TradingWalletService = require('../../../src/services/TradingWalletService')
+const TradingWalletServiceBuilder = require('../../../src/factories/TradingWalletServiceBuilder')
 const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
 const GetAddressCommandValidator = require('../../../src/validators/GetAddressCommandValidator')
 const GetAddressCommand = require('../../../src/commands/GetAddressCommand')
 
-const providerUrl = 'urlToProvider'
-const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
-
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
-const tradingWalletService = new TradingWalletService(web3)
+
+const tradingWalletService = TradingWalletServiceBuilder.build()
 
 const privateKeyValidator = new PrivateKeyValidator(logger)
 const privateKeyService = new PrivateKeyService(logger)

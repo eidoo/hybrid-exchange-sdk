@@ -1,13 +1,9 @@
 (async () => {
-  const { TradingWalletService } = require('@eidoo/hybrid-exchange-sdk').services
-  const Web3 = require('web3')
+  const { TradingWalletServiceBuilder } = require('@eidoo/hybrid-exchange-sdk').factories
 
-  const providerUrl = 'providerUrl'
-  const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
-  const tradingWalletService = new TradingWalletService(web3)
+  const tradingWalletService = TradingWalletServiceBuilder.build()
 
-  const personalWalletAddress = '0x70742a2530069fd1fa302766e2e58f7c03d63e4e'
-
+  const personalWalletAddress = '0xcf4b07a79b5d29988f488f30c4a676ecaad35c02'
   const tradingWalletAddress = await tradingWalletService.getTradingWalletAddressAsync(personalWalletAddress)
   console.log(tradingWalletAddress)
 })()

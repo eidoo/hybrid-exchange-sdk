@@ -1,41 +1,15 @@
-const Web3 = require('web3')
-
-const { TransactionLib } = require('../lib/TransactionLib')
 const { TradingWalletNotFoundError } = require('../utils/errors')
 const BaseTransactionService = require('./BaseTransactionService')
-const log = require('../logger')
-const TradingWalletTransactionBuilder = require('../factories/TradingWalletTransactionBuilder')
 
 const ETH_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ETH_ADDRESS_LENGTH = 40
 const ETH_ADDRESS_LENGTH_256B = 66
-
-const providerUrl = 'urlToProvider'
-const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
-
-const transactionLibInstance = new TransactionLib(web3, log)
-
-const tradingWalletTransactionBuilderInstance = new TradingWalletTransactionBuilder(web3)
 
 /**
  * Class representing a service to create trading, deposit and withdraw token or ether.
  * @extends BaseTransactionService
  */
 class TradingWalletService extends BaseTransactionService {
-  /**
-   * Create a new instance of TradingWalletService.
-   *
-   * @param  {Object}    web3                 The web3 instance.
-   * @param  {Object}    [transactionLib]     The transaction lib istance.
-   * @param  {Object}    [transactionBuilder] The trading wallet transaction builder lib istance.
-   * @param  {Object}    [logger]             The logger instance.
-   * @throws {TypeError}                      If exchangeSmart contract objecs is not initialized as expected.
-   */
-  constructor(web3, transactionLib = transactionLibInstance,
-    transactionBuilder = tradingWalletTransactionBuilderInstance, logger = log) {
-    super(web3, transactionLib, transactionBuilder, logger)
-  }
-
   /**
    * It gets the signed transaction data to execute the transaction.
    *

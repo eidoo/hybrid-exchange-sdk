@@ -1,13 +1,10 @@
 (async () => {
-  const { TradingWalletService } = require('@eidoo/hybrid-exchange-sdk').services
-  const Web3 = require('web3')
+  const { TradingWalletServiceBuilder } = require('@eidoo/hybrid-exchange-sdk').factories
 
-  const providerUrl = 'providerUrl'
-  const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
-  const tradingWalletService = new TradingWalletService(web3)
+  const tradingWalletService = TradingWalletServiceBuilder.build()
 
-  const personalWalletAddress = '0xf6ccfafbe3ac8b6c82f39f54530a5ff7c0a1ed52'
-  const privateKey = '0xbf177acb6470f78c01209c1461fb0a104b2b0dbff9607d0b95b7e02f450b4142'
+  const personalWalletAddress = '0xcf4b07a79b5d29988f488f30c4a676ecaad35c02'
+  const privateKey = '0x4c7ee440ad699493b22732031e4a3277d2d8aa834b727aa0b358e3310aa37384'
 
   const transactionHash = await tradingWalletService.createWalletAsync(personalWalletAddress, privateKey)
   console.log(transactionHash)
