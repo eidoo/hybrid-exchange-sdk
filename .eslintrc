@@ -9,6 +9,7 @@
             "error",
             120
         ],
+        "no-await-in-loop": "off",
         "no-shadow": "off",
         "no-underscore-dangle": "off",
         "object-curly-newline": [
