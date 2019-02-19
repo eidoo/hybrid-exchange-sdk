@@ -18,9 +18,17 @@ class Erc20TokenService extends BaseTransactionService {
     this.checkEtherumAddress(personalWalletAddress)
     this.checkEtherumAddress(tradingWalletAddress)
 
+    this.log.info({
+      fn: 'approveTrasferAsync',
+      tradingWalletAddress,
+      quantity,
+      personalWalletAddress,
+    },
+    'Approving quantity.')
     const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity]
     const transactionDraftBuilderName = 'buildApproveTrasferTransactionDraft'
     const transactionHash = this.transactionExecutor(privateKey, transactionDraftBuilderName, transactionParams)
+
     return transactionHash
   }
 
@@ -39,9 +47,16 @@ class Erc20TokenService extends BaseTransactionService {
       personalWalletAddress,
       tradingWalletAddress,
     )
-    const allowance = await this.transactionLib.call(transactionObjectDraft)
-
-    return this.web3.toBigNumber(allowance).toString(10)
+    const allowanceHex = await this.transactionLib.call(transactionObjectDraft)
+    const allowance = this.web3.toBigNumber(allowanceHex).toString(10)
+    this.log.info({
+      fn: 'getAllowanceAsync',
+      allowance,
+      tradingWalletAddress,
+      personalWalletAddress,
+    },
+    'Retrieve allowance.')
+    return allowance
   }
 
   /**
@@ -56,8 +71,11 @@ class Erc20TokenService extends BaseTransactionService {
     const transactionObjectDraft = this.transactionBuilder.buildGetBalanceOfTransactionDraft(
       personalWalletAddress,
     )
-    const assetBalance = await this.transactionLib.call(transactionObjectDraft)
-    return this.web3.toBigNumber(assetBalance).toString(10)
+    const assetBalanceHex = await this.transactionLib.call(transactionObjectDraft)
+    const assetBalance = this.web3.toBigNumber(assetBalanceHex).toString(10)
+    this.log.info({ fn: 'getBalanceOfAsync', personalWalletAddress, assetBalance }, 'Retrieve token balanceOf.')
+
+    return assetBalance
   }
 }
 

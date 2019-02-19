@@ -201,7 +201,7 @@ class TransactionLib extends ITransactionLib {
       const privateKeyWithPrefix = ethereumUtil.addHexPrefix(privateKey)
       const privateKeyBuffered = ethereumUtil.toBuffer(privateKeyWithPrefix)
       const transactionObject = await getTransactionObject(this, transactionDraftObject, nonce, gas, gasPrice)
-      this.log.info({ transactionObject }, 'Transaction Object.')
+      this.log.debug({ transactionObject }, 'Transaction Object.')
       const rawTransaction = new Tx(transactionObject)
       rawTransaction.sign(privateKeyBuffered)
 
@@ -245,11 +245,10 @@ class TransactionLib extends ITransactionLib {
         throw new Error(errors)
       }
       const transactionObject = Object.assign({}, transactionObjectDraft)
-      this.log.info({ transactionObject }, 'Doing transaction call.')
 
       const responsePayload = await this.ethApiClient
         .transactionCallAsync({ transactionObject })
-      this.log.info({ transactionObject, responsePayload }, 'Transaction call done.')
+      this.log.info({ fn: 'call', transactionObject, responsePayload }, 'Transaction call done.')
       return responsePayload
     } catch (err) {
       this.log.error({ err, fn: 'call', transactionObjectDraft }, 'Error executing transaction call.')
@@ -262,6 +261,13 @@ class TransactionLib extends ITransactionLib {
       const { transactions } = await this.ethApiClient.getAccountTxsDetailsAsync(fromAddress)
 
       const transactionReceipt = _.find(transactions, item => item.transactionReceipt.transactionHash === hash)
+      this.log.info({
+        fn: 'getTransactionReceipt',
+        transactionReceipt,
+        hash,
+        fromAddress,
+      }, 'Retrieve transaction receipt.')
+
       return transactionReceipt || null
     } catch (err) {
       throw new Error(`Error retriving transaction Receipt: ${hash}`)

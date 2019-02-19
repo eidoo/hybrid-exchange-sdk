@@ -33,6 +33,14 @@ class TradingWalletFacade {
   }
 
   async depositTokenAsync(personalWalletAddress, tradingWalletAddress, quantity, tokenAddress, privateKey) {
+    this.log.info({
+      fn: 'depositTokenAsync',
+      personalWalletAddress,
+      tradingWalletAddress,
+      tokenAddress,
+      quantity,
+    }, 'Deposit token.')
+
     let approveToZeroTransactionHash = null
     let approveTransactionHash = null
 
@@ -53,14 +61,14 @@ class TradingWalletFacade {
     }
 
     const allowance = await this.erc20TokenService.getAllowanceAsync(personalWalletAddress, tradingWalletAddress)
-
-    if (quantity > allowance && allowance > 0) {
+    const allowanceToInt = +allowance
+    if (quantity > allowanceToInt && allowanceToInt > 0) {
       this.log.info({
         personalWalletAddress,
         tradingWalletAddress,
         quantity,
         tokenAddress,
-        allowance,
+        allowanceToInt,
         fn: 'depositTokenAsync',
       },
       'The quantity to deposit is not completely allowed!')
@@ -72,26 +80,15 @@ class TradingWalletFacade {
         zeroQuantity,
         privateKey,
       )
-
-      this.log.info({
-        approveToZeroTransactionHash,
-        fn: 'depositTokenAsync',
-      },
-      'Approve to zero quantity done successfully.')
     }
 
-    if (allowance === 0 || (quantity > allowance && allowance > 0)) {
+    if (allowanceToInt === 0 || (quantity > allowanceToInt && allowanceToInt > 0)) {
       approveTransactionHash = await this.erc20TokenService.approveTrasferAsync(
         personalWalletAddress,
         tradingWalletAddress,
         quantity,
         privateKey,
       )
-      this.log.info({
-        approveTransactionHash,
-        fn: 'depositTokenAsync',
-      },
-      'Approve quantity done successfully.')
     }
 
     const depositTransactionHash = await this.tradingWalletService.depositTokenAsync(
@@ -108,7 +105,8 @@ class TradingWalletFacade {
       tradingWalletAddress,
       quantity,
       tokenAddress,
-      privateKey,
+      approveToZeroTransactionHash,
+      approveTransactionHash,
       depositTransactionHash,
     },
     'Deposit token completed successfully.')
