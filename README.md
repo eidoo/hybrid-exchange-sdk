@@ -50,6 +50,7 @@ In order to deposit the above assets your ethereum wallet needs to be funded.<br
 
 Please note that as soon as you are ready to deposit some ERC20 token you must [approve](./examples/lib/tradingWallet/approve/approve.js) your trading wallet as spender of the deposit amount since the trading wallet will perform a `transferFrom` of the token from your ethereum wallet to itself.<br>
 You can check the status of the approval verifying the [allowance](./examples/lib/tradingWallet/allowance/getAllowance.js).
+You can decide also to deposit ERC20 token with auto managed approve operation ([example](./examples/lib/tradingWallet/depositToken/depositTokenWithApprove.js)).
 
 You will always be the only one able to withdraw [ERC20 token](./examples/lib/tradingWallet/withdraw/withdraw.js) and [ether](./examples/lib/tradingWallet/withdraw/withdraw.js) from your trading wallet to the connected ethereum wallet.
 

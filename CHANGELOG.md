@@ -11,6 +11,7 @@ Release date: 2019-02-REPLEACE_ME.
 ### Added
 
 - [CLI withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/13)
+- [Deposit Token with approve](https://github.com/eidoo/hybrid-exchange-sdk/issues/11)
 - [Allowance](https://github.com/eidoo/hybrid-exchange-sdk/issues/7).
 - [Private key from mnemonic](https://github.com/eidoo/hybrid-exchange-sdk/issues/5).
 - [Pair fee](https://github.com/eidoo/hybrid-exchange-sdk/issues/1).
