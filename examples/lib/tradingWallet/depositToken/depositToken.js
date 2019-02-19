@@ -1,6 +1,5 @@
 (async () => {
-  // const { TradingWalletServiceBuilder } = require('@eidoo/hybrid-exchange-sdk').factories
-  const { TradingWalletServiceBuilder } = require('../../../../index').factories
+  const { TradingWalletServiceBuilder } = require('@eidoo/hybrid-exchange-sdk').factories
 
   const tradingWalletService = TradingWalletServiceBuilder.build()
 
