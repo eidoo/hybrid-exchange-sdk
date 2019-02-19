@@ -61,12 +61,6 @@ class TradingWalletNotFoundError extends BaseError {}
  */
 class QuantityNotEnoughError extends BaseError {}
 
-/**
- * This error will be raised if the allowed quantity  is lower than approved quantity
- * during deposit token operation.
- */
-class QuantityNotAllowedError extends BaseError {}
-
 
 class MultiValidationError extends BaseError {
   constructor(id, errors) {
@@ -83,7 +77,6 @@ module.exports = {
   MultiValidationError,
   NonceError,
   NotImplementedError,
-  QuantityNotAllowedError,
   SignTransactionError,
   SmartContractInterfaceError,
   TradingWalletNotFoundError,
