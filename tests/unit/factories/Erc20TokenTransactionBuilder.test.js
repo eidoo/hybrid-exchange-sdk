@@ -128,4 +128,31 @@ describe('Erc20TokenTransactionBuilder', () => {
         }
       })
   })
+
+  describe('buildGetBalanceOfTransactionDraft', () => {
+    test('returns correct transaction object', () => {
+      const encodedDataForApproveMethod = '0x70a08231000000000000000000000000d57cb05ef66d2c7c952656ddf5096e02281e3d2e'
+
+      const expectedTransactionObjectDraft = MockTransactionDraftFactory
+        .build({ from: personalWalletAddress, data: encodedDataForApproveMethod, to: erc20TokenSmartContractAddress })
+
+      const result = erc20TokenTransactionBuilder.buildGetBalanceOfTransactionDraft(
+        personalWalletAddress,
+        tradingWalletSmartContractAddress,
+        quantity,
+      )
+
+      expect(result).toMatchObject(expectedTransactionObjectDraft)
+    })
+
+    const invalidPersonalWalletAddresses = [{}, [], 'I am not a valid ethereum address', 1, undefined, NaN, '0xNOOP']
+    test.each(invalidPersonalWalletAddresses)('raise InvalidEthereumAddress error if the personalWalletAddress is not a valid ethereum address %s',
+      (invalidPersonalWalletAddress) => {
+        try {
+          erc20TokenTransactionBuilder.buildGetBalanceOfTransactionDraft(invalidPersonalWalletAddress)
+        } catch (e) {
+          expect(e instanceof InvalidEthereumAddress).toBe(true)
+        }
+      })
+  })
 })
