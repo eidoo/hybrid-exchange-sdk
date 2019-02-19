@@ -128,7 +128,7 @@ class TransactionLib extends ITransactionLib {
 
     if (!ethApiClient) {
       const errorMessage = `Invalid "ethApiClient" value: ${ethApiClient}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
 
     this.ethApiClient = ethApiClient

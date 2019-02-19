@@ -26,7 +26,7 @@ class TransactionObjectDraftFactory {
   constructor(transactionValidator) {
     if (!transactionValidator) {
       const errorMessage = `Invalid "transactionValidator" value: ${transactionValidator}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.transactionValidator = transactionValidator
   }

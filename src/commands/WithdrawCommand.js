@@ -2,18 +2,19 @@ const ABaseCommand = require('./ABaseCommand')
 const CommandArg = require('../models/CommandArg')
 
 /**
- * Class representing CreateWalletCommand. */
-class CreateWalletCommand extends ABaseCommand {
+ * Class representing WithdrawCommand.
+ */
+class WithdrawCommand extends ABaseCommand {
   /**
    * Create a signer controller.
-   * @param {Object} logger                       The logger helper.
- * @param {Object} tradingWalletService           The tradingWallet service.
-   * @param {Object} createWalletCommandValidator The CreateWalletCommand validator.
-   * @param {Object} privateKeyService            The privateKeyService.
-   * @param {Object} privateKeyValidator          The privateKeyValidator.
-   * @throws {TypeError}                          If some required property is missing.
+   * @param {Object} logger                   The logger helper.
+   * @param {Object} tradingWalletService     The tradingWallet service.
+   * @param {Object} withdrawCommandValidator The WithdrawCommand validator.
+   * @param {Object} privateKeyService        The privateKeyService.
+   * @param {Object} privateKeyValidator      The privateKeyValidator.
+   * @throws {TypeError}                      If some required property is missing.
    */
-  constructor(logger, tradingWalletService, createWalletCommandValidator,
+  constructor(logger, tradingWalletService, withdrawCommandValidator,
     privateKeyService, privateKeyValidator) {
     super(logger, privateKeyService, privateKeyValidator)
 
@@ -23,11 +24,11 @@ class CreateWalletCommand extends ABaseCommand {
     }
     this.tradingWalletService = tradingWalletService
 
-    if (!createWalletCommandValidator) {
-      const errorMessage = `Invalid "CreateWalletCommandValidator" value: ${createWalletCommandValidator}`
+    if (!withdrawCommandValidator) {
+      const errorMessage = `Invalid "withdrawCommandValidator" value: ${withdrawCommandValidator}`
       throw new TypeError(errorMessage)
     }
-    this.createWalletCommandValidator = createWalletCommandValidator
+    this.withdrawCommandValidator = withdrawCommandValidator
 
     this.builderArgs = this.constructor.setBuilderArgs()
 
@@ -82,7 +83,7 @@ class CreateWalletCommand extends ABaseCommand {
    * @param {String} params.rawTwx                The raw tx flag. If set to true it shows the signed transaction data.
    */
   async doValidateAsync({ personalWalletAddress, privateKeyPath, draft, rawTx }) {
-    const params = this.createWalletCommandValidator
+    const params = this.WithdrawCommandValidator
       .createWallet({ personalWalletAddress, privateKeyPath, draft, rawTx })
     return params
   }
@@ -120,4 +121,4 @@ class CreateWalletCommand extends ABaseCommand {
   }
 }
 
-module.exports = CreateWalletCommand
+module.exports = WithdrawCommand

@@ -21,7 +21,7 @@ class BaseTransactionBuilder {
 
     if (!web3) {
       const errorMessage = `Invalid "web3" value: ${web3}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
 
     this.web3 = web3

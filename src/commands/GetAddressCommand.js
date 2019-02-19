@@ -19,13 +19,13 @@ class GetAddressCommand extends ABaseCommand {
 
     if (!tradingWalletService) {
       const errorMessage = `Invalid "tradingWalletService" value: ${tradingWalletService}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.tradingWalletService = tradingWalletService
 
     if (!getAddressCommandValidator) {
       const errorMessage = `Invalid "getAddressCommandValidator" value: ${getAddressCommandValidator}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.getAddressCommandValidator = getAddressCommandValidator
 

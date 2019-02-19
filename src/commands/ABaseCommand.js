@@ -19,13 +19,13 @@ class ABaseCommand {
 
     if (!privateKeyService) {
       const errorMessage = `Invalid "privateKeyService" value: ${privateKeyService}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.privateKeyService = privateKeyService
 
     if (!privateKeyValidator) {
       const errorMessage = `Invalid "privateKeyValidator" value: ${privateKeyValidator}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.privateKeyValidator = privateKeyValidator
   }
@@ -109,17 +109,6 @@ class ABaseCommand {
       throw new InvalidPrivateKeyError(`The private key does not match the personal wallet address given in input:${personalWalletAddress}`)
     }
     return personalWalletAddressFromPrivateKey
-  }
-
-  /**
-   * Throw an error, logging the message.
-   * @param  {String} errorMessage        The error message.
-   * @param  {Class}  ErrorType=TypeError The error class.
-   * @throws {Class}                      The error.
-   */
-  throwError(errorMessage, ErrorType = TypeError) {
-    this.log.error({ error: errorMessage })
-    throw new ErrorType(errorMessage)
   }
 }
 
