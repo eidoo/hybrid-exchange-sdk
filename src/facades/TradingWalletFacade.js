@@ -1,5 +1,5 @@
 const log = require('../logger')
-const { QuantityNotAllowedError, TransactionNotMinedError } = require('../utils').errors
+const { QuantityNotEnoughError } = require('../utils').errors
 const { TransactionLibBuilder } = require('../factories')
 
 /**
@@ -33,40 +33,67 @@ class TradingWalletFacade {
   }
 
   async depositTokenAsync(personalWalletAddress, tradingWalletAddress, quantity, tokenAddress, privateKey) {
-    const approveTransactionHash = await this.erc20TokenService.approveTrasferAsync(
-      personalWalletAddress,
-      tradingWalletAddress,
-      quantity,
-      privateKey,
-    )
-    const isApproveMined = await this.transactionLib.isTransactionMined(approveTransactionHash, tradingWalletAddress)
+    let approveToZeroTransactionHash = null
+    let approveTransactionHash = null
 
-    if (!isApproveMined) {
-      const errMsg = 'Approve transaction not mined.'
-      this.log.error({
-        fn: 'depositTokenAsync',
-        isApproveMined,
-        personalWalletAddress,
-        tradingWalletAddress,
-        quantity,
-      }, errMsg)
-      throw new TransactionNotMinedError(errMsg)
-    }
+    const assetBalance = this.erc20TokenService.getBalanceOfAsync(personalWalletAddress)
 
-    const allowedQuantity = await this.erc20TokenService.getAllowanceAsync(personalWalletAddress, tradingWalletAddress)
-
-    if (quantity <= allowedQuantity) {
-      const errorMessage = 'The quantity to deposit is not allowed!'
-      this.log.error({
+    if (assetBalance < quantity) {
+      const errorMessage = 'The asset balance is < than the quantity to depoist!'
+      this.log.info({
         personalWalletAddress,
         tradingWalletAddress,
         quantity,
         tokenAddress,
-        allowedQuantity,
+        assetBalance,
+        fn: 'depositTokenAsync',
       },
       errorMessage)
-      throw new QuantityNotAllowedError(errorMessage)
+      throw new QuantityNotEnoughError(errorMessage)
     }
+
+    const allowance = await this.erc20TokenService.getAllowanceAsync(personalWalletAddress, tradingWalletAddress)
+
+    if (quantity > allowance && allowance > 0) {
+      this.log.info({
+        personalWalletAddress,
+        tradingWalletAddress,
+        quantity,
+        tokenAddress,
+        allowance,
+        fn: 'depositTokenAsync',
+      },
+      'The quantity to deposit is not completely allowed!')
+
+      const zeroQuantity = 0
+      approveToZeroTransactionHash = await this.erc20TokenService.approveTrasferAsync(
+        personalWalletAddress,
+        tradingWalletAddress,
+        zeroQuantity,
+        privateKey,
+      )
+
+      this.log.info({
+        approveToZeroTransactionHash,
+        fn: 'depositTokenAsync',
+      },
+      'Approve to zero quantity done successfully.')
+    }
+
+    if (allowance === 0 || (quantity > allowance && allowance > 0)) {
+      approveTransactionHash = await this.erc20TokenService.approveTrasferAsync(
+        personalWalletAddress,
+        tradingWalletAddress,
+        quantity,
+        privateKey,
+      )
+      this.log.info({
+        approveTransactionHash,
+        fn: 'depositTokenAsync',
+      },
+      'Approve quantity done successfully.')
+    }
+
     const depositTransactionHash = await this.tradingWalletService.depositTokenAsync(
       personalWalletAddress,
       tradingWalletAddress,
@@ -74,19 +101,6 @@ class TradingWalletFacade {
       tokenAddress,
       privateKey,
     )
-    const isDepositMined = await this.transactionLib.isTransactionMined(depositTransactionHash, tradingWalletAddress)
-
-    if (!isDepositMined) {
-      const errMsg = 'Deposit transaction not mined.'
-      this.log.error({
-        fn: 'depositTokenAsync',
-        isDepositMined,
-        personalWalletAddress,
-        tradingWalletAddress,
-        quantity,
-      }, errMsg)
-      throw new TransactionNotMinedError(errMsg)
-    }
 
     this.log.info({
       fn: 'depositTokenAsync',
@@ -95,8 +109,15 @@ class TradingWalletFacade {
       quantity,
       tokenAddress,
       privateKey,
+      depositTransactionHash,
     },
     'Deposit token completed successfully.')
+
+    return {
+      approveToZeroTransactionHash,
+      approveTransactionHash,
+      depositTransactionHash,
+    }
   }
 }
 

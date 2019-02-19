@@ -57,9 +57,9 @@ class TransactionCallError extends BaseError {}
 class TradingWalletNotFoundError extends BaseError {}
 
 /**
- * This error will be raised if the transaction is not mined.
+ * This error will be raised if the asset balance is less then the quantity to deposit.
  */
-class TransactionNotMinedError extends BaseError {}
+class QuantityNotEnoughError extends BaseError {}
 
 /**
  * This error will be raised if the allowed quantity  is lower than approved quantity
@@ -89,5 +89,5 @@ module.exports = {
   TradingWalletNotFoundError,
   TransactionCallError,
   TransactionExecutionError,
-  TransactionNotMinedError,
+  QuantityNotEnoughError,
 }

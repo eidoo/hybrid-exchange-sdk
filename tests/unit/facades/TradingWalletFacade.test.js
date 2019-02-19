@@ -1,7 +1,7 @@
 /* global describe, expect, test */
 const sandbox = require('sinon').createSandbox()
 
-const { QuantityNotAllowedError, TransactionNotMinedError } = require('../../../index').utils.errors
+const { QuantityNotEnoughError } = require('../../../index').utils.errors
 
 const { Erc20TokenServiceBuilder, TradingWalletServiceBuilder } = require('../../../index').factories
 const { TradingWalletFacade } = require('../../../index').facades
@@ -23,9 +23,9 @@ afterEach(() => {
 })
 
 describe('DepositTokenAsync', () => {
-  const approvedTxHash = '0xApprovedTxHash'
-  test('should raise TransactionNotMinedError if the approved transaction was not mined.', async () => {
-    sandbox.stub(tradingWalletFacade.erc20TokenService, 'approveTrasferAsync').returns(approvedTxHash)
+  test('should raise QuantityNotEnoughError if the asset balance is not enought.', async () => {
+    const balanceOfQuantity = '10000000000000000'
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getBalanceOfAsync').returns(balanceOfQuantity)
     const isApprovedMinedMock = sandbox.stub(tradingWalletFacade.transactionLib, 'isTransactionMined')
     isApprovedMinedMock.onFirstCall().returns(false)
 
@@ -35,21 +35,84 @@ describe('DepositTokenAsync', () => {
       quantityToDeposit,
       tokenAddress,
       privateKey,
-    )).rejects.toBeInstanceOf(TransactionNotMinedError)
+    )).rejects.toBeInstanceOf(QuantityNotEnoughError)
   })
 
-  test('should raise TransactionNotMinedError if deposit transaction was not mined.', async () => {
-    sandbox.stub(tradingWalletFacade.erc20TokenService, 'approveTrasferAsync').returns(approvedTxHash)
-    const isApprovedMinedMock = sandbox.stub(tradingWalletFacade.transactionLib, 'isTransactionMined')
-    isApprovedMinedMock.onFirstCall().returns(true)
-    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getAllowanceAsync').returns(quantityToDeposit + 10000)
+  test('should call directly depositToken becuase the quantity its already approved', async () => {
+    const balanceOfQuantity = '500000000000000000'
+    const depositTxHash = '0xDepositTxHash'
+    const expecetedResult = {
+      approveToZeroTransactionHash: null,
+      approveTransactionHash: null,
+      depositTransactionHash: depositTxHash,
+    }
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getBalanceOfAsync').returns(balanceOfQuantity)
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getAllowanceAsync').returns(quantityToDeposit)
+    sandbox.stub(tradingWalletFacade.tradingWalletService, 'depositTokenAsync').returns(depositTxHash)
 
-    return expect(tradingWalletFacade.depositTokenAsync(
+    const result = await tradingWalletFacade.depositTokenAsync(
       personalWalletAddress,
       tradingWalletAddress,
       quantityToDeposit,
       tokenAddress,
       privateKey,
-    )).rejects.toBeInstanceOf(QuantityNotAllowedError)
+    )
+
+    expect(result).toMatchObject(expecetedResult)
+  })
+
+  test('should call approve becuase the allowance is zero', async () => {
+    const balanceOfQuantity = '500000000000000000'
+    const allowance = 0
+    const depositTxHash = '0xDepositTxHash'
+    const approveTxHash = '0xApproveTxHash'
+    const expecetedResult = {
+      approveToZeroTransactionHash: null,
+      approveTransactionHash: approveTxHash,
+      depositTransactionHash: depositTxHash,
+    }
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getBalanceOfAsync').returns(balanceOfQuantity)
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getAllowanceAsync').returns(allowance)
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'approveTrasferAsync').returns(approveTxHash)
+    sandbox.stub(tradingWalletFacade.tradingWalletService, 'depositTokenAsync').returns(depositTxHash)
+
+    const result = await tradingWalletFacade.depositTokenAsync(
+      personalWalletAddress,
+      tradingWalletAddress,
+      quantityToDeposit,
+      tokenAddress,
+      privateKey,
+    )
+
+    expect(result).toMatchObject(expecetedResult)
+  })
+
+  test('should call directly approve ', async () => {
+    const balanceOfQuantity = '500000000000000000'
+    const allowance = balanceOfQuantity - 1000
+    const depositTxHash = '0xDepositTxHash'
+    const approveZeroTxHash = '0xApproveZeroTxHash'
+    const approveTxHash = '0xApproveTxHash'
+    const expecetedResult = {
+      approveToZeroTransactionHash: approveZeroTxHash,
+      approveTransactionHash: approveTxHash,
+      depositTransactionHash: depositTxHash,
+    }
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getBalanceOfAsync').returns(balanceOfQuantity)
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'getAllowanceAsync').returns(allowance)
+    const approveTrasferMock = sandbox.stub(tradingWalletFacade.erc20TokenService, 'approveTrasferAsync')
+    approveTrasferMock.onFirstCall().returns(approveZeroTxHash)
+    approveTrasferMock.onSecondCall().returns(approveTxHash)
+    sandbox.stub(tradingWalletFacade.tradingWalletService, 'depositTokenAsync').returns(depositTxHash)
+
+    const result = await tradingWalletFacade.depositTokenAsync(
+      personalWalletAddress,
+      tradingWalletAddress,
+      quantityToDeposit,
+      tokenAddress,
+      privateKey,
+    )
+
+    expect(result).toMatchObject(expecetedResult)
   })
 })
