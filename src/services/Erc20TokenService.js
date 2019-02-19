@@ -43,6 +43,22 @@ class Erc20TokenService extends BaseTransactionService {
 
     return this.web3.toBigNumber(allowance).toString(10)
   }
+
+  /**
+   * It gets balance of an erc20 token.
+   *
+   * @param {String} personalWalletAddress The personal wallet address, owner of the  (EOA).
+   * @throws {InvalidEthereumAddress}      If personalWalletAddress or the tokenAddress is not a valid ethereum address.
+   */
+  async getBalanceOfAsync(personalWalletAddress) {
+    this.checkEtherumAddress(personalWalletAddress)
+
+    const transactionObjectDraft = this.transactionBuilder.buildGetBalanceOfTransactionDraft(
+      personalWalletAddress,
+    )
+    const assetBalance = await this.transactionLib.call(transactionObjectDraft)
+    return this.web3.toBigNumber(assetBalance).toString(10)
+  }
 }
 
 module.exports = Erc20TokenService
