@@ -186,7 +186,7 @@ class TradingWalletTransactionBuilder extends BaseTransactionBuilder {
     const transactionDraft = this.transactionLib.buildDraft(this.exchangeSmartContractInstance,
       transactionParams, smartContractMethodName, smartContractParams)
     this.log.debug({ transactionDraft, fn: 'buildTradingWalletAddressTransactionDraft' },
-      'Created wallet transaction draft successfully.')
+      'Get trading wallet address Transaction draft created successfully.')
     return transactionDraft
   }
 

@@ -8,7 +8,7 @@ const privateKeySchema = customJoiValidator.object().keys({
 })
 
 const privateKeyFilePathSchema = customJoiValidator.object().keys({
-  privateKeyPath: customJoiValidator.path()
+  privateKeyFilePath: customJoiValidator.path()
     .existFile().required(),
 })
 
