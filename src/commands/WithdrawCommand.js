@@ -36,11 +36,11 @@ class WithdrawCommand extends ABaseCommand {
   }
 
   static get description() {
-    return 'It creates a trading wallet given the personal wallet address and private key.'
+    return 'It withdraws token quantity.'
   }
 
   setSynopsis() {
-    let synopsis = 'create-trading-wallet '
+    let synopsis = 'withdraw '
     this.builderArgs.forEach((item) => {
       synopsis += item.getReprForSynopsys()
     })
@@ -51,15 +51,21 @@ class WithdrawCommand extends ABaseCommand {
    * It set the builder args necessary to set args cli command.
    */
   static setBuilderArgs() {
-    const personalWalletAddressArg = new CommandArg('personal-wallet-address',
-      'string', 'eoa', 'The personal wallet address (EOA).', 1, true)
-    const privateKeyPathArg = new CommandArg('private-key-path',
+    const fromArg = new CommandArg('from',
+      'string', 'f', 'The from address.', 1, true)
+    const toArg = new CommandArg('to',
+      'string', 't', 'The to address.', 1, true)
+    const quantityArg = new CommandArg('quantity',
+      'string', 'q', 'The quantity to withdraw.', 1, true)
+    const tokenArg = new CommandArg('token',
+      'string', 'tk', 'The token address.', 1, true)
+    const privateKeyFilePathArg = new CommandArg('private-key-path',
       'string', 'prv', 'The private key file path.', 1, false)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
     const rawTxArg = new CommandArg('raw-tx',
       'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
-    return [personalWalletAddressArg, privateKeyPathArg, draftArg, rawTxArg]
+    return [fromArg, toArg, quantityArg, tokenArg, privateKeyFilePathArg, draftArg, rawTxArg]
   }
 
   /**
@@ -77,14 +83,17 @@ class WithdrawCommand extends ABaseCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.personalWalletAddress The personal wallet address (EOA).
-   * @param {String} params.privateKeyPath        The private key file path.
-   * @param {String} params.draft                 The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx                The raw tx flag. If set to true it shows the signed transaction data.
+   * @param {String} params.from           The personal wallet address (EOA).
+   * @param {String} params.to             The trading wallet address.
+   * @param {String} params.quantity       The personal wallet address (EOA).
+   * @param {String} params.token          The token address.
+   * @param {String} params.privateKeyPath The private key file path.
+   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doValidateAsync({ personalWalletAddress, privateKeyPath, draft, rawTx }) {
-    const params = this.WithdrawCommandValidator
-      .createWallet({ personalWalletAddress, privateKeyPath, draft, rawTx })
+  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+    const params = this.withdrawCommandValidator
+      .withdraw({ from, to, quantity, token, privateKeyFilePath, draft, rawTx })
     return params
   }
 
@@ -92,17 +101,19 @@ class WithdrawCommand extends ABaseCommand {
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.personalWalletAddress The personal wallet address (EOA).
-   * @param {String} params.privateKeyPath        The private key file path.
-   * @param {String} params.draft                 The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx                The raw tx flag. If set to true it shows the signed transaction data.
+   * @param {String} params.from           The personal wallet address (EOA).
+   * @param {String} params.to             The trading wallet address.
+   * @param {String} params.quantity       The personal wallet address (EOA).
+   * @param {String} params.token          The token address.
+   * @param {String} params.privateKeyPath The private key file path.
+   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doExecuteAsync({ personalWalletAddress, privateKeyPath, draft, rawTx }) {
-    let personalWalletAddressRetrived = personalWalletAddress
-    const privateKey = await this.extractPrivateKey(privateKeyPath)
-    personalWalletAddressRetrived = this.getAddressFromPrivateKey(personalWalletAddress, privateKey)
+  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+    const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+    const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
     const transactionObjectDraft = this.tradingWalletService.transactionBuilder
-      .buildCreateWalletTransactionDraft(personalWalletAddressRetrived, privateKey)
+      .buildWithdrawTransactionDraft(from, to, quantity, token)
 
     if (draft) {
       return transactionObjectDraft
@@ -115,8 +126,13 @@ class WithdrawCommand extends ABaseCommand {
       )
       return signedTransactionData
     }
-
-    const result = await this.tradingWalletService.createWalletAsync(personalWalletAddressRetrived, privateKey)
+    const result = await this.tradingWalletService.withdrawAsync(
+      personalWalletAddressRetrived,
+      to,
+      quantity,
+      token,
+      privateKey,
+    )
     return result
   }
 }

@@ -79,16 +79,16 @@ class ABaseCommand {
   }
 
   /**
-   * It extract private key from file specified in privateKeyPath.
+   * It extract private key from file specified in privateKeyFilePath.
    *
-   * @param {String} privateKeyPath  The path of private key file.
+   * @param {String} privateKeyFilePath  The path of private key file.
    *
    * @throws {InvalidPrivateKeyFile} If does not exist the file.
    *
    */
-  async extractPrivateKey (privateKeyPath) {
-    this.privateKeyValidator.validateFilePath({ privateKeyPath })
-    const privateKey = await this.privateKeyService.getPrivateKeyAsync(privateKeyPath)
+  async extractPrivateKey (privateKeyFilePath) {
+    this.privateKeyValidator.validateFilePath({ privateKeyFilePath })
+    const privateKey = await this.privateKeyService.getPrivateKeyAsync(privateKeyFilePath)
     this.privateKeyValidator.validatePrivateKey({ privateKey })
     return privateKey
   }
