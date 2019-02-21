@@ -144,6 +144,7 @@ describe('tws create-trading-wallet', () => {
 
       expect(result).toMatchObject(expectedResult)
     })
+
     test('should raise ValidationError if the private key is not a valid ethereum private key', async() => {
       const personalWalletAddress = '0x966b39c20dbd2d502f7a2aa8f47f38c01eac8c77'
       const InvalidPrivateKeyPath = 'tests/fixtures/privateKeys/invalidPrivateKey.key'
@@ -164,8 +165,8 @@ describe('tws create-trading-wallet', () => {
       const privateKeyPath = undefined
       const expectedResult = [{
         code: 'ValidationError',
-        field: 'privateKeyPath',
-        message: 'privateKeyPath is required',
+        field: 'privateKeyFilePath',
+        message: 'privateKeyFilePath is required',
       }]
 
       const result = await createWalletCommand.executeAsync({ privateKeyPath, personalWalletAddress })

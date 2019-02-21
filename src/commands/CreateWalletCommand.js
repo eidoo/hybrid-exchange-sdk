@@ -19,13 +19,13 @@ class CreateWalletCommand extends ABaseCommand {
 
     if (!tradingWalletService) {
       const errorMessage = `Invalid "tradingWalletService" value: ${tradingWalletService}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.tradingWalletService = tradingWalletService
 
     if (!createWalletCommandValidator) {
       const errorMessage = `Invalid "CreateWalletCommandValidator" value: ${createWalletCommandValidator}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.createWalletCommandValidator = createWalletCommandValidator
 

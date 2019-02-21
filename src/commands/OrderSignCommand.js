@@ -22,13 +22,13 @@ class OrderSignCommand extends ABaseCommand {
 
     if (!orderSignerHelper) {
       const errorMessage = `Invalid "orderSignerHelper" value: ${orderSignerHelper}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.orderSignerHelper = orderSignerHelper
 
     if (!orderSignCommandValidator) {
       const errorMessage = `Invalid "orderSignCommandValidator" value: ${orderSignCommandValidator}`
-      this.throwError(errorMessage)
+      throw new TypeError(errorMessage)
     }
     this.orderSignCommandValidator = orderSignCommandValidator
 
