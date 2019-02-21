@@ -12,6 +12,10 @@ const TradingWalletServiceBuilder = require('../factories/TradingWalletServiceBu
 const WithdrawCommand = require('../commands/WithdrawCommand')
 const WithdrawCommandValidator = require('../validators/WithdrawCommandValidator')
 
+const ApproveCommand = require('../commands/ApproveCommand')
+const ApproveCommandValidator = require('../validators/ApproveCommandValidator')
+
+const approveCommandValidator = new ApproveCommandValidator(logger)
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
@@ -35,7 +39,11 @@ const signCommand = new OrderSignCommand(logger, ordersignerHelper, orderSignCom
 const withdrawCommand = new WithdrawCommand(logger, tradingWalletService, withdrawCommandValidator,
   privateKeyService, privateKeyValidator)
 
+const approveCommand = new ApproveCommand(logger, approveCommandValidator,
+  privateKeyService, privateKeyValidator)
+
 module.exports = {
+  approveCommand,
   createWalletCommand,
   getAddressCommand,
   signCommand,
