@@ -1,5 +1,4 @@
-# Eidoo Hybrid Exchange SDK
-
+# <img src="logo.svg" alt="OpenZeppelin" width="400px">
 
 The official **EIDOO HYBRID EXCHANGE SDK** for Node.js.<br>
 Learn more about [Eidoo](https://eidoo.io/hybrid-crypto-exchange/) and the [Eidoo Hybrid Exchange APIs](https://docs.api.eidoo.io/).
