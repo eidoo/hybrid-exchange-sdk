@@ -7,7 +7,11 @@ const Erc20TokenServiceBuilder = require('../factories/Erc20TokenServiceBuilder'
 */
 class ApproveCommand extends ABaseCommand {
   /**
+<<<<<<< HEAD
    * Create an ApproveCommand controller.
+=======
+   * Create a signer controller.
+>>>>>>> efe2de5... #18 Add ApproveCommand
    * @param {Object} logger                       The logger helper.
    * @param {Object} approveCommandValidator      The ApproveToken validator.
    * @param {Object} privateKeyService            The privateKeyService.
@@ -82,19 +86,33 @@ class ApproveCommand extends ABaseCommand {
    *
    * @param {Object} params
    * @param {String} params.from           The personal wallet address (EOA).
+<<<<<<< HEAD
    * @param {String} params.to             The token address.
    * @param {String} params.quantity       The quantity to approve.
    * @param {String} params.spender        The spender address (i.e. trading wallet address)
+=======
+   * @param {String} params.to             The trading wallet address.
+   * @param {String} params.quantity       The personal wallet address (EOA).
+   * @param {String} params.token          The token address.
+>>>>>>> efe2de5... #18 Add ApproveCommand
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
+<<<<<<< HEAD
   async doValidateAsync({ from, to, quantity, spender, privateKeyFilePath, draft, rawTx }) {
+=======
+  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+>>>>>>> efe2de5... #18 Add ApproveCommand
     const params = this.approveCommandValidator.approve({
       from,
       to,
       quantity,
+<<<<<<< HEAD
       spender,
+=======
+      token,
+>>>>>>> efe2de5... #18 Add ApproveCommand
       privateKeyFilePath,
       draft,
       rawTx,
@@ -107,13 +125,20 @@ class ApproveCommand extends ABaseCommand {
    *
    * @param {Object} params
    * @param {String} params.from           The personal wallet address (EOA).
+<<<<<<< HEAD
    * @param {String} params.to             The token address.
    * @param {String} params.quantity       The quantity to approve.
    * @param {String} params.spender        The spender address (i.e. trading wallet address)
+=======
+   * @param {String} params.to             The trading wallet address.
+   * @param {String} params.quantity       The personal wallet address (EOA).
+   * @param {String} params.token          The token address.
+>>>>>>> efe2de5... #18 Add ApproveCommand
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
+<<<<<<< HEAD
   async doExecuteAsync({ from, to, quantity, spender, privateKeyFilePath, draft, rawTx }) {
     const privateKey = await this.extractPrivateKey(privateKeyFilePath)
     const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
@@ -121,6 +146,15 @@ class ApproveCommand extends ABaseCommand {
 
     const transactionObjectDraft = this.erc20TokenService.transactionBuilder
       .buildApproveTrasferTransactionDraft(from, spender, quantity)
+=======
+  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+    const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+    const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
+    this.setErc20Tokenservice(token)
+
+    const transactionObjectDraft = this.erc20TokenService.transactionBuilder
+      .buildApproveTrasferTransactionDraft(from, to, quantity, token)
+>>>>>>> efe2de5... #18 Add ApproveCommand
 
     if (draft) {
       return transactionObjectDraft
@@ -136,7 +170,11 @@ class ApproveCommand extends ABaseCommand {
 
     const result = await this.erc20TokenService.approveTrasferAsync(
       personalWalletAddressRetrived,
+<<<<<<< HEAD
       spender,
+=======
+      to,
+>>>>>>> efe2de5... #18 Add ApproveCommand
       quantity,
       privateKey,
     )
