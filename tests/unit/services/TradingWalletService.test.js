@@ -186,7 +186,7 @@ describe('getAssetBalanceAsync', () => {
     expect(tradingWalletService.getAssetBalanceAsync(personalWalletAddress, tokenAddress))
       .rejects.toBeInstanceOf(TradingWalletNotFoundError)
   })
-  test('calls correctly ethapi transactionCallAsync correctly', async() => {
+  test('calls correctly ethapi transactionCallAsync correctly without specifying a trading wallet address', async() => {
     const expectedAssetBalance = web3.toBigNumber(web3.toWei(5)).toString(10)
 
     sandbox.stub(tradingWalletService, 'getTradingWalletAddressAsync').returns(tradingWalletOfThePersonalWallet)
@@ -195,6 +195,18 @@ describe('getAssetBalanceAsync', () => {
     const tradingWalletAssetBalanceResult = await tradingWalletService.getAssetBalanceAsync(
       personalWalletAddress,
       tokenAddress,
+    )
+
+    expect(tradingWalletAssetBalanceResult).toEqual(expectedAssetBalance)
+  })
+  test('calls correctly ethapi transactionCallAsync correctly specifying a trading wallet address', async() => {
+    const expectedAssetBalance = web3.toBigNumber(web3.toWei(5)).toString(10)
+    sandbox.stub(ethApiLib, 'transactionCallAsync').returns(expectedAssetBalance)
+
+    const tradingWalletAssetBalanceResult = await tradingWalletService.getAssetBalanceAsync(
+      personalWalletAddress,
+      tokenAddress,
+      tradingWalletOfThePersonalWallet,
     )
 
     expect(tradingWalletAssetBalanceResult).toEqual(expectedAssetBalance)
