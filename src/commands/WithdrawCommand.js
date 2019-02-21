@@ -40,7 +40,7 @@ class WithdrawCommand extends ABaseCommand {
   }
 
   setSynopsis() {
-    let synopsis = 'withdraw'
+    let synopsis = 'withdraw '
     this.builderArgs.forEach((item) => {
       synopsis += item.getReprForSynopsys()
     })
