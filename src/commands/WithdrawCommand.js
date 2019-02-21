@@ -36,11 +36,11 @@ class WithdrawCommand extends ABaseCommand {
   }
 
   static get description() {
-    return 'It withdraws token quantity.'
+    return 'It withdraws an asset amount from a trading wallet to its owner.'
   }
 
   setSynopsis() {
-    let synopsis = 'withdraw '
+    let synopsis = 'withdraw'
     this.builderArgs.forEach((item) => {
       synopsis += item.getReprForSynopsys()
     })
