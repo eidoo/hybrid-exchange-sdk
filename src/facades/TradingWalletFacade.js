@@ -42,7 +42,9 @@ class TradingWalletFacade {
   async throwIfTokenWalletEnought(personalWalletAddress, quantity) {
     const assetBalance = await this.erc20TokenService.getBalanceOfAsync(personalWalletAddress)
 
-    if (assetBalance < quantity) {
+    const assetBalanceToBigNumber = this.transactionLib.web3.toBigNumber(assetBalance)
+    const quantityToBigNumber = this.transactionLib.web3.toBigNumber(quantity)
+    if (assetBalanceToBigNumber.lt(quantityToBigNumber)) {
       const errorMessage = 'The asset balance is < than the quantity to depoist!'
       this.log.info({
         personalWalletAddress,
@@ -98,12 +100,13 @@ class TradingWalletFacade {
       quantity,
     )
     const gasEstimationForApprove = await this.transactionLib.getGasEstimation(approveTransactionDraftObject)
+    const nonceForApprove = await this.transactionLib.getNonce(personalWalletAddress)
 
     if (allowanceToInt === 0 || (quantity > allowanceToInt && allowanceToInt > 0)) {
       const signedApproveData = await this.transactionLib.sign(
         approveTransactionDraftObject,
         privateKey,
-        null,
+        nonceForApprove,
         gasEstimationForApprove.gas,
         gasEstimationForApprove.gasPrice,
       )
@@ -117,6 +120,7 @@ class TradingWalletFacade {
     const signedTransactionDataForDeposit = await this.transactionLib.sign(
       depositTokenTransactionDraft,
       privateKey,
+      nonceForApprove + 1,
       depositTokenFixedGasEstimation,
       gasEstimationForApprove.gasPrice,
     )
