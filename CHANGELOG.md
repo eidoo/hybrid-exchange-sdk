@@ -11,6 +11,7 @@ Release date: 2019-02-REPLEACE_ME.
 ### Added
 
 - [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/24)
+- [CLI get trading wallet asset balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/20)
 - [CLI deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/15)
 - [CLI approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/18)
 - [CLI withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/13)
