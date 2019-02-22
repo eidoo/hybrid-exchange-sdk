@@ -19,11 +19,6 @@ const providerUrl = 'urlToProvider'
 const web3Instance = new Web3(new Web3.providers.HttpProvider(providerUrl))
 const ethApiLibClient = new EidooEthApiLib(ethApi)
 
-
-function waitForMsAsync (time) {
-  return new Promise(resolve => setTimeout(resolve, time))
-}
-
 /**
  * It gets nonce from input address.
  *
@@ -37,31 +32,6 @@ async function getNonce(transactionLibInstance, address) {
   } catch (err) {
     transactionLibInstance.log.error({ err, fn: 'getNonce' }, `Error getting nonce for ${address}`)
     throw new NonceError(err)
-  }
-}
-
-/**
- * It get the gas estimation of doing the trnansaction
- *
- * @param {Object} transactionObject       The transaction object.
- * @param {Object} transactionObject.data  The transaction object.
- * @param {Object} transactionObject.from  The transaction object.
- * @param {Object} transactionObject.nonce The transaction object.
- * @param {Object} transactionObject.to    The transaction object.
- * @param {Object} transactionObject.value The transaction object.
- *
- */
-async function getGasEstimation(TransactionLibInstance, transactionObject) {
-  try {
-    const { gas, gasPrices } = await TransactionLibInstance.ethApiClient
-      .getEstimateGasAsync({ transactionObject })
-
-    const { medium: gasPrice } = gasPrices
-
-    return { gas, gasPrice }
-  } catch (err) {
-    TransactionLibInstance.log.error({ err, transactionObject, fn: 'getGasEstimation' }, 'Error getting gas.')
-    throw new GasEstimationError(err)
   }
 }
 
@@ -93,7 +63,7 @@ async function getTransactionObject(transactionLibInstance, transactionDraftObje
   )
 
   if (!gas || !gasPrice) {
-    const gasEstimation = await getGasEstimation(transactionLibInstance, transactionDraftObject)
+    const gasEstimation = await transactionLibInstance.getGasEstimation(transactionDraftObject)
     estimatedGas = gasEstimation.gas
     estimatedGasPrice = gasEstimation.gasPrice
   }
@@ -185,6 +155,31 @@ class TransactionLib extends ITransactionLib {
   }
 
   /**
+ * It get the gas estimation of doing the trnansaction
+ *
+ * @param {Object} transactionObject       The transaction object.
+ * @param {Object} transactionObject.data  The transaction object.
+ * @param {Object} transactionObject.from  The transaction object.
+ * @param {Object} transactionObject.nonce The transaction object.
+ * @param {Object} transactionObject.to    The transaction object.
+ * @param {Object} transactionObject.value The transaction object.
+ *
+ */
+  async getGasEstimation(transactionObject) {
+    try {
+      const { gas, gasPrices } = await this.ethApiClient
+        .getEstimateGasAsync({ transactionObject })
+
+      const { medium: gasPrice } = gasPrices
+
+      return { gas, gasPrice }
+    } catch (err) {
+      this.log.error({ err, transactionObject, fn: 'getGasEstimation' }, 'Error getting gas.')
+      throw new GasEstimationError(err)
+    }
+  }
+
+  /**
    * It signs the transaction object in order to be executed.
    *
    * @param {Object} transactionDraftObject The transactionDraftObject.
@@ -272,33 +267,6 @@ class TransactionLib extends ITransactionLib {
     } catch (err) {
       throw new Error(`Error retriving transaction Receipt: ${hash}`)
     }
-  }
-
-  /**
-   * It checks if the transaction is mined.
-   *
-   * @param {String} hash The transaction hash
-   */
-  async isTransactionMined (hash, fromAddress) {
-    const maxWaitAllowedInMs = 5 * 1000
-    const startedAt = new Date()
-    let transactionReceipit = this.getTransactionReceipt(hash, fromAddress)
-    let isEnd = false
-    while (transactionReceipit !== null && !isEnd) {
-      const now = new Date()
-      isEnd = (+now - +startedAt) > maxWaitAllowedInMs
-      transactionReceipit = this.getTransactionReceipt(hash, fromAddress)
-      this.log.info({
-        fn: 'isTransactionMined',
-        hash,
-        transactionReceipit,
-      },
-      'Checking transaction...')
-      await waitForMsAsync(1000)
-    }
-
-    const isMined = !!transactionReceipit
-    return isMined
   }
 }
 
