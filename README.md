@@ -1,4 +1,5 @@
 # <img src="logo.svg" alt="OpenZeppelin" width="400px">
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/eidoo/hybrid-exchange-sdk/issues)
 
 The official **EIDOO HYBRID EXCHANGE SDK** for Node.js.<br>
 Learn more about [Eidoo](https://eidoo.io/hybrid-crypto-exchange/) and the [Eidoo Hybrid Exchange APIs](https://docs.api.eidoo.io/).
