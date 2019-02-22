@@ -14,11 +14,7 @@ const gasEstimationResponse = {
     low: '0',
   },
 }
-const token = '0xf6d686e52ffc5b9d224a9eb60b8e9c57978d5189'
-
-// beforeEach(() => {
-//   approveCommand.setErc20Tokenservice(token)
-// })
+const to = '0xf6d686e52ffc5b9d224a9eb60b8e9c57978d5189'
 
 afterEach(() => {
   sandbox.restore()
@@ -26,13 +22,13 @@ afterEach(() => {
 
 describe('tws approve', () => {
   const from = '0x9c858489661158d1721a66319f8683925d5a8b70'
-  const to = '0x230cd1dc412c44bb95aa39018e2a2aed28ebadfc'
+  const spender = '0x230cd1dc412c44bb95aa39018e2a2aed28ebadfc'
   const quantity = '500000000000000000'
   const validPrivateKeyFilePath = 'tests/fixtures/privateKeys/privateKey.key'
   describe('execute  approve command ', () => {
     test('should return the expected transaction hash', async () => {
       const expectedTransactionHash = '0xTransactionHash'
-      approveCommand.setErc20Tokenservice(token)
+      approveCommand.setErc20Tokenservice(to)
       sandbox.stub(approveCommand.erc20TokenService.transactionLib.ethApiClient, 'getAddressNonceAsync')
         .returns(nonceResponse)
       sandbox.stub(approveCommand.erc20TokenService.transactionLib.ethApiClient, 'getEstimateGasAsync')
@@ -41,7 +37,7 @@ describe('tws approve', () => {
         .returns({ hash: expectedTransactionHash })
 
       const result = await approveCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false })
+        .executeAsync({ from, to, quantity, spender, privateKeyFilePath: validPrivateKeyFilePath, draft: false })
 
       expect(result).toBe(expectedTransactionHash)
     })
@@ -50,11 +46,11 @@ describe('tws approve', () => {
       const expectedTransactionObjectDraft = { data:
      '0x095ea7b3000000000000000000000000230cd1dc412c44bb95aa39018e2a2aed28ebadfc00000000000000000000000000000000000000000000000006f05b59d3b20000',
       from,
-      to: token,
+      to,
       value: '0x0' }
 
       const result = await approveCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: true })
+        .executeAsync({ from, to, quantity, spender, privateKeyFilePath: validPrivateKeyFilePath, draft: true })
 
       expect(result).toMatchObject(expectedTransactionObjectDraft)
     })
@@ -67,7 +63,7 @@ describe('tws approve', () => {
         .returns({ hash: expectedTransactionHash })
 
       const result = await approveCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx })
+        .executeAsync({ from, to, quantity, spender, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx })
       expect(result).toBe(expectedTransactionHash)
     })
 
@@ -77,7 +73,7 @@ describe('tws approve', () => {
       sandbox.stub(approveCommand.erc20TokenService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
       const result = await approveCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx: true })
+        .executeAsync({ from, to, quantity, spender, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx: true })
       expect(result).toEqual(expectedTransactionSignedData)
     })
   })

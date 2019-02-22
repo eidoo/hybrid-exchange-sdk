@@ -82,19 +82,19 @@ class ApproveCommand extends ABaseCommand {
    *
    * @param {Object} params
    * @param {String} params.from           The personal wallet address (EOA).
-   * @param {String} params.to             The trading wallet address.
-   * @param {String} params.quantity       The personal wallet address (EOA).
-   * @param {String} params.token          The token address.
+   * @param {String} params.to             The token address.
+   * @param {String} params.quantity       The quantity to approve.
+   * @param {String} params.spender        The spender address (i.e. trading wallet address)
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+  async doValidateAsync({ from, to, quantity, spender, privateKeyFilePath, draft, rawTx }) {
     const params = this.approveCommandValidator.approve({
       from,
       to,
       quantity,
-      token,
+      spender,
       privateKeyFilePath,
       draft,
       rawTx,
@@ -107,20 +107,20 @@ class ApproveCommand extends ABaseCommand {
    *
    * @param {Object} params
    * @param {String} params.from           The personal wallet address (EOA).
-   * @param {String} params.to             The trading wallet address.
-   * @param {String} params.quantity       The personal wallet address (EOA).
-   * @param {String} params.token          The token address.
+   * @param {String} params.to             The token address.
+   * @param {String} params.quantity       The quantity to approve.
+   * @param {String} params.spender        The spender address (i.e. trading wallet address)
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+  async doExecuteAsync({ from, to, quantity, spender, privateKeyFilePath, draft, rawTx }) {
     const privateKey = await this.extractPrivateKey(privateKeyFilePath)
     const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
-    this.setErc20Tokenservice(token)
+    this.setErc20Tokenservice(to)
 
     const transactionObjectDraft = this.erc20TokenService.transactionBuilder
-      .buildApproveTrasferTransactionDraft(from, to, quantity, token)
+      .buildApproveTrasferTransactionDraft(from, spender, quantity)
 
     if (draft) {
       return transactionObjectDraft
@@ -136,7 +136,7 @@ class ApproveCommand extends ABaseCommand {
 
     const result = await this.erc20TokenService.approveTrasferAsync(
       personalWalletAddressRetrived,
-      to,
+      spender,
       quantity,
       privateKey,
     )
