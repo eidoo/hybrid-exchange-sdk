@@ -7,17 +7,18 @@ const { TransactionLibBuilder } = require('../factories')
  */
 
 class TradingWalletFacade {
-  constructor(tradingWalletService, erc20TokenService, transactionLib = TransactionLibBuilder.build(), logger = log) {
+  constructor(tradingWalletTransactionBuilder, erc20TokenService, erc20TokenTransactionBuilder,
+    transactionLib = TransactionLibBuilder.build(), logger = log) {
     if (!logger) {
       throw new TypeError(`Invalid "logger" value: ${logger}`)
     }
     this.log = logger.child({ module: this.constructor.name })
 
-    if (!tradingWalletService) {
-      const errorMessage = `Invalid "tradingWalletService" value: ${tradingWalletService}`
+    if (!tradingWalletTransactionBuilder) {
+      const errorMessage = `Invalid "tradingWalletTransactionBuilder" value: ${tradingWalletTransactionBuilder}`
       throw new TypeError(errorMessage)
     }
-    this.tradingWalletService = tradingWalletService
+    this.tradingWalletTransactionBuilder = tradingWalletTransactionBuilder
 
     if (!erc20TokenService) {
       const errorMessage = `Invalid "erc20TokenService" value: ${erc20TokenService}`
@@ -25,11 +26,33 @@ class TradingWalletFacade {
     }
     this.erc20TokenService = erc20TokenService
 
+    if (!erc20TokenTransactionBuilder) {
+      const errorMessage = `Invalid "erc20TokenTransactionBuilder" value: ${erc20TokenTransactionBuilder}`
+      throw new TypeError(errorMessage)
+    }
+    this.erc20TokenTransactionBuilder = erc20TokenTransactionBuilder
+
     if (!transactionLib) {
       const errorMessage = `Invalid "transactionLib" value: ${transactionLib}`
       throw new TypeError(errorMessage)
     }
     this.transactionLib = transactionLib
+  }
+
+  async throwIfTokenWalletEnought(personalWalletAddress, quantity) {
+    const assetBalance = await this.erc20TokenService.getBalanceOfAsync(personalWalletAddress)
+
+    if (assetBalance < quantity) {
+      const errorMessage = 'The asset balance is < than the quantity to depoist!'
+      this.log.info({
+        personalWalletAddress,
+        quantity,
+        assetBalance,
+        fn: 'checkIfTokenWalletEnought',
+      },
+      errorMessage)
+      throw new QuantityNotEnoughError(errorMessage)
+    }
   }
 
   async depositTokenAsync(personalWalletAddress, tradingWalletAddress, quantity, tokenAddress, privateKey) {
@@ -44,31 +67,18 @@ class TradingWalletFacade {
     let approveToZeroTransactionHash = null
     let approveTransactionHash = null
 
-    const assetBalance = this.erc20TokenService.getBalanceOfAsync(personalWalletAddress)
-
-    if (assetBalance < quantity) {
-      const errorMessage = 'The asset balance is < than the quantity to depoist!'
-      this.log.info({
-        personalWalletAddress,
-        tradingWalletAddress,
-        quantity,
-        tokenAddress,
-        assetBalance,
-        fn: 'depositTokenAsync',
-      },
-      errorMessage)
-      throw new QuantityNotEnoughError(errorMessage)
-    }
+    await this.throwIfTokenWalletEnought(personalWalletAddress, quantity)
 
     const allowance = await this.erc20TokenService.getAllowanceAsync(personalWalletAddress, tradingWalletAddress)
     const allowanceToInt = +allowance
-    if (quantity > allowanceToInt && allowanceToInt > 0) {
+
+    if (quantity > allowance && allowance > 0) {
       this.log.info({
         personalWalletAddress,
         tradingWalletAddress,
         quantity,
         tokenAddress,
-        allowanceToInt,
+        allowance,
         fn: 'depositTokenAsync',
       },
       'The quantity to deposit is not completely allowed!')
@@ -82,22 +92,37 @@ class TradingWalletFacade {
       )
     }
 
-    if (allowanceToInt === 0 || (quantity > allowanceToInt && allowanceToInt > 0)) {
-      approveTransactionHash = await this.erc20TokenService.approveTrasferAsync(
-        personalWalletAddress,
-        tradingWalletAddress,
-        quantity,
-        privateKey,
-      )
-    }
-
-    const depositTransactionHash = await this.tradingWalletService.depositTokenAsync(
+    const approveTransactionDraftObject = await this.erc20TokenTransactionBuilder.buildApproveTrasferTransactionDraft(
       personalWalletAddress,
       tradingWalletAddress,
       quantity,
-      tokenAddress,
-      privateKey,
     )
+    const gasEstimationForApprove = await this.transactionLib.getGasEstimation(approveTransactionDraftObject)
+
+    if (allowanceToInt === 0 || (quantity > allowanceToInt && allowanceToInt > 0)) {
+      const signedApproveData = await this.transactionLib.sign(
+        approveTransactionDraftObject,
+        privateKey,
+        null,
+        gasEstimationForApprove.gas,
+        gasEstimationForApprove.gasPrice,
+      )
+      approveTransactionHash = await this.transactionLib.execute(signedApproveData)
+    }
+
+    const depositTokenTransactionDraft = await this.tradingWalletTransactionBuilder
+      .buildDepositTokenTransactionDraft(personalWalletAddress, tradingWalletAddress, quantity, tokenAddress)
+    const depositTokenFixedGasEstimation = 100000
+
+    const signedTransactionDataForDeposit = await this.transactionLib.sign(
+      depositTokenTransactionDraft,
+      privateKey,
+      depositTokenFixedGasEstimation,
+      gasEstimationForApprove.gasPrice,
+    )
+
+    const depositTransactionHash = await this.transactionLib
+      .execute(signedTransactionDataForDeposit, privateKey)
 
     this.log.info({
       fn: 'depositTokenAsync',
