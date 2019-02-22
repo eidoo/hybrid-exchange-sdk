@@ -19,21 +19,6 @@ const providerUrl = 'urlToProvider'
 const web3Instance = new Web3(new Web3.providers.HttpProvider(providerUrl))
 const ethApiLibClient = new EidooEthApiLib(ethApi)
 
-/**
- * It gets nonce from input address.
- *
- * @param {Object} transactionLibInstance The transaction lib istance.
- * @param {String} address               The address used to get nonce.
- */
-async function getNonce(transactionLibInstance, address) {
-  try {
-    const { nonce } = await transactionLibInstance.ethApiClient.getAddressNonceAsync(address)
-    return nonce
-  } catch (err) {
-    transactionLibInstance.log.error({ err, fn: 'getNonce' }, `Error getting nonce for ${address}`)
-    throw new NonceError(err)
-  }
-}
 
 /**
  * It gets the transaction Object from the transactionObjectDraft adding nonce and gas.
@@ -55,7 +40,7 @@ async function getTransactionObject(transactionLibInstance, transactionDraftObje
     throw new Error(transactionDraftErrors)
   }
   if (!nonce) {
-    currentNonce = await getNonce(transactionLibInstance, transactionDraftObject.from)
+    currentNonce = await transactionLibInstance.getNonce(transactionDraftObject.from)
   }
 
   transactionLibInstance.log.info(
@@ -80,15 +65,15 @@ async function getTransactionObject(transactionLibInstance, transactionDraftObje
 }
 
 /**
- * Class representing the Transaction library interface.
- */
+   * Class representing the Transaction library interface.
+   */
 class TransactionLib extends ITransactionLib {
   /**
-   * Create an Transaction library instance.
-   * @param  {Object}    logger       The logger instance.
-   * @param  {Object}    ethApiClient The ethApiClient instance.
-   * @throws {TypeError}              If logger objecs is not defined.
-   */
+     * Create an Transaction library instance.
+     * @param  {Object}    logger       The logger instance.
+     * @param  {Object}    ethApiClient The ethApiClient instance.
+     * @throws {TypeError}              If logger objecs is not defined.
+     */
   constructor(web3 = web3Instance, logger = log, ethApiClient = ethApiLibClient) {
     super()
     if (!logger) {
@@ -109,6 +94,21 @@ class TransactionLib extends ITransactionLib {
     this.ethApiClient = ethApiClient
     this.transactionValidator = new TransactionValidator(logger)
     this.transactionObjectDraftFactory = new TransactionObjectDraftFactory(this.transactionValidator)
+  }
+
+  /**
+     * It gets nonce from input address.
+     *
+     * @param {String} address               The address used to get nonce.
+     */
+  async getNonce(address) {
+    try {
+      const { nonce } = await this.ethApiClient.getAddressNonceAsync(address)
+      return nonce
+    } catch (err) {
+      this.log.error({ err, fn: 'getNonce' }, `Error getting nonce for ${address}`)
+      throw new NonceError(err)
+    }
   }
 
   /**
