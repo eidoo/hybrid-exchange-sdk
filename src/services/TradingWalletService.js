@@ -167,16 +167,22 @@ class TradingWalletService extends BaseTransactionService {
    * The `tokenBalances_` method of trading wallet smart contract should be called to
    * retrieve the amount of the owned asset.
    *
-   * @param {String} personalWalletAddress The personal wallet address, owner of the  (EOA).
+   * @param {String} personalWalletAddress The personal wallet address (EOA).
    * @param {String} tokenAddress          The address of the owned asset.
+   * @param {String} tradingWalletAddress  The trading wallet address address.
    * @throws {InvalidEthereumAddress}      If personalWalletAddress or the tokenAddress is not a valid ethereum address.
    */
-  async getAssetBalanceAsync(personalWalletAddress, tokenAddress) {
+  async getAssetBalanceAsync(personalWalletAddress, tokenAddress, tradingWalletAddress = null) {
     this.checkEtherumAddress(personalWalletAddress)
     this.checkEtherumAddress(tokenAddress)
 
-    const tradingWalletAddress = await this.getTradingWalletAddressAsync(personalWalletAddress)
+    let retrievedTradingWalletAddress = tradingWalletAddress
+
     if (!tradingWalletAddress) {
+      retrievedTradingWalletAddress = await this.getTradingWalletAddressAsync(personalWalletAddress)
+    }
+
+    if (retrievedTradingWalletAddress === null) {
       this.log.error(
         { fn: 'getAssetBalanceAsync' },
         `tradingWallet not found for EOA:${personalWalletAddress}`,
@@ -186,7 +192,7 @@ class TradingWalletService extends BaseTransactionService {
 
     const transactionObjectDraft = this.transactionBuilder.buildAssetBalanceTransactionDraft(
       personalWalletAddress,
-      tradingWalletAddress,
+      retrievedTradingWalletAddress,
       tokenAddress,
     )
 
