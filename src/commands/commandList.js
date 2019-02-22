@@ -7,6 +7,10 @@ const GetAddressCommand = require('../commands/GetAddressCommand')
 const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
 const GetAllowanceCommand = require('../commands/GetAllowanceCommand')
 const GetAllowanceCommandValidator = require('../validators/GetAllowanceCommandValidator')
+
+const GetTradingWalletBalanceCommand = require('../commands/GetBalanceCommand')
+const GetTradingWalletBalanceCommandValidator = require('../validators/GetTradingWalletBalanceCommandValidator')
+
 const logger = require('../logger')
 const OrderSignCommand = require('../commands/OrderSignCommand')
 const OrderSignCommandValidator = require('../validators/OrderSignCommandValidator')
@@ -24,6 +28,9 @@ const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const depositEthCommandValidator = new DepositEthCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
+
+const getTradingWalletBalanceCommandValidator = new GetTradingWalletBalanceCommandValidator(logger)
+
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 const withdrawCommandValidator = new WithdrawCommandValidator(logger)
 
@@ -41,6 +48,9 @@ const getAllowanceCommand = new GetAllowanceCommand(logger,
 
 const createWalletCommand = new CreateWalletCommand(logger, getAllowanceCommandValidator,
   createWalletCommandValidator, privateKeyService, privateKeyValidator)
+
+const getTradingWalletBalanceCommand = new GetTradingWalletBalanceCommand(logger, tradingWalletService,
+  getTradingWalletBalanceCommandValidator, privateKeyService, privateKeyValidator)
 
 const depositEthCommand = new DepositEthCommand(logger, tradingWalletService,
   depositEthCommandValidator, privateKeyService, privateKeyValidator)
@@ -60,6 +70,7 @@ module.exports = {
   depositEthCommand,
   getAddressCommand,
   getAllowanceCommand,
+  getTradingWalletBalanceCommand,
   signCommand,
   withdrawCommand,
 }
