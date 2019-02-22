@@ -11,7 +11,7 @@
   const erc20TokenServiceBuilder = new Erc20TokenServiceBuilder(tokenAddress)
   const erc20TokenService = erc20TokenServiceBuilder.build()
 
-  const transactionHash = await erc20TokenService.approveTrasferAsync(
+  const transactionHash = await erc20TokenService.approveTransferAsync(
     personalWalletAddress,
     tradingWalletAddress,
     toDeposit,

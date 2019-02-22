@@ -14,12 +14,12 @@ class Erc20TokenService extends BaseTransactionService {
    * @param {String} tokenAddress          The address of the token asset to withdraw.
    * @param {String} privateKey            The private key.
    */
-  async approveTrasferAsync(personalWalletAddress, tradingWalletAddress, quantity, privateKey) {
+  async approveTransferAsync(personalWalletAddress, tradingWalletAddress, quantity, privateKey) {
     this.checkEtherumAddress(personalWalletAddress)
     this.checkEtherumAddress(tradingWalletAddress)
 
     this.log.info({
-      fn: 'approveTrasferAsync',
+      fn: 'approveTransferAsync',
       tradingWalletAddress,
       quantity,
       personalWalletAddress,

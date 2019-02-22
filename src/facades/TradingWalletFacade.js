@@ -86,7 +86,7 @@ class TradingWalletFacade {
       'The quantity to deposit is not completely allowed!')
 
       const zeroQuantity = 0
-      approveToZeroTransactionHash = await this.erc20TokenService.approveTrasferAsync(
+      approveToZeroTransactionHash = await this.erc20TokenService.approveTransferAsync(
         personalWalletAddress,
         tradingWalletAddress,
         zeroQuantity,

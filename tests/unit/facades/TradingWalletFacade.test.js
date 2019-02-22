@@ -133,7 +133,7 @@ describe('DepositTokenAsync', () => {
 
     sandbox.stub(tradingWalletFacade.erc20TokenService, 'getBalanceOfAsync').returns(balanceOfQuantity)
     sandbox.stub(tradingWalletFacade.erc20TokenService, 'getAllowanceAsync').returns(allowance)
-    sandbox.stub(tradingWalletFacade.erc20TokenService, 'approveTrasferAsync').returns(approveZeroTxHash)
+    sandbox.stub(tradingWalletFacade.erc20TokenService, 'approveTransferAsync').returns(approveZeroTxHash)
     const executeMock = sandbox.stub(tradingWalletFacade.transactionLib, 'execute')
     executeMock.onFirstCall().returns(approveTxHash)
     executeMock.onSecondCall().returns(depositTxHash)

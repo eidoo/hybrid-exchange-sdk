@@ -41,7 +41,7 @@ afterEach(() => {
   sandbox.restore()
 })
 
-describe('approveTrasferAsync', () => {
+describe('approveTransferAsync', () => {
   const privateKey = '0x0e72f985ad5de44fd7ffafe2b689f1030bb82e45537ed3a60aa10f9c49affbc2'
   const personalWalletAddress = '0x52daf0caee4cf4e66a9c90dad58c3f0cc4cbf785'
   const quantity = '100000000000000000'
@@ -63,7 +63,7 @@ describe('approveTrasferAsync', () => {
     sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
     sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
-    const transactionHash = await erc20TokenService.approveTrasferAsync(personalWalletAddress,
+    const transactionHash = await erc20TokenService.approveTransferAsync(personalWalletAddress,
       tradingWalletAddress, quantity, tokenAddress, privateKey)
 
     expect(transactionHash).toEqual(expectedTransactionHash)
