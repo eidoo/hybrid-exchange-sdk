@@ -27,11 +27,19 @@
     erc20TokenTransactionBuilder,
   )
 
-  await tradingWalletFacade.depositTokenAsync(
+  const {
+    approveToZeroTransactionHash,
+    approveTransactionHash,
+    depositTransactionHash,
+  } = await tradingWalletFacade.depositTokenAsync(
     personalWalletAddress,
     tradingWalletAddress,
     quantityToDeposit,
     tokenAddress,
     privateKey,
   )
+
+  console.log('approveToZeroTransactionHash: ', approveToZeroTransactionHash)
+  console.log('approveTransactionHash: ', approveTransactionHash)
+  console.log('depositTransactionHash: ', depositTransactionHash)
 })()
