@@ -19,46 +19,6 @@ const providerUrl = 'urlToProvider'
 const web3Instance = new Web3(new Web3.providers.HttpProvider(providerUrl))
 const ethApiLibClient = new EidooEthApiLib(ethApi)
 
-/**
- * It gets nonce from input address.
- *
- * @param {Object} transactionLibInstance The transaction lib istance.
- * @param {String} address               The address used to get nonce.
- */
-async function getNonce(transactionLibInstance, address) {
-  try {
-    const { nonce } = await transactionLibInstance.ethApiClient.getAddressNonceAsync(address)
-    return nonce
-  } catch (err) {
-    transactionLibInstance.log.error({ err, fn: 'getNonce' }, `Error getting nonce for ${address}`)
-    throw new NonceError(err)
-  }
-}
-
-/**
- * It get the gas estimation of doing the trnansaction
- *
- * @param {Object} transactionObject       The transaction object.
- * @param {Object} transactionObject.data  The transaction object.
- * @param {Object} transactionObject.from  The transaction object.
- * @param {Object} transactionObject.nonce The transaction object.
- * @param {Object} transactionObject.to    The transaction object.
- * @param {Object} transactionObject.value The transaction object.
- *
- */
-async function getGasEstimation(TransactionLibInstance, transactionObject) {
-  try {
-    const { gas, gasPrices } = await TransactionLibInstance.ethApiClient
-      .getEstimateGasAsync({ transactionObject })
-
-    const { medium: gasPrice } = gasPrices
-
-    return { gas, gasPrice }
-  } catch (err) {
-    TransactionLibInstance.log.error({ err, transactionObject, fn: 'getGasEstimation' }, 'Error getting gas.')
-    throw new GasEstimationError(err)
-  }
-}
 
 /**
  * It gets the transaction Object from the transactionObjectDraft adding nonce and gas.
@@ -80,7 +40,7 @@ async function getTransactionObject(transactionLibInstance, transactionDraftObje
     throw new Error(transactionDraftErrors)
   }
   if (!nonce) {
-    currentNonce = await getNonce(transactionLibInstance, transactionDraftObject.from)
+    currentNonce = await transactionLibInstance.getNonce(transactionDraftObject.from)
   }
 
   transactionLibInstance.log.info(
@@ -88,7 +48,7 @@ async function getTransactionObject(transactionLibInstance, transactionDraftObje
   )
 
   if (!gas || !gasPrice) {
-    const gasEstimation = await getGasEstimation(transactionLibInstance, transactionDraftObject)
+    const gasEstimation = await transactionLibInstance.getGasEstimation(transactionDraftObject)
     estimatedGas = gasEstimation.gas
     estimatedGasPrice = gasEstimation.gasPrice
   }
@@ -105,15 +65,15 @@ async function getTransactionObject(transactionLibInstance, transactionDraftObje
 }
 
 /**
- * Class representing the Transaction library interface.
- */
+   * Class representing the Transaction library interface.
+   */
 class TransactionLib extends ITransactionLib {
   /**
-   * Create an Transaction library instance.
-   * @param  {Object}    logger       The logger instance.
-   * @param  {Object}    ethApiClient The ethApiClient instance.
-   * @throws {TypeError}              If logger objecs is not defined.
-   */
+     * Create an Transaction library instance.
+     * @param  {Object}    logger       The logger instance.
+     * @param  {Object}    ethApiClient The ethApiClient instance.
+     * @throws {TypeError}              If logger objecs is not defined.
+     */
   constructor(web3 = web3Instance, logger = log, ethApiClient = ethApiLibClient) {
     super()
     if (!logger) {
@@ -134,6 +94,21 @@ class TransactionLib extends ITransactionLib {
     this.ethApiClient = ethApiClient
     this.transactionValidator = new TransactionValidator(logger)
     this.transactionObjectDraftFactory = new TransactionObjectDraftFactory(this.transactionValidator)
+  }
+
+  /**
+     * It gets nonce from input address.
+     *
+     * @param {String} address               The address used to get nonce.
+     */
+  async getNonce(address) {
+    try {
+      const { nonce } = await this.ethApiClient.getAddressNonceAsync(address)
+      return nonce
+    } catch (err) {
+      this.log.error({ err, fn: 'getNonce' }, `Error getting nonce for ${address}`)
+      throw new NonceError(err)
+    }
   }
 
   /**
@@ -180,6 +155,31 @@ class TransactionLib extends ITransactionLib {
   }
 
   /**
+ * It get the gas estimation of doing the trnansaction
+ *
+ * @param {Object} transactionObject       The transaction object.
+ * @param {Object} transactionObject.data  The transaction object.
+ * @param {Object} transactionObject.from  The transaction object.
+ * @param {Object} transactionObject.nonce The transaction object.
+ * @param {Object} transactionObject.to    The transaction object.
+ * @param {Object} transactionObject.value The transaction object.
+ *
+ */
+  async getGasEstimation(transactionObject) {
+    try {
+      const { gas, gasPrices } = await this.ethApiClient
+        .getEstimateGasAsync({ transactionObject })
+
+      const { medium: gasPrice } = gasPrices
+
+      return { gas, gasPrice }
+    } catch (err) {
+      this.log.error({ err, transactionObject, fn: 'getGasEstimation' }, 'Error getting gas.')
+      throw new GasEstimationError(err)
+    }
+  }
+
+  /**
    * It signs the transaction object in order to be executed.
    *
    * @param {Object} transactionDraftObject The transactionDraftObject.
@@ -196,7 +196,7 @@ class TransactionLib extends ITransactionLib {
       const privateKeyWithPrefix = ethereumUtil.addHexPrefix(privateKey)
       const privateKeyBuffered = ethereumUtil.toBuffer(privateKeyWithPrefix)
       const transactionObject = await getTransactionObject(this, transactionDraftObject, nonce, gas, gasPrice)
-      this.log.info({ transactionObject }, 'Transaction Object.')
+      this.log.debug({ transactionObject }, 'Transaction Object.')
       const rawTransaction = new Tx(transactionObject)
       rawTransaction.sign(privateKeyBuffered)
 
@@ -240,15 +240,32 @@ class TransactionLib extends ITransactionLib {
         throw new Error(errors)
       }
       const transactionObject = Object.assign({}, transactionObjectDraft)
-      this.log.info({ transactionObject }, 'Doing transaction call.')
 
       const responsePayload = await this.ethApiClient
         .transactionCallAsync({ transactionObject })
-      this.log.info({ transactionObject, responsePayload }, 'Transaction call done.')
+      this.log.info({ fn: 'call', transactionObject, responsePayload }, 'Transaction call done.')
       return responsePayload
     } catch (err) {
       this.log.error({ err, fn: 'call', transactionObjectDraft }, 'Error executing transaction call.')
       throw new TransactionCallError(err)
+    }
+  }
+
+  async getTransactionReceipt(hash, fromAddress) {
+    try {
+      const { transactions } = await this.ethApiClient.getAccountTxsDetailsAsync(fromAddress)
+
+      const transactionReceipt = _.find(transactions, item => item.transactionReceipt.transactionHash === hash)
+      this.log.info({
+        fn: 'getTransactionReceipt',
+        transactionReceipt,
+        hash,
+        fromAddress,
+      }, 'Retrieve transaction receipt.')
+
+      return transactionReceipt || null
+    } catch (err) {
+      throw new Error(`Error retriving transaction Receipt: ${hash}`)
     }
   }
 }

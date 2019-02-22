@@ -18,4 +18,14 @@ describe('ITransactionLib (unit tests)', () => {
       (new ITransactionLib({})).execute(),
     ).rejects.toEqual(Error('Method "execute" has not been implemented yet.')))
   })
+  describe('getNonce', () => {
+    it('should reject if called', () => expect(
+      (new ITransactionLib({})).getNonce(),
+    ).rejects.toEqual(Error('Method "getNonce" has not been implemented yet.')))
+  })
+  describe('getGasEstimation', () => {
+    it('should reject if called', () => expect(
+      (new ITransactionLib({})).getGasEstimation(),
+    ).rejects.toEqual(Error('Method "getGasEstimation" has not been implemented yet.')))
+  })
 })

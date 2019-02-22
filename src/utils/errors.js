@@ -46,7 +46,6 @@ class GasEstimationError extends BaseError {}
  */
 class TransactionExecutionError extends BaseError {}
 
-
 /**
  * This error will be raised if there was an error during call.
  */
@@ -56,6 +55,12 @@ class TransactionCallError extends BaseError {}
  * This error will be raised if no trading wallet is found.
  */
 class TradingWalletNotFoundError extends BaseError {}
+
+/**
+ * This error will be raised if the asset balance is less then the quantity to deposit.
+ */
+class QuantityNotEnoughError extends BaseError {}
+
 
 class MultiValidationError extends BaseError {
   constructor(id, errors) {
@@ -77,4 +82,5 @@ module.exports = {
   TradingWalletNotFoundError,
   TransactionCallError,
   TransactionExecutionError,
+  QuantityNotEnoughError,
 }

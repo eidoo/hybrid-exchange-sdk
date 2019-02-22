@@ -14,13 +14,21 @@ class Erc20TokenService extends BaseTransactionService {
    * @param {String} tokenAddress          The address of the token asset to withdraw.
    * @param {String} privateKey            The private key.
    */
-  async approveTrasferAsync(personalWalletAddress, tradingWalletAddress, quantity, privateKey) {
+  async approveTransferAsync(personalWalletAddress, tradingWalletAddress, quantity, privateKey) {
     this.checkEtherumAddress(personalWalletAddress)
     this.checkEtherumAddress(tradingWalletAddress)
 
+    this.log.info({
+      fn: 'approveTransferAsync',
+      tradingWalletAddress,
+      quantity,
+      personalWalletAddress,
+    },
+    'Approving quantity.')
     const transactionParams = [personalWalletAddress, tradingWalletAddress, quantity]
     const transactionDraftBuilderName = 'buildApproveTrasferTransactionDraft'
     const transactionHash = this.transactionExecutor(privateKey, transactionDraftBuilderName, transactionParams)
+
     return transactionHash
   }
 
@@ -39,9 +47,35 @@ class Erc20TokenService extends BaseTransactionService {
       personalWalletAddress,
       tradingWalletAddress,
     )
-    const allowance = await this.transactionLib.call(transactionObjectDraft)
+    const allowanceHex = await this.transactionLib.call(transactionObjectDraft)
+    const allowance = this.web3.toBigNumber(allowanceHex).toString(10)
+    this.log.info({
+      fn: 'getAllowanceAsync',
+      allowance,
+      tradingWalletAddress,
+      personalWalletAddress,
+    },
+    'Retrieve allowance.')
+    return allowance
+  }
 
-    return this.web3.toBigNumber(allowance).toString(10)
+  /**
+   * It gets balance of an erc20 token.
+   *
+   * @param {String} personalWalletAddress The personal wallet address, owner of the  (EOA).
+   * @throws {InvalidEthereumAddress}      If personalWalletAddress or the tokenAddress is not a valid ethereum address.
+   */
+  async getBalanceOfAsync(personalWalletAddress) {
+    this.checkEtherumAddress(personalWalletAddress)
+
+    const transactionObjectDraft = this.transactionBuilder.buildGetBalanceOfTransactionDraft(
+      personalWalletAddress,
+    )
+    const assetBalanceHex = await this.transactionLib.call(transactionObjectDraft)
+    const assetBalance = this.web3.toBigNumber(assetBalanceHex).toString(10)
+    this.log.info({ fn: 'getBalanceOfAsync', personalWalletAddress, assetBalance }, 'Retrieve token balanceOf.')
+
+    return assetBalance
   }
 }
 
