@@ -176,21 +176,23 @@ class TradingWalletService extends BaseTransactionService {
     this.checkEtherumAddress(personalWalletAddress)
     this.checkEtherumAddress(tokenAddress)
 
-    let currentTradingWalletAddress = tradingWalletAddress
-    if (!currentTradingWalletAddress) {
-      currentTradingWalletAddress = await this.getTradingWalletAddressAsync(personalWalletAddress)
-      if (!currentTradingWalletAddress) {
-        this.log.error(
-          { fn: 'getAssetBalanceAsync' },
-          `tradingWallet not found for EOA:${personalWalletAddress}`,
-        )
-        throw new TradingWalletNotFoundError(`No trading wallet address for: ${personalWalletAddress}`)
-      }
+    let retrievedTradingWalletAddress = tradingWalletAddress
+
+    if (!tradingWalletAddress) {
+      retrievedTradingWalletAddress = await this.getTradingWalletAddressAsync(personalWalletAddress)
+    }
+
+    if (retrievedTradingWalletAddress === null) {
+      this.log.error(
+        { fn: 'getAssetBalanceAsync' },
+        `tradingWallet not found for EOA:${personalWalletAddress}`,
+      )
+      throw new TradingWalletNotFoundError(`No trading wallet address for: ${personalWalletAddress}`)
     }
 
     const transactionObjectDraft = this.transactionBuilder.buildAssetBalanceTransactionDraft(
       personalWalletAddress,
-      currentTradingWalletAddress,
+      retrievedTradingWalletAddress,
       tokenAddress,
     )
 
