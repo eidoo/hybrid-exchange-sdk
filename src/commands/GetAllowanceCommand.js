@@ -1,5 +1,6 @@
 const ABaseCommand = require('./ABaseCommand')
 const CommandArg = require('../models/CommandArg')
+const { Erc20TokenServiceBuilder } = require('../factories')
 
 /**
  * Class representing GetAllowanceCommand. */
@@ -47,12 +48,14 @@ class GetAllowanceCommand extends ABaseCommand {
    * It set the builder args necessary to set args cli command.
    */
   static setBuilderArgs() {
-    const from = new CommandArg('from','string', 'f', 'the from address i.e. who is asking for the balance', 1, true)
-    const spender = new CommandArg('spender','string', 'n2', 'The spender i.e. the trading wallet address.', 1, true)
-    const tokenArg = new CommandArg('token','string', 'tk', 'The token address.', 1, true)
-    const draftArg = new CommandArg('draft','boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
-    const rawTxArg = new CommandArg('raw-tx', 'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
-    return [from, spender, tokenArg, draftArg, rawTxArg]
+    const from = new CommandArg('from', 'string', 'f', 'the from address i.e. who is asking for the balance', 1, true)
+    const spender = new CommandArg('spender', 'string', 's', 'The spender i.e. the trading wallet address.', 1, true)
+    const tokenArg = new CommandArg('token', 'string', 'tk', 'The token address.', 1, true)
+    const privateKeyPathArg = new CommandArg('private-key-path',
+      'string', 'prv', 'The private key file path.', 1, false)
+    const draftArg = new CommandArg('draft', 'boolean', 'd',
+      'If set, it returns the TransactionObjectDraft.', 0, false, false)
+    return [from, spender, tokenArg, privateKeyPathArg, draftArg]
   }
 
   /**
@@ -70,14 +73,14 @@ class GetAllowanceCommand extends ABaseCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.from           The from parameter.
-   * @param {String} params.spender        The spender.
-   * @param {String} params.token          The token address.
-   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
+   * @param {String} params.from               The from parameter.
+   * @param {String} params.spender            The spender.
+   * @param {String} params.token              The token address.
+   * @param {String} params.privateKeyFilePath The private key file path.
+   * @param {String} params.draft              The draft flag. If set to true it shows the TransactionObjectDraft.
    */
-  async doValidateAsync({ from, spender, token, draft, rawTx }) {
-    const params = this.getAllowanceValidator.getAllowance({from, spender, token, draft, rawTx  })
+  async doValidateAsync({ from, spender, token, privateKeyFilePath, draft }) {
+    const params = this.getAllowanceCommandValidator.getAllowance({ from, spender, token, privateKeyFilePath, draft })
     return params
   }
 
@@ -85,33 +88,28 @@ class GetAllowanceCommand extends ABaseCommand {
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.from           The from parameter.
-   * @param {String} params.spender        The spender.
-   * @param {String} params.token          The token address.
-   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
+   * @param {String} params.from               The from parameter.
+   * @param {String} params.spender            The spender.
+   * @param {String} params.token              The token address.
+   * @param {String} params.privateKeyFilePath The private key file path.
+   * @param {String} params.draft              The draft flag. If set to true it shows the TransactionObjectDraft.
    */
-  async doExecuteAsync({ from, spender, token, draft, rawTx }) {
+  async doExecuteAsync({ from, spender, token, privateKeyFilePath, draft }) {
+    let fromAddressRetrived = from
     this.setErc20Tokenservice(token)
-    
-    const transactionObjectDraft = this.erc20TokenService.transactionBuilder
-      .buildCreateWalletTransactionDraft( from, spender, token)
+
+    if (privateKeyFilePath) {
+      const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+      fromAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
+    }
 
     if (draft) {
-      return transactionObjectDraft
+      return this.erc20TokenService.transactionBuilder
+        .buildGetAllowanceTransactionDraft(fromAddressRetrived, spender)
     }
-
-    if (rawTx) {
-      const signedTransactionData = await this.erc20TokenService.getSignedTransactionData(
-        transactionObjectDraft,
-        privateKey,
-      )
-      return signedTransactionData
-    }
-    const result = await this.erc20TokenService.(from, spender)
+    const result = await this.erc20TokenService.getAllowanceAsync(fromAddressRetrived, spender)
     return result
   }
 }
 
-module.exports = getAllowanceCommand
-
+module.exports = GetAllowanceCommand

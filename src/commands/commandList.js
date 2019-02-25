@@ -5,6 +5,8 @@ const DepositEthCommand = require('./DepositEthCommand')
 const DepositEthCommandValidator = require('../validators/DepositEthCommandValidator')
 const GetAddressCommand = require('../commands/GetAddressCommand')
 const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
+const GetAllowanceCommand = require('../commands/GetAllowanceCommand')
+const GetAllowanceCommandValidator = require('../validators/GetAllowanceCommandValidator')
 const logger = require('../logger')
 const OrderSignCommand = require('../commands/OrderSignCommand')
 const OrderSignCommandValidator = require('../validators/OrderSignCommandValidator')
@@ -21,6 +23,7 @@ const approveCommandValidator = new ApproveCommandValidator(logger)
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const depositEthCommandValidator = new DepositEthCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
+const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 const withdrawCommandValidator = new WithdrawCommandValidator(logger)
 
@@ -33,7 +36,10 @@ const tradingWalletService = TradingWalletServiceBuilder.build()
 const getAddressCommand = new GetAddressCommand(logger, tradingWalletService,
   getAddressCommandValidator, privateKeyService, privateKeyValidator)
 
-const createWalletCommand = new CreateWalletCommand(logger, tradingWalletService,
+const getAllowanceCommand = new GetAllowanceCommand(logger,
+  getAllowanceCommandValidator, privateKeyService, privateKeyValidator)
+
+const createWalletCommand = new CreateWalletCommand(logger, getAllowanceCommandValidator,
   createWalletCommandValidator, privateKeyService, privateKeyValidator)
 
 const depositEthCommand = new DepositEthCommand(logger, tradingWalletService,
@@ -53,6 +59,7 @@ module.exports = {
   createWalletCommand,
   depositEthCommand,
   getAddressCommand,
+  getAllowanceCommand,
   signCommand,
   withdrawCommand,
 }
