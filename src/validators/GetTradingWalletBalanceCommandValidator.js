@@ -6,6 +6,7 @@ const withdrawSchema = customJoiValidator.object()
     from: customJoiValidator.address().ethereum().required(),
     to: customJoiValidator.address().ethereum().required(),
     token: customJoiValidator.address().ethereum().required(),
+    privateKeyFilePath: customJoiValidator.path().existFile(),
     draft: customJoiValidator.boolean(),
   })
 

@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const ABaseCommand = require('./ABaseCommand')
 const CommandArg = require('../models/CommandArg')
 
@@ -56,9 +58,11 @@ class GetBalanceCommand extends ABaseCommand {
       'string', 't', 'The to address.', 1, true)
     const tokenArg = new CommandArg('token',
       'string', 'tk', 'The token address.', 1, true)
+    const privateKeyFilePathArg = new CommandArg('private-key-path',
+      'string', 'prv', 'The private key file path.', 1, false)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
-    return [fromArg, toArg, tokenArg, draftArg]
+    return [fromArg, toArg, tokenArg, privateKeyFilePathArg, draftArg]
   }
 
   /**
@@ -76,14 +80,15 @@ class GetBalanceCommand extends ABaseCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.from  The personal wallet address (EOA).
-   * @param {String} params.to    The trading wallet address.
-   * @param {String} params.token The token wallet address.
-   * @param {String} params.draft                 The draft parameter.
+   * @param {String} params.from               The personal wallet address (EOA).
+   * @param {String} params.to                 The trading wallet address.
+   * @param {String} params.token              The token wallet address.
+   * @param {String} params.privateKeyFilePath The EOA private key.
+   * @param {String} params.draft              The draft parameter.
    */
-  async doValidateAsync({ from, to, token, draft }) {
+  async doValidateAsync({ from, to, token, privateKeyFilePath, draft }) {
     const params = this.getBalanceCommandValidator
-      .getBalance({ from, to, token, draft })
+      .getBalance({ from, to, token, privateKeyFilePath, draft })
     return params
   }
 
@@ -94,15 +99,22 @@ class GetBalanceCommand extends ABaseCommand {
    * @param {String} params.from  The personal wallet address (EOA).
    * @param {String} params.to    The trading wallet address.
    * @param {String} params.token The token wallet address.
+   * @param {String} params.privateKeyFilePath The EOA private key.
    * @param {String} params.draft The draft. If set to true it shows the TransactionObjectDraft.
    */
-  async doExecuteAsync({ from, to, token, draft }) {
+  async doExecuteAsync({ from, to, token, privateKeyFilePath, draft }) {
+    let personalWalletAddressRetrived = _.cloneDeep(from)
+    if (privateKeyFilePath) {
+      const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+      personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
+    }
+
     if (draft) {
       return this.tradingWalletService.transactionBuilder.buildAssetBalanceTransactionDraft(from, to, token)
     }
 
     const result = await this.tradingWalletService
-      .getAssetBalanceAsync(from, token, to)
+      .getAssetBalanceAsync(personalWalletAddressRetrived, token, to)
     return result
   }
 }
