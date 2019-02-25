@@ -52,9 +52,6 @@ const getBalanceCommand = new GetBalanceCommand(logger, tradingWalletService,
 const createWalletCommand = new CreateWalletCommand(logger, getAllowanceCommandValidator,
   createWalletCommandValidator, privateKeyService, privateKeyValidator)
 
-const getTradingWalletBalanceCommand = new GetTradingWalletBalanceCommand(logger, tradingWalletService,
-  getTradingWalletBalanceCommandValidator, privateKeyService, privateKeyValidator)
-
 const depositEthCommand = new DepositEthCommand(logger, tradingWalletService,
   depositEthCommandValidator, privateKeyService, privateKeyValidator)
 

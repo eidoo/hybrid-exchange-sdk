@@ -17,7 +17,7 @@ const tradingWalletService = TradingWalletServiceBuilder.build()
 const privateKeyValidator = new PrivateKeyValidator(logger)
 const privateKeyService = new PrivateKeyService(logger)
 
-const getTradingWalletBalanceCommand = new GetBalanceCommand(logger, tradingWalletService,
+const getBalanceCommand = new GetBalanceCommand(logger, tradingWalletService,
   getBalanceCommandValidator, privateKeyService, privateKeyValidator)
 
 afterEach(() => {
@@ -41,7 +41,7 @@ describe('tws get-balance', () => {
         },
       ]
 
-      const result = await getTradingWalletBalanceCommand
+      const result = await getBalanceCommand
         .executeAsync({ from: invalidFrom, to, token })
 
       expect(result).toMatchObject(expectedResult)
@@ -55,19 +55,19 @@ describe('tws get-balance', () => {
         message: 'from is required',
       }]
 
-      const result = await getTradingWalletBalanceCommand.executeAsync({ from, to, token })
+      const result = await getBalanceCommand.executeAsync({ from, to, token })
       expect(result).toMatchObject(expectedResult)
     })
   })
 
-  describe('should execute GetTradingWalletBalanceCommand as expected', () => {
+  describe('should execute GetBalanceCommand as expected', () => {
     const draftValues = [false, undefined]
     test.each(draftValues)('should return the tradingWallet asset balance with draft value = %o', async (draft) => {
       const expectedTradinWalletAssetBalance = '1'
       sandbox.stub(tradingWalletService.transactionLib.ethApiClient, 'transactionCallAsync')
         .returns(expectedTradinWalletAssetBalance)
 
-      const result = await getTradingWalletBalanceCommand.executeAsync({ from, to, token, draft })
+      const result = await getBalanceCommand.executeAsync({ from, to, token, draft })
       expect(result).toBe(expectedTradinWalletAssetBalance)
     })
 
@@ -79,7 +79,7 @@ describe('tws get-balance', () => {
         value: '0x0',
       }
 
-      const result = await getTradingWalletBalanceCommand
+      const result = await getBalanceCommand
         .executeAsync({ from, to, token, draft: true })
 
       expect(result).toMatchObject(expectedTransactionObjectDraft)
