@@ -55,7 +55,11 @@ class ExchangeApiLib extends IExchangeApiLib {
 
     httpClient.interceptors.response.use(
       response => response.data,
-      (error) => { throw new ExchangeApiLibError(error, JSON.stringify(error.response.data)) },
+      (error) => {
+        const parsedError = JSON.stringify(error.response.data)
+        console.log(parsedError)
+        throw new ExchangeApiLibError(parsedError.code, parsedError.message)
+      },
     )
     return httpClient
   }
@@ -63,12 +67,8 @@ class ExchangeApiLib extends IExchangeApiLib {
   async listOrderAsync(tradingWalletAddress) {
     const method = 'get'
     const endpoint = `/trading-wallet/v1/trading-wallets/${tradingWalletAddress}/orders`
-    try {
-      const response = await this.callAsync({ method, endpoint })
-      return response.data.results
-    } catch (err) {
-      throw new ExchangeApiLibError(err)
-    }
+    const response = await this.callAsync({ method, endpoint })
+    return response.data.results
   }
 
   async listPairAsync() {
@@ -88,12 +88,8 @@ class ExchangeApiLib extends IExchangeApiLib {
   async getOrderAsync(walletAddress, orderId) {
     const method = 'get'
     const endpoint = `/trading-wallet/v1/trading-wallets/${walletAddress}/orders/${orderId}`
-    try {
-      const response = await this.callAsync({ method, endpoint })
-      return response.data
-    } catch (err) {
-      throw new ExchangeApiLibError(err)
-    }
+    const response = await this.callAsync({ method, endpoint })
+    return response.data
   }
 
   async getOrderBookAsync(baseSymbol, quoteSymbol, orderType) {
@@ -122,12 +118,8 @@ class ExchangeApiLib extends IExchangeApiLib {
       confirmation: 'cancel_request',
       ecSignature,
     }
-    try {
-      const response = await this.callAsync({ method, endpoint, body })
-      return response.result
-    } catch (err) {
-      throw new ExchangeApiLibError(err)
-    }
+    const response = await this.callAsync({ method, endpoint, body })
+    return response.result
   }
 
   async createOrderAsync(orderPayload, ecSignature) {
@@ -137,12 +129,8 @@ class ExchangeApiLib extends IExchangeApiLib {
       ...orderPayload,
       ecSignature,
     }
-    try {
-      const response = await this.callAsync({ method, endpoint, body })
-      return response.result
-    } catch (err) {
-      throw new ExchangeApiLibError(err)
-    }
+    const response = await this.callAsync({ method, endpoint, body })
+    return response.result
   }
 }
 
