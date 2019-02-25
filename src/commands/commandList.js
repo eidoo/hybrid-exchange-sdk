@@ -1,4 +1,9 @@
 const { PrivateKeyService } = require('../services/PrivateKeyService')
+const OrderService = require('../services/OrderService')
+const logger = require('../logger')
+
+const ApproveCommand = require('../commands/ApproveCommand')
+const ApproveCommandValidator = require('../validators/ApproveCommandValidator')
 const CreateWalletCommand = require('../commands/CreateWalletCommand')
 const CreateWalletCommandValidator = require('../validators/CreateWalletCommandValidator')
 const DepositEthCommand = require('./DepositEthCommand')
@@ -7,11 +12,10 @@ const GetAddressCommand = require('../commands/GetAddressCommand')
 const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
 const GetAllowanceCommand = require('../commands/GetAllowanceCommand')
 const GetAllowanceCommandValidator = require('../validators/GetAllowanceCommandValidator')
-
 const GetBalanceCommand = require('../commands/GetBalanceCommand')
 const GetBalanceCommandValidator = require('../validators/GetBalanceCommandValidator')
-
-const logger = require('../logger')
+const OrderCancelCommand = require('../commands/OrderCancelCommand')
+const OrderCancelCommandValidator = require('../validators/OrderCancelCommandValidator')
 const OrderSignCommand = require('../commands/OrderSignCommand')
 const OrderSignCommandValidator = require('../validators/OrderSignCommandValidator')
 const OrderSignerHelper = require('../helpers/OrderSignerHelper')
@@ -20,23 +24,19 @@ const TradingWalletServiceBuilder = require('../factories/TradingWalletServiceBu
 const WithdrawCommand = require('../commands/WithdrawCommand')
 const WithdrawCommandValidator = require('../validators/WithdrawCommandValidator')
 
-const ApproveCommand = require('../commands/ApproveCommand')
-const ApproveCommandValidator = require('../validators/ApproveCommandValidator')
-
 const approveCommandValidator = new ApproveCommandValidator(logger)
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const depositEthCommandValidator = new DepositEthCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
-
 const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
-
+const orderCancelCommandValidator = new OrderCancelCommandValidator(logger)
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
-const withdrawCommandValidator = new WithdrawCommandValidator(logger)
-
 const ordersignerHelper = new OrderSignerHelper(logger)
+const orderService = new OrderService(logger)
 const privateKeyService = new PrivateKeyService(logger)
 const privateKeyValidator = new PrivateKeyValidator(logger)
+const withdrawCommandValidator = new WithdrawCommandValidator(logger)
 
 const tradingWalletService = TradingWalletServiceBuilder.build()
 
@@ -64,6 +64,9 @@ const withdrawCommand = new WithdrawCommand(logger, tradingWalletService, withdr
 const approveCommand = new ApproveCommand(logger, approveCommandValidator,
   privateKeyService, privateKeyValidator)
 
+const orderCancelCommand = new OrderCancelCommand(logger, orderService, orderCancelCommandValidator,
+  privateKeyService, privateKeyValidator)
+
 module.exports = {
   approveCommand,
   createWalletCommand,
@@ -71,6 +74,7 @@ module.exports = {
   getAddressCommand,
   getAllowanceCommand,
   getBalanceCommand,
+  orderCancelCommand,
   signCommand,
   withdrawCommand,
 }
