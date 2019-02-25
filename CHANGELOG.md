@@ -11,6 +11,7 @@ Release date: 2019-02-REPLEACE_ME.
 ### Added
 
 - [CLI deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/15)
+- [CLI approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/18)
 - [CLI withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/13)
 - [Deposit Token with approve](https://github.com/eidoo/hybrid-exchange-sdk/issues/11)
 - [Allowance](https://github.com/eidoo/hybrid-exchange-sdk/issues/7).

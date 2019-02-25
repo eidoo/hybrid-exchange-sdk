@@ -2,6 +2,7 @@
 const sandbox = require('sinon').createSandbox()
 
 const { approveCommand } = require('../../../src/commands/commandList')
+const { Erc20TokenServiceBuilder } = require('../../../index').factories
 
 const nonceResponse = {
   nonce: 4400,
@@ -15,11 +16,18 @@ const gasEstimationResponse = {
   },
 }
 const to = '0xf6d686e52ffc5b9d224a9eb60b8e9c57978d5189'
+const erc20TokenServiceBuilder = new Erc20TokenServiceBuilder(to)
 
-afterEach(() => {
-  sandbox.restore()
+const erc20TokenService = erc20TokenServiceBuilder.build()
+
+beforeEach(() => {
+  approveCommand.erc20TokenService = erc20TokenService
 })
 
+afterEach(() => {
+  delete approveCommand.erc20TokenService
+  sandbox.restore()
+})
 describe('tws approve', () => {
   const from = '0x9c858489661158d1721a66319f8683925d5a8b70'
   const spender = '0x230cd1dc412c44bb95aa39018e2a2aed28ebadfc'
@@ -28,7 +36,7 @@ describe('tws approve', () => {
   describe('execute  approve command ', () => {
     test('should return the expected transaction hash', async () => {
       const expectedTransactionHash = '0xTransactionHash'
-      approveCommand.setErc20Tokenservice(to)
+
       sandbox.stub(approveCommand.erc20TokenService.transactionLib.ethApiClient, 'getAddressNonceAsync')
         .returns(nonceResponse)
       sandbox.stub(approveCommand.erc20TokenService.transactionLib.ethApiClient, 'getEstimateGasAsync')
@@ -38,7 +46,6 @@ describe('tws approve', () => {
 
       const result = await approveCommand
         .executeAsync({ from, to, quantity, spender, privateKeyFilePath: validPrivateKeyFilePath, draft: false })
-
       expect(result).toBe(expectedTransactionHash)
     })
 
