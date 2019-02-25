@@ -7,7 +7,7 @@ const Erc20TokenServiceBuilder = require('../factories/Erc20TokenServiceBuilder'
 */
 class ApproveCommand extends ABaseCommand {
   /**
-   * Create a signer controller.
+   * Create an ApproveCommand controller.
    * @param {Object} logger                       The logger helper.
    * @param {Object} approveCommandValidator      The ApproveToken validator.
    * @param {Object} privateKeyService            The privateKeyService.
