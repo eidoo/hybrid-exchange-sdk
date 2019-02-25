@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const ABaseCommand = require('./ABaseCommand')
 const CommandArg = require('../models/CommandArg')
 
@@ -93,7 +95,7 @@ class GetAddressCommand extends ABaseCommand {
    * @param {String} params.draft                 The draft. If set to true it shows the TransactionObjectDraft.
    */
   async doExecuteAsync({ personalWalletAddress, privateKeyPath, draft }) {
-    let personalWalletAddressRetrived = personalWalletAddress
+    let personalWalletAddressRetrived = _.cloneDeep(personalWalletAddress)
 
     if (privateKeyPath) {
       const privateKey = await this.extractPrivateKey(privateKeyPath)
