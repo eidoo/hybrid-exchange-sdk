@@ -134,7 +134,7 @@ class ApproveCommand extends ABaseCommand {
       return signedTransactionData
     }
 
-    const result = await this.erc20TokenService.approveTrasferAsync(
+    const result = await this.erc20TokenService.approveTransferAsync(
       personalWalletAddressRetrived,
       spender,
       quantity,
