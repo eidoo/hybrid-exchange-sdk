@@ -55,15 +55,15 @@ class ApproveCommand extends ABaseCommand {
       'string', 't', 'The to address.', 1, true)
     const quantityArg = new CommandArg('quantity',
       'string', 'q', 'The quantity to withdraw.', 1, true)
-    const tokenArg = new CommandArg('token',
-      'string', 'tk', 'The token address.', 1, true)
-    const privateKeyFilePathArg = new CommandArg('private-key-path',
-      'string', 'prv', 'The private key file path.', 1, false)
+    const spenderArg = new CommandArg('spender',
+      'string', 's', 'The spender address.', 1, true)
+    const privateKeyFilePathArg = new CommandArg('private-key-file-path',
+      'string', 'prv', 'The private key file path.', 1, true)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
     const rawTxArg = new CommandArg('raw-tx',
       'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
-    return [fromArg, toArg, quantityArg, tokenArg, privateKeyFilePathArg, draftArg, rawTxArg]
+    return [fromArg, toArg, quantityArg, spenderArg, privateKeyFilePathArg, draftArg, rawTxArg]
   }
 
   /**

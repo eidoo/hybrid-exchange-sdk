@@ -5,9 +5,9 @@ const approveSchema = customJoiValidator.object()
   .keys({
     from: customJoiValidator.address().ethereum().required(),
     to: customJoiValidator.address().ethereum().required(),
-    privateKeyFilePath: customJoiValidator.path().existFile(),
     quantity: customJoiValidator.bigNumber().valid().required(),
     spender: customJoiValidator.address().ethereum().required(),
+    privateKeyFilePath: customJoiValidator.path().existFile().required(),
     draft: customJoiValidator.boolean(),
     rawTx: customJoiValidator.boolean(),
   })
