@@ -7,6 +7,10 @@ const GetAddressCommand = require('../commands/GetAddressCommand')
 const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
 const GetAllowanceCommand = require('../commands/GetAllowanceCommand')
 const GetAllowanceCommandValidator = require('../validators/GetAllowanceCommandValidator')
+
+const GetBalanceCommand = require('../commands/GetBalanceCommand')
+const GetBalanceCommandValidator = require('../validators/GetBalanceCommandValidator')
+
 const logger = require('../logger')
 const OrderSignCommand = require('../commands/OrderSignCommand')
 const OrderSignCommandValidator = require('../validators/OrderSignCommandValidator')
@@ -24,6 +28,9 @@ const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const depositEthCommandValidator = new DepositEthCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
+
+const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
+
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 const withdrawCommandValidator = new WithdrawCommandValidator(logger)
 
@@ -38,6 +45,9 @@ const getAddressCommand = new GetAddressCommand(logger, tradingWalletService,
 
 const getAllowanceCommand = new GetAllowanceCommand(logger,
   getAllowanceCommandValidator, privateKeyService, privateKeyValidator)
+
+const getBalanceCommand = new GetBalanceCommand(logger, tradingWalletService,
+  getBalanceCommandValidator, privateKeyService, privateKeyValidator)
 
 const createWalletCommand = new CreateWalletCommand(logger, getAllowanceCommandValidator,
   createWalletCommandValidator, privateKeyService, privateKeyValidator)
@@ -60,6 +70,7 @@ module.exports = {
   depositEthCommand,
   getAddressCommand,
   getAllowanceCommand,
+  getBalanceCommand,
   signCommand,
   withdrawCommand,
 }
