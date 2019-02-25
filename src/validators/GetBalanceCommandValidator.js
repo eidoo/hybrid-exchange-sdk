@@ -10,10 +10,10 @@ const withdrawSchema = customJoiValidator.object()
     draft: customJoiValidator.boolean(),
   })
 
-class GetTradingWalletBalanceCommandValidator extends BaseValidator {
+class GetBalanceCommandValidator extends BaseValidator {
   getBalance(getBalanceData) {
     return this.constructor.validate(getBalanceData, withdrawSchema)
   }
 }
 
-module.exports = GetTradingWalletBalanceCommandValidator
+module.exports = GetBalanceCommandValidator

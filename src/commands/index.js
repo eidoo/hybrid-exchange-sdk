@@ -4,7 +4,7 @@ const commandList = require('./commandList')
 const CreateWalletCommand = require('./CreateWalletCommand')
 const DepositEthCommand = require('./DepositEthCommand')
 const GetAddressCommand = require('./GetAddressCommand')
-const GetTradingWalletBalanceCommand = require('./GetTradingWalletBalanceCommand')
+const GetTradingWalletBalanceCommand = require('./GetBalanceCommand')
 const OrderSignCommand = require('./OrderSignCommand')
 
 module.exports = {

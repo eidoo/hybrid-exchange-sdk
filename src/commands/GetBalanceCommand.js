@@ -96,11 +96,11 @@ class GetBalanceCommand extends ABaseCommand {
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.from  The personal wallet address (EOA).
-   * @param {String} params.to    The trading wallet address.
-   * @param {String} params.token The token wallet address.
+   * @param {String} params.from               The personal wallet address (EOA).
+   * @param {String} params.to                 The trading wallet address.
+   * @param {String} params.token              The token wallet address.
    * @param {String} params.privateKeyFilePath The EOA private key.
-   * @param {String} params.draft The draft. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.draft              The draft. If set to true it shows the TransactionObjectDraft.
    */
   async doExecuteAsync({ from, to, token, privateKeyFilePath, draft }) {
     let personalWalletAddressRetrived = _.cloneDeep(from)
