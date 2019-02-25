@@ -6,8 +6,8 @@ const getAllowanceSchema = customJoiValidator.object()
     from: customJoiValidator.address().ethereum().required(),
     spender: customJoiValidator.address().ethereum().required(),
     token: customJoiValidator.address().ethereum().required(),
+    privateKeyFilePath: customJoiValidator.path().existFile(),
     draft: customJoiValidator.boolean(),
-    rawTx: customJoiValidator.boolean(),
   })
 
 class GetAllowanceCommandValidator extends BaseValidator {
