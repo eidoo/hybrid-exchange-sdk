@@ -1,11 +1,18 @@
-const { BaseError } = require('../../utils/errors')
+class ExchangeApiLibError extends Error {
+  constructor(message) {
+    super(message)
+    this.code = this.constructor.name
+    this.message = message
+  }
 
-/**
- * Class representing the ExchangeApiLibError.
- */
-class ExchangeApiLibError extends BaseError {
-  constructor(code, message = 'Error during exchangeApi http request') {
-    super(message, code)
+  toJSON() {
+    return {
+      error: {
+        code: this.name,
+        message: this.message,
+        stacktrace: this.stack,
+      },
+    }
   }
 }
 

@@ -56,9 +56,8 @@ class ExchangeApiLib extends IExchangeApiLib {
     httpClient.interceptors.response.use(
       response => response.data,
       (error) => {
-        const parsedError = JSON.stringify(error.response.data)
-        console.log(parsedError)
-        throw new ExchangeApiLibError(parsedError.code, parsedError.message)
+        const message = error.response.data ? error.response.data.message : 'Error using exchange api lib'
+        throw new ExchangeApiLibError(message)
       },
     )
     return httpClient
