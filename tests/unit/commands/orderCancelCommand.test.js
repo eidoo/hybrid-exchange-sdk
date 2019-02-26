@@ -19,13 +19,14 @@ describe('os cancel', () => {
 
     expect(result).toBe(orderId)
   })
-  test('', async() => {
+  test('should raise if order service raiese Exchange api error', async() => {
+    const errorMessage = 'exchange error message'
     const expetedResult = [{
       code: 'ExchangeApiLibError',
-      message: 'Error during exchangeApi http request',
+      message: errorMessage,
       field: null,
     }]
-    sandbox.stub(orderCancelCommand.orderService, 'cancelOrderAsync').throws(new ExchangeApiLibError())
+    sandbox.stub(orderCancelCommand.orderService, 'cancelOrderAsync').throws(new ExchangeApiLibError(errorMessage))
 
     const result = await orderCancelCommand
       .executeAsync({ orderId, privateKeyFilePath: validPrivateKeyFilePath })
