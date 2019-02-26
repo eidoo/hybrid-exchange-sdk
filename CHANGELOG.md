@@ -10,8 +10,9 @@ Release date: 2019-02-REPLEACE_ME.
 
 ### Added
 
-- [Circle CI](https://github.com/eidoo/hybrid-exchange-sdk/issues/36)
 - [CLI cancel order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/26)
+- [Circle CI](https://github.com/eidoo/hybrid-exchange-sdk/issues/36)
+- [CLI create order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/25)
 - [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/24)
 - [CLI get trading wallet asset balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/20)
 - [CLI deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/15)
