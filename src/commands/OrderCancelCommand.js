@@ -5,7 +5,7 @@ const CommandArg = require('../models/CommandArg')
  * Class representing OrderCancelCommand. */
 class OrderCancelCommand extends ABaseCommand {
   /**
-   * Create a signer controller.
+   * Create a OrderCancelCommand controller.
    * @param {Object} logger                      The logger helper.
    * @param {Object} orderService                The order service.
    * @param {Object} orderCancelCommandValidator The orderCancelCommandValidator.
