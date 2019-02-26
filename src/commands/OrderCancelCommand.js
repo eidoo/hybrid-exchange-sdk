@@ -89,8 +89,8 @@ class OrderCancelCommand extends ABaseCommand {
    */
   async doExecuteAsync({ orderId, privateKeyFilePath }) {
     const privateKey = await this.extractPrivateKey(privateKeyFilePath)
-    const result = await this.orderService.cancelOrderAsync(orderId, privateKey)
-    return result
+    const cancelledOrderId = await this.orderService.cancelOrderAsync(orderId, privateKey)
+    return cancelledOrderId
   }
 }
 
