@@ -1,11 +1,18 @@
-/**
- * Class representing the ExchangeApiLibError.
- */
 class ExchangeApiLibError extends Error {
-  constructor(parent, message = 'Error during http request') {
+  constructor(message) {
     super(message)
-    this.parent = parent
-    Error.captureStackTrace(this, this.constructor)
+    this.code = this.constructor.name
+    this.message = message
+  }
+
+  toJSON() {
+    return {
+      error: {
+        code: this.name,
+        message: this.message,
+        stacktrace: this.stack,
+      },
+    }
   }
 }
 

@@ -24,9 +24,8 @@ const orderId = '0x7cbfd8954a9078a536407d632bd0a9302f4e79153fb21f3810fcc2783b1fd
 const tradingWalletAddress = '0xAaD5329c065B61f8d44d3d0417068eA74021Fb79'
 
 describe('getOrderAsync', () => {
-  const errors = [new TypeError(), new Error()]
-  test.each(errors)('returns ExchangeApiLibError if getOrderAsync raise %s ', async (error) => {
-    sandbox.stub(exchangeApiLib, 'callAsync').throws(error)
+  test('returns ExchangeApiLibError if getOrderAsync raise %s ', async () => {
+    sandbox.stub(exchangeApiLib, 'callAsync').throws(new ExchangeApiLibError())
     return expect(orderService.getOrderAsync(tradingWalletAddress, orderId)).rejects
       .toBeInstanceOf(ExchangeApiLibError)
   })
@@ -43,9 +42,8 @@ describe('getOrderAsync', () => {
 })
 
 describe('listOrderAsync', () => {
-  const errors = [new TypeError(), new Error()]
-  test.each(errors)('returns ExchangeApiLibError if listOrderAsync raise %s ', async (error) => {
-    sandbox.stub(exchangeApiLib, 'callAsync').throws(error)
+  test('returns ExchangeApiLibError if listOrderAsync raise ExchangeApiLibError ', async () => {
+    sandbox.stub(exchangeApiLib, 'callAsync').throws(new ExchangeApiLibError())
     return expect(orderService.listOrderAsync(tradingWalletAddress, orderId)).rejects
       .toBeInstanceOf(ExchangeApiLibError)
   })
