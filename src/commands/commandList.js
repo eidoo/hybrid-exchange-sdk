@@ -8,6 +8,8 @@ const CreateWalletCommand = require('../commands/CreateWalletCommand')
 const CreateWalletCommandValidator = require('../validators/CreateWalletCommandValidator')
 const DepositEthCommand = require('./DepositEthCommand')
 const DepositEthCommandValidator = require('../validators/DepositEthCommandValidator')
+const DepositTokenCommand = require('./DepositTokenCommand')
+const DepositTokenCommandValidator = require('../validators/DepositTokenCommandValidator')
 const GetAddressCommand = require('../commands/GetAddressCommand')
 const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
 const GetAllowanceCommand = require('../commands/GetAllowanceCommand')
@@ -27,6 +29,7 @@ const WithdrawCommandValidator = require('../validators/WithdrawCommandValidator
 const approveCommandValidator = new ApproveCommandValidator(logger)
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const depositEthCommandValidator = new DepositEthCommandValidator(logger)
+const depositTokenCommandValidator = new DepositTokenCommandValidator(logger)
 const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
 const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
@@ -55,6 +58,9 @@ const createWalletCommand = new CreateWalletCommand(logger, getAllowanceCommandV
 const depositEthCommand = new DepositEthCommand(logger, tradingWalletService,
   depositEthCommandValidator, privateKeyService, privateKeyValidator)
 
+const depositTokenCommand = new DepositTokenCommand(logger, tradingWalletService,
+  depositTokenCommandValidator, privateKeyService, privateKeyValidator)
+
 const signCommand = new OrderSignCommand(logger, ordersignerHelper, orderSignCommandValidator,
   privateKeyService, privateKeyValidator)
 
@@ -71,6 +77,7 @@ module.exports = {
   approveCommand,
   createWalletCommand,
   depositEthCommand,
+  depositTokenCommand,
   getAddressCommand,
   getAllowanceCommand,
   getBalanceCommand,
