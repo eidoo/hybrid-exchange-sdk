@@ -24,7 +24,7 @@ describe('tws deposit-eth', () => {
   const to = '0x230cd1dc412c44bb95aa39018e2a2aed28ebadfc'
   const quantity = '500000000000000000'
   const validPrivateKeyFilePath = 'tests/fixtures/privateKeys/privateKey.key'
-  describe('execute withdraw command ', () => {
+  describe('execute deposit eth command ', () => {
     test('should return the expected transaction hash', async () => {
       const expectedTransactionHash = '0xTransactionHash'
       sandbox.stub(depositEthCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync')
@@ -39,7 +39,7 @@ describe('tws deposit-eth', () => {
 
       expect(result).toBe(expectedTransactionHash)
     })
-    test('should return the transactionObjectDraft to deposit wallet', async () => {
+    test('should return the transactionObjectDraft to deposit eth', async () => {
       const expectedTransactionObjectDraft = { data:
      '0x98ea5fca',
       from,
@@ -64,7 +64,7 @@ describe('tws deposit-eth', () => {
         .executeAsync({ from, to, quantity, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx })
       expect(result).toBe(expectedTransactionHash)
     })
-    test('should return the signed transaction data to create wallet', async () => {
+    test('should return the signed transaction data to deposit eth', async () => {
       const expectedTransactionSignedData = '0xf86f82113082633382520894230cd1dc412c44bb95aa39018e2a2aed28ebadfc8806f05b59d3b200008498ea5fca1ca0121cd167aec2f138174218863ea7b1d09b21448cc99f9b5bf0aa420ee3dbc66da01553d4106a51ac5e087122f3c5b355d5106dd88515a4dcce69aa32e08378bf96'
       sandbox.stub(depositEthCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
       sandbox.stub(depositEthCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
