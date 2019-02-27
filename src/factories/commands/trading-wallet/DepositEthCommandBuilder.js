@@ -1,10 +1,10 @@
-const logger = require('../../logger')
-const { PrivateKeyService } = require('../../services/PrivateKeyService')
+const logger = require('../../../logger')
+const { PrivateKeyService } = require('../../../services/PrivateKeyService')
 
-const DepositEthCommand = require('../../commands/trading-wallet/DepositEthCommand')
-const DepositEthCommandValidator = require('../../validators/DepositEthCommandValidator')
-const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')
-const TradingWalletServiceBuilder = require('../TradingWalletServiceBuilder')
+const DepositEthCommand = require('../../../commands/trading-wallet/DepositEthCommand')
+const DepositEthCommandValidator = require('../../../validators/DepositEthCommandValidator')
+const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
+const TradingWalletServiceBuilder = require('../../TradingWalletServiceBuilder')
 
 const privateKeyService = new PrivateKeyService(logger)
 const privateKeyValidator = new PrivateKeyValidator(logger)
