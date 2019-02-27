@@ -1,7 +1,7 @@
 const logger = require('../../logger')
 const { PrivateKeyService } = require('../../services/PrivateKeyService')
 
-const OrderCancelCommand = require('../../commands/OrderCancelCommand')
+const OrderCancelCommand = require('../../commands/order/OrderCancelCommand')
 const OrderCancelCommandValidator = require('../../validators/OrderCancelCommandValidator')
 const OrderService = require('../../services/OrderService')
 const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')

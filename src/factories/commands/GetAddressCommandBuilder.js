@@ -1,7 +1,7 @@
 const logger = require('../../logger')
 const { PrivateKeyService } = require('../../services/PrivateKeyService')
 
-const GetAddressCommand = require('../../commands/GetAddressCommand')
+const GetAddressCommand = require('../../commands/trading-wallet/GetAddressCommand')
 const GetAddressCommandValidator = require('../../validators/GetAddressCommandValidator')
 const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')
 const TradingWalletServiceBuilder = require('../TradingWalletServiceBuilder')

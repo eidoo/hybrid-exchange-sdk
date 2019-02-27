@@ -1,7 +1,7 @@
 const logger = require('../../logger')
 const { PrivateKeyService } = require('../../services/PrivateKeyService')
 
-const GetAllowanceCommand = require('../../commands/GetAllowanceCommand')
+const GetAllowanceCommand = require('../../commands/token/GetAllowanceCommand')
 const GetAllowanceCommandValidator = require('../../validators/GetAllowanceCommandValidator')
 const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')
 

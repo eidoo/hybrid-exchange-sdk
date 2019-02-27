@@ -1,6 +1,6 @@
-const ABaseCommand = require('./ABaseCommand')
-const CommandArg = require('../models/CommandArg')
-const Erc20TokenServiceBuilder = require('../factories/Erc20TokenServiceBuilder')
+const ABaseCommand = require('../ABaseCommand')
+const CommandArg = require('../../models/CommandArg')
+const Erc20TokenServiceBuilder = require('../../factories/Erc20TokenServiceBuilder')
 
 /**
  * Class representing approve command.

@@ -1,11 +1,11 @@
 const Web3 = require('web3')
 
-const ABaseCommand = require('./ABaseCommand')
-const CommandArg = require('../models/CommandArg')
-const Erc20TokenServiceBuilder = require('../factories/Erc20TokenServiceBuilder')
-const Erc20TokenTransactionBuilder = require('../factories/Erc20TokenTransactionBuilder')
-const TradingWalletTransactionBuilder = require('../factories/TradingWalletTransactionBuilder')
-const TradingWalletFacade = require('../facades/TradingWalletFacade')
+const ABaseCommand = require('../ABaseCommand')
+const CommandArg = require('../../models/CommandArg')
+const Erc20TokenServiceBuilder = require('../../factories/Erc20TokenServiceBuilder')
+const Erc20TokenTransactionBuilder = require('../../factories/Erc20TokenTransactionBuilder')
+const TradingWalletTransactionBuilder = require('../../factories/TradingWalletTransactionBuilder')
+const TradingWalletFacade = require('../../facades/TradingWalletFacade')
 
 const providerUrl = 'PROVIDER_URL'
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))

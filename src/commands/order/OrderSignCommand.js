@@ -1,6 +1,6 @@
-const ABaseCommand = require('./ABaseCommand')
-const CommandArg = require('../models/CommandArg')
-const validRequestType = require('../models/Request').TYPES
+const ABaseCommand = require('../ABaseCommand')
+const CommandArg = require('../../models/CommandArg')
+const validRequestType = require('../../models/Request').TYPES
 
 /**
  * Class representing orderSignCommand. */

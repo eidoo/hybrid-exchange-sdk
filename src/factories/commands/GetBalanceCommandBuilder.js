@@ -1,7 +1,7 @@
 const logger = require('../../logger')
 const { PrivateKeyService } = require('../../services/PrivateKeyService')
 
-const GetBalanceCommand = require('../../commands/GetBalanceCommand')
+const GetBalanceCommand = require('../../commands/trading-wallet/GetBalanceCommand')
 const GetBalanceCommandValidator = require('../../validators/GetBalanceCommandValidator')
 const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')
 const TradingWalletServiceBuilder = require('../TradingWalletServiceBuilder')

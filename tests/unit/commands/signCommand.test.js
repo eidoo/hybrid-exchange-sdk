@@ -6,7 +6,7 @@ const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
 const OrderSignerHelper = require('../../../src/helpers/OrderSignerHelper')
 const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
 const OrderSignCommandValidator = require('../../../src/validators/OrderSignCommandValidator')
-const OrderSignCommand = require('../../../src/commands/OrderSignCommand')
+const OrderSignCommand = require('../../../src/commands/order/OrderSignCommand')
 
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 const orderSignerHelper = new OrderSignerHelper(logger)

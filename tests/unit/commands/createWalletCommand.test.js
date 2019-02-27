@@ -5,7 +5,7 @@ const { EidooEthApiLib } = require('@eidoo/ethapi-lib')
 
 const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
 const { TransactionLib } = require('../../../src/lib/TransactionLib')
-const CreateWalletCommand = require('../../../src/commands/CreateWalletCommand')
+const CreateWalletCommand = require('../../../src/commands/trading-wallet/CreateWalletCommand')
 const CreateWalletCommandValidator = require('../../../src/validators/CreateWalletCommandValidator')
 const logger = require('../../../src/logger')
 const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')

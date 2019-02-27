@@ -1,20 +1,20 @@
-const ABaseCommand = require('./ABaseCommand')
-const CommandArg = require('../models/CommandArg')
+const ABaseCommand = require('../ABaseCommand')
+const CommandArg = require('../../models/CommandArg')
 
 /**
- * Class representing WithdrawCommand.
+ * Class representing DepositEthCommand.
  */
-class WithdrawCommand extends ABaseCommand {
+class DepositEthCommand extends ABaseCommand {
   /**
-   * Create a signer controller.
-   * @param {Object} logger                   The logger helper.
-   * @param {Object} tradingWalletService     The tradingWallet service.
-   * @param {Object} withdrawCommandValidator The WithdrawCommand validator.
-   * @param {Object} privateKeyService        The privateKeyService.
-   * @param {Object} privateKeyValidator      The privateKeyValidator.
-   * @throws {TypeError}                      If some required property is missing.
+   * Create a deposit ethereum command controller.
+   * @param {Object} logger                     The logger helper.
+   * @param {Object} tradingWalletService       The tradingWallet service.
+   * @param {Object} depositEthCommandValidator The DepositEthCommand validator.
+   * @param {Object} privateKeyService          The privateKeyService.
+   * @param {Object} privateKeyValidator        The privateKeyValidator.
+   * @throws {TypeError}                        If some required property is missing.
    */
-  constructor(logger, tradingWalletService, withdrawCommandValidator,
+  constructor(logger, tradingWalletService, depositEthCommandValidator,
     privateKeyService, privateKeyValidator) {
     super(logger, privateKeyService, privateKeyValidator)
 
@@ -24,11 +24,11 @@ class WithdrawCommand extends ABaseCommand {
     }
     this.tradingWalletService = tradingWalletService
 
-    if (!withdrawCommandValidator) {
-      const errorMessage = `Invalid "withdrawCommandValidator" value: ${withdrawCommandValidator}`
+    if (!depositEthCommandValidator) {
+      const errorMessage = `Invalid "depositEthCommandValidator" value: ${depositEthCommandValidator}`
       throw new TypeError(errorMessage)
     }
-    this.withdrawCommandValidator = withdrawCommandValidator
+    this.depositEthCommandValidator = depositEthCommandValidator
 
     this.builderArgs = this.constructor.setBuilderArgs()
 
@@ -36,11 +36,11 @@ class WithdrawCommand extends ABaseCommand {
   }
 
   static get description() {
-    return 'It withdraws an asset amount from a trading wallet to its owner.'
+    return 'It deposits some ETH amount from an EOA to a trading wallet.'
   }
 
   setSynopsis() {
-    let synopsis = 'withdraw '
+    let synopsis = 'deposit-eth '
     this.builderArgs.forEach((item) => {
       synopsis += item.getReprForSynopsys()
     })
@@ -56,16 +56,14 @@ class WithdrawCommand extends ABaseCommand {
     const toArg = new CommandArg('to',
       'string', 't', 'The to address.', 1, true)
     const quantityArg = new CommandArg('quantity',
-      'string', 'q', 'The quantity to withdraw.', 1, true)
-    const tokenArg = new CommandArg('token',
-      'string', 'tk', 'The token address.', 1, true)
+      'string', 'q', 'The quantity to deposit.', 1, true)
     const privateKeyFilePathArg = new CommandArg('private-key-path',
       'string', 'prv', 'The private key file path.', 1, false)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
     const rawTxArg = new CommandArg('raw-tx',
       'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
-    return [fromArg, toArg, quantityArg, tokenArg, privateKeyFilePathArg, draftArg, rawTxArg]
+    return [fromArg, toArg, quantityArg, privateKeyFilePathArg, draftArg, rawTxArg]
   }
 
   /**
@@ -85,15 +83,14 @@ class WithdrawCommand extends ABaseCommand {
    * @param {Object} params
    * @param {String} params.from           The personal wallet address (EOA).
    * @param {String} params.to             The trading wallet address.
-   * @param {String} params.quantity       The personal wallet address (EOA).
-   * @param {String} params.token          The token address.
+   * @param {String} params.quantity       The amount of ETH to be deposited.
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
-    const params = this.withdrawCommandValidator
-      .withdraw({ from, to, quantity, token, privateKeyFilePath, draft, rawTx })
+  async doValidateAsync({ from, to, quantity, privateKeyFilePath, draft, rawTx }) {
+    const params = this.depositEthCommandValidator
+      .depositEth({ from, to, quantity, privateKeyFilePath, draft, rawTx })
     return params
   }
 
@@ -103,17 +100,16 @@ class WithdrawCommand extends ABaseCommand {
    * @param {Object} params
    * @param {String} params.from           The personal wallet address (EOA).
    * @param {String} params.to             The trading wallet address.
-   * @param {String} params.quantity       The personal wallet address (EOA).
-   * @param {String} params.token          The token address.
+   * @param {String} params.quantity       The amount of ETH to be deposited.
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx }) {
+  async doExecuteAsync({ from, to, quantity, privateKeyFilePath, draft, rawTx }) {
     const privateKey = await this.extractPrivateKey(privateKeyFilePath)
     const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
     const transactionObjectDraft = this.tradingWalletService.transactionBuilder
-      .buildWithdrawTransactionDraft(from, to, quantity, token)
+      .buildDepositEtherTransactionDraft(personalWalletAddressRetrived, to, quantity)
 
     if (draft) {
       return transactionObjectDraft
@@ -126,15 +122,14 @@ class WithdrawCommand extends ABaseCommand {
       )
       return signedTransactionData
     }
-    const result = await this.tradingWalletService.withdrawAsync(
+    const result = await this.tradingWalletService.depositEtherAsync(
       personalWalletAddressRetrived,
       to,
       quantity,
-      token,
       privateKey,
     )
     return result
   }
 }
 
-module.exports = WithdrawCommand
+module.exports = DepositEthCommand

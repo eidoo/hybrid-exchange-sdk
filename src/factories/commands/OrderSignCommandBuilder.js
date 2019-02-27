@@ -1,7 +1,7 @@
 const logger = require('../../logger')
 const { PrivateKeyService } = require('../../services/PrivateKeyService')
 
-const OrderSignCommand = require('../../commands/OrderSignCommand')
+const OrderSignCommand = require('../../commands/order/OrderSignCommand')
 const OrderSignCommandValidator = require('../../validators/OrderSignCommandValidator')
 const OrderSignerHelper = require('../../helpers/OrderSignerHelper')
 const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')

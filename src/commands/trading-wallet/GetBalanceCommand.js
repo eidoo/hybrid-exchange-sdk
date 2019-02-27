@@ -1,7 +1,7 @@
 const _ = require('lodash')
 
-const ABaseCommand = require('./ABaseCommand')
-const CommandArg = require('../models/CommandArg')
+const ABaseCommand = require('../ABaseCommand')
+const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing GetBalanceCommand. */

@@ -1,7 +1,7 @@
 const logger = require('../../logger')
 const { PrivateKeyService } = require('../../services/PrivateKeyService')
 
-const WithdrawCommand = require('../../commands/WithdrawCommand')
+const WithdrawCommand = require('../../commands/trading-wallet/WithdrawCommand')
 const WithdrawCommandValidator = require('../../validators/WithdrawCommandValidator')
 const PrivateKeyValidator = require('../../validators/PrivateKeyValidator')
 const TradingWalletServiceBuilder = require('../TradingWalletServiceBuilder')
