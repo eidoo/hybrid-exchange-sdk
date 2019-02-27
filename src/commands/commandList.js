@@ -10,8 +10,8 @@ const DepositEthCommand = require('./DepositEthCommand')
 const DepositEthCommandValidator = require('../validators/DepositEthCommandValidator')
 const DepositTokenCommand = require('./DepositTokenCommand')
 const DepositTokenCommandValidator = require('../validators/DepositTokenCommandValidator')
-const GetAddressCommand = require('../commands/GetAddressCommand')
-const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
+// const GetAddressCommand = require('../commands/GetAddressCommand')
+// const GetAddressCommandValidator = require('../validators/GetAddressCommandValidator')
 const GetAllowanceCommand = require('../commands/GetAllowanceCommand')
 const GetAllowanceCommandValidator = require('../validators/GetAllowanceCommandValidator')
 const GetBalanceCommand = require('../commands/GetBalanceCommand')
@@ -30,7 +30,7 @@ const approveCommandValidator = new ApproveCommandValidator(logger)
 const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
 const depositEthCommandValidator = new DepositEthCommandValidator(logger)
 const depositTokenCommandValidator = new DepositTokenCommandValidator(logger)
-const getAddressCommandValidator = new GetAddressCommandValidator(logger)
+// const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
 const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
 const orderCancelCommandValidator = new OrderCancelCommandValidator(logger)
@@ -43,8 +43,13 @@ const withdrawCommandValidator = new WithdrawCommandValidator(logger)
 
 const tradingWalletService = TradingWalletServiceBuilder.build()
 
-const getAddressCommand = new GetAddressCommand(logger, tradingWalletService,
-  getAddressCommandValidator, privateKeyService, privateKeyValidator)
+// const getAddressCommand = new GetAddressCommand(logger, tradingWalletService,
+//   getAddressCommandValidator, privateKeyService, privateKeyValidator)
+
+const GetAddressCommandBuilder = require('../factories/commands/GetAddressCommandBuilder')
+
+const getAddressCommand = GetAddressCommandBuilder.build()
+
 
 const getAllowanceCommand = new GetAllowanceCommand(logger,
   getAllowanceCommandValidator, privateKeyService, privateKeyValidator)
