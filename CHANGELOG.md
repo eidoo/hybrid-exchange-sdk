@@ -10,6 +10,7 @@ Release date: 2019-02-REPLEACE_ME.
 
 ### Added
 
+- [Command factories](https://github.com/eidoo/hybrid-exchange-sdk/issues/40)
 - [CLI deposit token command](https://github.com/eidoo/hybrid-exchange-sdk/issues/19)
 - [Circle CI](https://github.com/eidoo/hybrid-exchange-sdk/issues/36)
 - [CLI cancel order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/26)
