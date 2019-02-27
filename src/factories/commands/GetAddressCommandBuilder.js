@@ -11,8 +11,8 @@ const privateKeyValidator = new PrivateKeyValidator(logger)
 const tradingWalletService = TradingWalletServiceBuilder.build()
 
 /**
-   * Class representing a simple factory to build GetAddressCommandBuilder object.
-   */
+ * Class representing a simple factory to build GetAddressCommandBuilder object.
+ */
 class GetAddressCommandBuilder {
   static build() {
     const getAddressCommandValidator = new GetAddressCommandValidator(logger)
@@ -21,4 +21,5 @@ class GetAddressCommandBuilder {
     return getAddressCommand
   }
 }
+
 module.exports = GetAddressCommandBuilder
