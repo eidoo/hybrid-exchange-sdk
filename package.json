@@ -11,7 +11,6 @@
     "release": "git add . && yarn version && VERSION=$(yarn -s version:current) && git push origin release/v$VERSION && git push origin v$VERSION && git checkout master && git pull --rebase && git rebase release/v$VERSION && git push origin master && git checkout dev && git pull --rebase && git rebase release/v$VERSION && git push origin dev",
     "start": "bin/hybrid-exchange-cli.js",
     "test": "jest",
-    "lint": "eslint . --ext .js",
     "test:ci": "jest --ci --reporters=default --reporters=jest-junit",
     "test:unit": "jest test/unit",
     "version:current": "echo $npm_package_version"

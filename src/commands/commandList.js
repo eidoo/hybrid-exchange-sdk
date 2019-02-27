@@ -16,6 +16,8 @@ const GetBalanceCommand = require('../commands/GetBalanceCommand')
 const GetBalanceCommandValidator = require('../validators/GetBalanceCommandValidator')
 const OrderCancelCommand = require('../commands/OrderCancelCommand')
 const OrderCancelCommandValidator = require('../validators/OrderCancelCommandValidator')
+const OrderCreateCommand = require('../commands/OrderCreateCommand')
+const OrderCreateCommandValidator = require('../validators/OrderCreateCommandValidator')
 const OrderSignCommand = require('../commands/OrderSignCommand')
 const OrderSignCommandValidator = require('../validators/OrderSignCommandValidator')
 const OrderSignerHelper = require('../helpers/OrderSignerHelper')
@@ -31,6 +33,7 @@ const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const getAllowanceCommandValidator = new GetAllowanceCommandValidator(logger)
 const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
 const orderCancelCommandValidator = new OrderCancelCommandValidator(logger)
+const orderCreateCommandValidator = new OrderCreateCommandValidator(logger)
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 const ordersignerHelper = new OrderSignerHelper(logger)
 const orderService = new OrderService(logger)
@@ -67,6 +70,9 @@ const approveCommand = new ApproveCommand(logger, approveCommandValidator,
 const orderCancelCommand = new OrderCancelCommand(logger, orderService, orderCancelCommandValidator,
   privateKeyService, privateKeyValidator)
 
+const orderCreateCommand = new OrderCreateCommand(logger, orderService, orderCreateCommandValidator,
+  privateKeyService, privateKeyValidator)
+
 module.exports = {
   approveCommand,
   createWalletCommand,
@@ -75,6 +81,7 @@ module.exports = {
   getAllowanceCommand,
   getBalanceCommand,
   orderCancelCommand,
+  orderCreateCommand,
   signCommand,
   withdrawCommand,
 }

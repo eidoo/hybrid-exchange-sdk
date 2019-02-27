@@ -1,6 +1,5 @@
 const ABaseCommand = require('./ABaseCommand')
 const CommandArg = require('../models/CommandArg')
-const { exchange } = require('../config')
 
 /**
  * Class representing orderCreateCommand. */
@@ -51,13 +50,11 @@ class OrderCreateCommand extends ABaseCommand {
    * It set the builder args necessary to set args cli command.
    */
   static setBuilderArgs() {
-    const generateCliSkeletonArg = new CommandArg('generate-cli-skeleton',
-      'string', 'n', 'Name argument is blablalbbal.', 1, true)
-    const cliInputJsonArg = new CommandArg('generate-cli-skeleton',
-      'string', 'n', 'Name argument is blablalbbal.', 1, true)
+    const cliInputJsonArg = new CommandArg('cli-input-JSON',
+      'string', 'input', 'The order creation payload.', 1, true, undefined)
     const privateKeyFilePathArg = new CommandArg('private-key-file-path',
-      'string', 'prv', 'The private key file path.', 1, false)
-    return [generateCliSkeletonArg, cliInputJsonArg, privateKeyFilePathArg]
+      'string', 'prv', 'The private key file path.', 1, true)
+    return [cliInputJsonArg, privateKeyFilePathArg]
   }
 
   /**
@@ -76,42 +73,25 @@ class OrderCreateCommand extends ABaseCommand {
    *
    * @param {Object} params
    * @param {String} params.cliInputJson        The order create command payload.
-   * @param {String} params.generateCliSkeleton If set to true returns the skeleton of the payload to be filled.
    * @param {String} params.privateKeyFilePath  The private key file path.
    */
-  async doValidateAsync({ generateCliSkeleton, cliInputJson, privateKeyFilePath }) {
-    const params = this.orderCreateValidator.createOrder({ generateCliSkeleton, cliInputJson, privateKeyFilePath })
+  async doValidateAsync({ cliInputJson, privateKeyFilePath }) {
+    const params = this.orderCreateCommandValidator.orderCreate({
+      cliInputJson,
+      privateKeyFilePath,
+    })
     return params
-  }
-
-  static getCliSkeleton() {
-    return {
-      exchangeAddress: exchange.smartContractAddress,
-      expirationBlock: '',
-      offerTokenAddress: '',
-      offerTokenAmount: '',
-      wantTokenAmount: '',
-      wantTokenAddress: '',
-      salt: '',
-      maker: '',
-    }
   }
 
   /**
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.cliInputJson        The order create command payload.
-   * @param {String} params.generateCliSkeleton If set to true returns the skeleton of the payload to be filled.
-   * @param {String} params.privateKeyFilePath  The private key file path.
+   * @param {String} params.cliInputJson       The order create command payload.
+   * @param {String} params.privateKeyFilePath The private key file path.
    */
-  async doExecuteAsync({ generateCliSkeleton, cliInputJson, privateKeyFilePath }) {
-    if (generateCliSkeleton) {
-      return this.constructor.getCliSkeleton()
-    }
-
+  async doExecuteAsync({ cliInputJson, privateKeyFilePath }) {
     const privateKey = await this.extractPrivateKey(privateKeyFilePath)
-
     const order = await this.orderService.createOrderAsync(cliInputJson, privateKey)
     return order
   }

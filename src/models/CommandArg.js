@@ -1,5 +1,5 @@
 class CommandArg {
-  constructor (name, type, alias, describe, nargs, demand, defaultValue = undefined) {
+  constructor (name, type, alias, describe, nargs, demand, defaultValue = undefined, coerce = {}) {
     this.name = name
     this.type = type
     this.alias = alias
@@ -7,15 +7,18 @@ class CommandArg {
     this.nargs = nargs
     this.demand = demand
     this.default = defaultValue
+    this.coerce = coerce
   }
 
   getArgProps() {
-    return { type: this.type,
+    return {
+      type: this.type,
       alias: this.alias,
       describe: this.describe,
       nargs: this.nargs,
       demand: this.demand,
-      default: this.default }
+      default: this.default,
+    }
   }
 
   getReprForSynopsys() {
