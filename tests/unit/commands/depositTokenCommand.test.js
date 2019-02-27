@@ -52,27 +52,5 @@ describe('tws deposit-token', () => {
 
       expect(result).toMatchObject(expectedTransactionObjectDraft)
     })
-
-    const rawTxValues = [false, undefined]
-    test.each(rawTxValues)('with rawTx value = %o', async (rawTx) => {
-      const expectedTransactionHash = '0xTransactionHash'
-      sandbox.stub(depositTokenCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
-      sandbox.stub(depositTokenCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
-      sandbox.stub(depositTokenCommand.tradingWalletService.transactionLib.ethApiClient, 'sendRawTransactionAsync')
-        .returns({ hash: expectedTransactionHash })
-
-      const result = await depositTokenCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx, withApprove: false })
-      expect(result).toBe(expectedTransactionHash)
-    })
-    test('should return the signed transaction data to deposit token', async () => {
-      const expectedTransactionSignedData = '0xf8a882113082633382520894230cd1dc412c44bb95aa39018e2a2aed28ebadfc80b8442039d9fd000000000000000000000000230cd1dc412c44bb95aa39018e2a2aed28eccaec00000000000000000000000000000000000000000000000006f05b59d3b200001ca06edb334568e31788d34b1c8e5cc9441e626eab4d96d350837a90cdda1f4a7a61a0407f974ed453211ed4d0d9e29ade82f6ea198676970048b7e0029baef7515220'
-      sandbox.stub(depositTokenCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
-      sandbox.stub(depositTokenCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
-
-      const result = await depositTokenCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx: true, withApprove: false })
-      expect(result).toEqual(expectedTransactionSignedData)
-    })
   })
 })
