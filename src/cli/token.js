@@ -1,7 +1,7 @@
-const TKS_COMMAND_DIR = 'tks'
+const TKS_COMMAND_DIR = 'token'
 
 module.exports = {
-  command: 'tks <command>',
+  command: 'token <command>',
   describe: 'Manage Erc20 token service',
   builder: yargs => yargs.commandDir(TKS_COMMAND_DIR),
 }
