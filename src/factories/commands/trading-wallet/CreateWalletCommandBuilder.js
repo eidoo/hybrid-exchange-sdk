@@ -2,8 +2,8 @@ const logger = require('../../../logger')
 const { PrivateKeyService } = require('../../../services/PrivateKeyService')
 
 const CreateWalletCommand = require('../../../commands/trading-wallet/CreateWalletCommand')
-const CreateWalletCommandValidator = require('../../../validators/CreateWalletCommandValidator')
-const GetAllowanceCommandValidator = require('../../../validators/GetAllowanceCommandValidator')
+const CreateWalletCommandValidator = require('../../../validators/commands/trading-wallet/CreateWalletCommandValidator')
+const GetAllowanceCommandValidator = require('../../../validators/commands/token/GetAllowanceCommandValidator')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 
 const privateKeyService = new PrivateKeyService(logger)

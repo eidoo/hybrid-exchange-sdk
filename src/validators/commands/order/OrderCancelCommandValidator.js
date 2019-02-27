@@ -1,5 +1,5 @@
-const BaseValidator = require('./BaseValidator')
-const customJoiValidator = require('../utils/customJoiValidator')
+const BaseValidator = require('../../BaseValidator')
+const customJoiValidator = require('../../../utils/customJoiValidator')
 
 const orderCancelCommandSchema = customJoiValidator.object()
   .keys({

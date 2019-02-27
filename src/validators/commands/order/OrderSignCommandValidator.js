@@ -1,8 +1,8 @@
 const Joi = require('joi')
 
-const BaseValidator = require('./BaseValidator')
-const customJoiValidator = require('../utils/customJoiValidator')
-const validRequestType = require('../models/Request').TYPES
+const BaseValidator = require('../../BaseValidator')
+const customJoiValidator = require('../../../utils/customJoiValidator')
+const validRequestType = require('../../../models/Request').TYPES
 
 const EXCHANGE_CANCEL_REQUEST_PARAM = 'cancel_request'
 

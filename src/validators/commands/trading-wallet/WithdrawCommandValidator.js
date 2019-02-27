@@ -1,5 +1,5 @@
-const customJoiValidator = require('../utils/customJoiValidator')
-const BaseValidator = require('./BaseValidator')
+const customJoiValidator = require('../../../utils/customJoiValidator')
+const BaseValidator = require('../../BaseValidator')
 
 const withdrawSchema = customJoiValidator.object()
   .keys({

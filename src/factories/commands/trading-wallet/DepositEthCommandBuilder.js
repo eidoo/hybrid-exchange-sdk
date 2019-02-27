@@ -2,7 +2,7 @@ const logger = require('../../../logger')
 const { PrivateKeyService } = require('../../../services/PrivateKeyService')
 
 const DepositEthCommand = require('../../../commands/trading-wallet/DepositEthCommand')
-const DepositEthCommandValidator = require('../../../validators/DepositEthCommandValidator')
+const DepositEthCommandValidator = require('../../../validators/commands/trading-wallet/DepositEthCommandValidator')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 const TradingWalletServiceBuilder = require('../../TradingWalletServiceBuilder')
 

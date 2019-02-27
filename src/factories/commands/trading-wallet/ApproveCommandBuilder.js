@@ -1,5 +1,5 @@
 const ApproveCommand = require('../../../commands/trading-wallet/ApproveCommand')
-const ApproveCommandValidator = require('../../../validators/ApproveCommandValidator')
+const ApproveCommandValidator = require('../../../validators/commands/trading-wallet/ApproveCommandValidator')
 const { PrivateKeyService } = require('../../../services/PrivateKeyService')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 

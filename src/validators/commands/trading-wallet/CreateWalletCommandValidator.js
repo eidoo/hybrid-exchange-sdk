@@ -1,5 +1,5 @@
-const customJoiValidator = require('../utils/customJoiValidator')
-const BaseValidator = require('./BaseValidator')
+const customJoiValidator = require('../../../utils/customJoiValidator')
+const BaseValidator = require('../../BaseValidator')
 
 const createWalletSchema = customJoiValidator.object()
   .keys({ personalWalletAddress: customJoiValidator.address().ethereum().required(),
