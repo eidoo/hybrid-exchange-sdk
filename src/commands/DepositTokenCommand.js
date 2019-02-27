@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const Web3 = require('web3')
 
 const ABaseCommand = require('./ABaseCommand')
@@ -49,25 +48,11 @@ class DepositTokenCommand extends ABaseCommand {
     return 'It deposits some Token amount from an EOA to a trading wallet.'
   }
 
-  setErc20Tokenservice(token) {
-    const erc20TokenServiceBuilder = new Erc20TokenServiceBuilder(token)
-    this.erc20TokenService = erc20TokenServiceBuilder.build()
-  }
-
-  setErc20TokenTransactionBuilder(token) {
-    const erc20TokenTransactionBuilder = new Erc20TokenTransactionBuilder(
-      web3,
-      { erc20TokenSmartContractAddress: token },
-    )
-    this.erc20TokenTransactionBuilder = erc20TokenTransactionBuilder
-  }
-
-  setTradingWalletTransactionBuilder() {
+  setTradingWalletFacade(erc20TokenSmartContractAddress) {
+    const erc20TokenTransactionBuilder = new Erc20TokenTransactionBuilder(web3, { erc20TokenSmartContractAddress })
+    const erc20TokenServiceBuilder = new Erc20TokenServiceBuilder(erc20TokenSmartContractAddress)
+    const erc20TokenService = erc20TokenServiceBuilder.build()
     const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(web3)
-    this.tradingWalletTransactionBuilder = tradingWalletTransactionBuilder
-  }
-
-  setTradingWalletFacade(tradingWalletTransactionBuilder, erc20TokenService, erc20TokenTransactionBuilder) {
     const tradingWalletFacade = new TradingWalletFacade(
       tradingWalletTransactionBuilder,
       erc20TokenService,
@@ -89,9 +74,9 @@ class DepositTokenCommand extends ABaseCommand {
    */
   static setBuilderArgs() {
     const fromArg = new CommandArg('from',
-      'string', 'f', 'The from address. (e.g The token holder)', 1, true)
+      'string', 'f', 'The from address. (e.g token holder)', 1, true)
     const toArg = new CommandArg('to',
-      'string', 't', 'The to address. (e.g a trading wallet)', 1, true)
+      'string', 't', 'The to address. (e.g trading wallet)', 1, true)
     const quantityArg = new CommandArg('quantity',
       'string', 'q', 'The quantity to deposit.', 1, true)
     const tokenArg = new CommandArg('token',
@@ -100,11 +85,9 @@ class DepositTokenCommand extends ABaseCommand {
       'string', 'prv', 'The private key file path.', 1, true)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
-    const rawTxArg = new CommandArg('raw-tx',
-      'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
     const withApproveArg = new CommandArg('with-approve',
-      'boolean', 'wap', 'It executes the deposit transaction managing the approve flow.', 0, false, true)
-    return [fromArg, toArg, quantityArg, tokenArg, privateKeyFilePathArg, draftArg, rawTxArg, withApproveArg]
+      'boolean', 'wap', 'It executes the deposit transaction managing the approve flow.', 0, true)
+    return [fromArg, toArg, quantityArg, tokenArg, privateKeyFilePathArg, draftArg, withApproveArg]
   }
 
   /**
@@ -128,12 +111,11 @@ class DepositTokenCommand extends ABaseCommand {
    * @param {String} params.token          The Token address to be deposited.
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
-   * @param {String} params.withApprove    The approve flag. Default true, it will automatically handle the approve flow required for the deposit.
+   * @param {String} params.withApprove    The approve flag. Default false, it will automatically handle the approve flow required for the deposit.
    */
-  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx, withApprove }) {
+  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, withApprove }) {
     const params = this.depositTokenCommandValidator
-      .depositToken({ from, to, quantity, token, privateKeyFilePath, draft, rawTx, withApprove })
+      .depositToken({ from, to, quantity, token, privateKeyFilePath, draft, withApprove })
     return params
   }
 
@@ -147,35 +129,18 @@ class DepositTokenCommand extends ABaseCommand {
    * @param {String} params.token          The Token address to be deposited.
    * @param {String} params.privateKeyPath The private key file path.
    * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
-   * @param {String} params.withApprove    The approve flag. Default true, it will automatically handle the approve flow required for the deposit.
+   * @param {String} params.withApprove    The approve flag. Default false, it will automatically handle the approve flow required for the deposit.
    */
-  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, rawTx, withApprove }) {
+  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, withApprove }) {
     const privateKey = await this.extractPrivateKey(privateKeyFilePath)
     const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
-
-    this.setErc20Tokenservice(token)
-    this.setErc20TokenTransactionBuilder(token)
-    this.setTradingWalletTransactionBuilder()
-    this.setTradingWalletFacade(
-      this.tradingWalletTransactionBuilder,
-      this.erc20TokenService,
-      this.erc20TokenTransactionBuilder,
-    )
+    this.setTradingWalletFacade(token)
 
     const transactionObjectDraft = this.tradingWalletService.transactionBuilder
       .buildDepositTokenTransactionDraft(personalWalletAddressRetrived, to, quantity, token)
 
     if (draft) {
       return transactionObjectDraft
-    }
-
-    if (rawTx) {
-      const signedTransactionData = await this.tradingWalletService.getSignedTransactionData(
-        transactionObjectDraft,
-        privateKey,
-      )
-      return signedTransactionData
     }
 
     if (!withApprove) {

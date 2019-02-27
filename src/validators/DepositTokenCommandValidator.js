@@ -9,8 +9,7 @@ const depositTokenSchema = customJoiValidator.object()
     token: customJoiValidator.address().ethereum().required(),
     privateKeyFilePath: customJoiValidator.path().existFile().required(),
     draft: customJoiValidator.boolean(),
-    rawTx: customJoiValidator.boolean(),
-    withApprove: customJoiValidator.boolean(),
+    withApprove: customJoiValidator.boolean().required(),
   })
 
 class DepositTokenCommandValidator extends BaseValidator {
