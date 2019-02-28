@@ -7,8 +7,8 @@ const logger = require('../../../src/logger')
 const TradingWalletServiceBuilder = require('../../../src/factories/TradingWalletServiceBuilder')
 const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
 
-const GetBalanceCommandValidator = require('../../../src/validators/GetBalanceCommandValidator')
-const GetBalanceCommand = require('../../../src/commands/GetBalanceCommand')
+const GetBalanceCommandValidator = require('../../../src/validators/commands/trading-wallet/GetBalanceCommandValidator')
+const GetBalanceCommand = require('../../../src/commands/trading-wallet/GetBalanceCommand')
 
 const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
 
