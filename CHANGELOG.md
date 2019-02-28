@@ -20,11 +20,14 @@ Release date: 2019-02-REPLEACE_ME.
 - [CLI approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/18)
 - [CLI withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/13)
 - [Deposit Token with approve](https://github.com/eidoo/hybrid-exchange-sdk/issues/11)
-- [Allowance](https://github.com/eidoo/hybrid-exchange-sdk/issues/7).
-- [Private key from mnemonic](https://github.com/eidoo/hybrid-exchange-sdk/issues/5).
-- [Pair fee](https://github.com/eidoo/hybrid-exchange-sdk/issues/1).
-- [Pair last price](https://github.com/eidoo/hybrid-exchange-sdk/issues/3).
+- [Allowance](https://github.com/eidoo/hybrid-exchange-sdk/issues/7)
+- [Private key from mnemonic](https://github.com/eidoo/hybrid-exchange-sdk/issues/5)
+- [Pair fee](https://github.com/eidoo/hybrid-exchange-sdk/issues/1)
+- [Pair last price](https://github.com/eidoo/hybrid-exchange-sdk/issues/3)
 
+### Changed
+
+- [Approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/43)
 
 ## [v1.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/fa85a7...v1.1.0)
 

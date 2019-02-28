@@ -1,4 +1,4 @@
-const ApproveCommandBuilder = require('../factories/commands/trading-wallet/ApproveCommandBuilder')
+const ApproveCommandBuilder = require('../factories/commands/token/ApproveCommandBuilder')
 const CreateWalletCommandBuilder = require('../factories/commands/trading-wallet/CreateWalletCommandBuilder')
 const DepositEthCommandBuilder = require('../factories/commands/trading-wallet/DepositEthCommandBuilder')
 const DepositTokenCommandBuilder = require('../factories/commands/trading-wallet/DepositTokenCommandBuilder')

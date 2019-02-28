@@ -102,7 +102,7 @@ class GetAllowanceCommand extends ABaseCommand {
 
     if (privateKeyFilePath) {
       const privateKey = await this.extractPrivateKey(privateKeyFilePath)
-      ownerAddressRetrived = this.getAddressOromPrivateKey(owner, privateKey)
+      ownerAddressRetrived = this.getAddressFromPrivateKey(owner, privateKey)
     }
 
     if (draft) {
