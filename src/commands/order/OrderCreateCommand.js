@@ -2,10 +2,10 @@ const ABaseCommand = require('../ABaseCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
- * Class representing orderCreateCommand. */
+ * Class representing OrderCreateCommand. */
 class OrderCreateCommand extends ABaseCommand {
   /**
-   * Create a signer controller.
+   * Create a OrderCreateCommand controller.
    * @param {Object} logger                      The logger helper.
    * @param {Object} orderService                The tradingWallet service.
    * @param {Object} orderCreateCommandValidator The orderCreateCommandValidator.
