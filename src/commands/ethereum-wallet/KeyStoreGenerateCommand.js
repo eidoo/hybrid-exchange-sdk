@@ -45,11 +45,11 @@ class KeyStoreGenerateCommand extends CredentialBasedCommand {
    * It set the builder args necessary to set args cli command.
    */
   static setBuilderArgs() {
-    const keyStoreFilePathArg = new CommandArg('key-store-file-path',
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
       'string', 'ksp', 'The private key file path.', 1, true)
     const hdPathArg = new CommandArg('hd-path',
       'string', 'p', 'It is the hd path used to derive the private key from mnemonic.', 1, false, HD_PATH)
-    return [keyStoreFilePathArg, hdPathArg]
+    return [keystoreFilePathArg, hdPathArg]
   }
 
   /**
@@ -67,13 +67,13 @@ class KeyStoreGenerateCommand extends CredentialBasedCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.keyStoreFilePath The keystore path.
+   * @param {String} params.keystoreFilePath The keystore path.
    * @param {String} params.hdPathArg        The hd path.
    */
-  async doValidateAsync({ keyStoreFilePath, hdPath }) {
+  async doValidateAsync({ keystoreFilePath, hdPath }) {
     const mnemonic = await this.promptMnemonic()
-    const keyStorePassword = await this.promptKeyStorePassword()
-    const params = this.keyStoreGenerateCommandValidator.keyStoreGenerate({ keyStoreFilePath, hdPath, mnemonic, keyStorePassword })
+    const keystorePassword = await this.promptKeyStorePassword()
+    const params = this.keyStoreGenerateCommandValidator.keyStoreGenerate({ keystoreFilePath, hdPath, mnemonic, keystorePassword })
     return params
   }
 
@@ -81,20 +81,20 @@ class KeyStoreGenerateCommand extends CredentialBasedCommand {
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.keyStoreFilePath The keystore path.
+   * @param {String} params.keystoreFilePath The keystore path.
    * @param {String} params.hdPath           The hd path.
    * @param {String} params.mnemonic         The mnemonic.
-   * @param {String} params.keyStorePassword The keystore password.
+   * @param {String} params.keystorePassword The keystore password.
    */
-  async doExecuteAsync({ keyStoreFilePath, hdPath, mnemonic, keyStorePassword }) {
+  async doExecuteAsync({ keystoreFilePath, hdPath, mnemonic, keystorePassword }) {
     const privateKey = this.privateKeyService.getPrivateKeyFromMnemonic(mnemonic, hdPath)
     const keyStore = await this.privateKeyService.generateKeyStoreAsync(
       privateKey,
-      keyStorePassword,
+      keystorePassword,
     )
     const keyStoreFileName = await this.privateKeyService.writeKeyStoreToFileAsync(
       keyStore,
-      keyStoreFilePath,
+      keystoreFilePath,
     )
     const successMessageKeyStoreGenerated = `Keystore file generated: ${keyStoreFileName}`
     return successMessageKeyStoreGenerated
