@@ -10,6 +10,7 @@ Release date: 2019-02-REPLEACE_ME.
 
 ### Added
 
+- [CLI generate keystore command](https://github.com/eidoo/hybrid-exchange-sdk/issues/50)
 - [CLI create order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/46)
 - [Command factories](https://github.com/eidoo/hybrid-exchange-sdk/issues/40)
 - [CLI deposit token command](https://github.com/eidoo/hybrid-exchange-sdk/issues/19)
