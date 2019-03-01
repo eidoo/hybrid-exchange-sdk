@@ -2,7 +2,7 @@
 const MockCancelOrderDataToSign = require('../../factories/MockCancelOrderDataToSign')
 const MockCreateOrderDataToSign = require('../../factories/MockCreateOrderDataToSign')
 const logger = require('../../../src/logger')
-const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
+const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
 const OrderSignerHelper = require('../../../src/helpers/OrderSignerHelper')
 const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
 const OrderSignCommandValidator = require('../../../src/validators/commands/order/OrderSignCommandValidator')
@@ -11,7 +11,8 @@ const OrderSignCommand = require('../../../src/commands/order/OrderSignCommand')
 const orderSignCommandValidator = new OrderSignCommandValidator(logger)
 const orderSignerHelper = new OrderSignerHelper(logger)
 const privateKeyValidator = new PrivateKeyValidator(logger)
-const privateKeyService = new PrivateKeyService(logger)
+
+const privateKeyService = PrivateKeyServiceBuilder.build()
 
 const signCommand = new OrderSignCommand(logger, orderSignerHelper,
   orderSignCommandValidator, privateKeyService, privateKeyValidator)

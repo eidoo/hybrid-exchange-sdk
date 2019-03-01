@@ -1,5 +1,5 @@
 const logger = require('../../../logger')
-const { PrivateKeyService } = require('../../../services/PrivateKeyService')
+const PrivateKeyServiceBuilder = require('../../../../src/factories/PrivateKeyServiceBuilder')
 
 const OrderCancelCommand = require('../../../commands/order/OrderCancelCommand')
 const OrderCancelCommandValidator = require('../../../validators/commands/order/OrderCancelCommandValidator')
@@ -7,7 +7,7 @@ const OrderService = require('../../../services/OrderService')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 
 const orderService = new OrderService(logger)
-const privateKeyService = new PrivateKeyService(logger)
+const privateKeyService = PrivateKeyServiceBuilder.build()
 const privateKeyValidator = new PrivateKeyValidator(logger)
 
 /**

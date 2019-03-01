@@ -1,14 +1,14 @@
 /* global describe, expect, test */
 const keythereum = require('keythereum')
 const ethereumUtil = require('ethereumjs-util')
+const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
 
-const { InvalidPrivateKeyFile, InvalidMnemonicError,
-  PrivateKeyService } = require('../../../src/services/PrivateKeyService')
+const { InvalidPrivateKeyFile, InvalidMnemonicError } = require('../../../src/services/PrivateKeyService')
 
 let privateKeyService
 
 beforeEach(() => {
-  privateKeyService = new PrivateKeyService()
+  privateKeyService = PrivateKeyServiceBuilder.build()
 })
 
 describe('getPrivateKey', () => {
