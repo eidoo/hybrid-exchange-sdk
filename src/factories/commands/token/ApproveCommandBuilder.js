@@ -1,11 +1,10 @@
 const ApproveCommand = require('../../../commands/token/ApproveCommand')
 const ApproveCommandValidator = require('../../../validators/commands/token/ApproveCommandValidator')
-const { PrivateKeyService } = require('../../../services/PrivateKeyService')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
-
+const PrivateKeyServiceBuilder = require('../../../factories/PrivateKeyServiceBuilder')
 const logger = require('../../../logger')
 
-const privateKeyService = new PrivateKeyService(logger)
+const privateKeyService = PrivateKeyServiceBuilder.build()
 const privateKeyValidator = new PrivateKeyValidator(logger)
 
 /**

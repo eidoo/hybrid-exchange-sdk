@@ -1,8 +1,7 @@
 /* eslint-env node, jest */
 const sandbox = require('sinon').createSandbox()
 
-const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
-
+const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
 const logger = require('../../../src/logger')
 const TradingWalletServiceBuilder = require('../../../src/factories/TradingWalletServiceBuilder')
 const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
@@ -13,9 +12,9 @@ const GetBalanceCommand = require('../../../src/commands/trading-wallet/GetBalan
 const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
 
 const tradingWalletService = TradingWalletServiceBuilder.build()
+const privateKeyService = PrivateKeyServiceBuilder.build()
 
 const privateKeyValidator = new PrivateKeyValidator(logger)
-const privateKeyService = new PrivateKeyService(logger)
 
 const getBalanceCommand = new GetBalanceCommand(logger, tradingWalletService,
   getBalanceCommandValidator, privateKeyService, privateKeyValidator)

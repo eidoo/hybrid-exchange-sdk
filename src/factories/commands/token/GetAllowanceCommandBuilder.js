@@ -1,11 +1,10 @@
 const logger = require('../../../logger')
-const { PrivateKeyService } = require('../../../services/PrivateKeyService')
-
+const PrivateKeyServiceBuilder = require('../../../../src/factories/PrivateKeyServiceBuilder')
 const GetAllowanceCommand = require('../../../commands/token/GetAllowanceCommand')
 const GetAllowanceCommandValidator = require('../../../validators/commands/token/GetAllowanceCommandValidator')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 
-const privateKeyService = new PrivateKeyService(logger)
+const privateKeyService = PrivateKeyServiceBuilder.build()
 const privateKeyValidator = new PrivateKeyValidator(logger)
 
 /**

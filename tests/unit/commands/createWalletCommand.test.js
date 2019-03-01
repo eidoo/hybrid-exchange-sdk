@@ -3,7 +3,7 @@ const Web3 = require('web3')
 const sandbox = require('sinon').createSandbox()
 const { EidooEthApiLib } = require('@eidoo/ethapi-lib')
 
-const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
+const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
 const { TransactionLib } = require('../../../src/lib/TransactionLib')
 const CreateWalletCommand = require('../../../src/commands/trading-wallet/CreateWalletCommand')
 const CreateWalletCommandValidator = require('../../../src/validators/commands/trading-wallet/CreateWalletCommandValidator')
@@ -32,7 +32,7 @@ const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
 const tradingWalletService = new TradingWalletService(web3, transactionLib, tradingWalletTransactionBuilder, logger)
 
 const privateKeyValidator = new PrivateKeyValidator(logger)
-const privateKeyService = new PrivateKeyService(logger)
+const privateKeyService = PrivateKeyServiceBuilder.build()
 
 const createWalletCommand = new CreateWalletCommand(logger, tradingWalletService,
   createWalletCommandValidator, privateKeyService, privateKeyValidator)

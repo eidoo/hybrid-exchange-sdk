@@ -2,7 +2,6 @@
 const sandbox = require('sinon').createSandbox()
 
 const { exchange } = require('../../../src/config')
-const { PrivateKeyService } = require('../../../src/services/PrivateKeyService')
 
 const logger = require('../../../src/logger')
 const TradingWalletServiceBuilder = require('../../../src/factories/TradingWalletServiceBuilder')
@@ -15,8 +14,9 @@ const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 const tradingWalletService = TradingWalletServiceBuilder.build()
 
 const privateKeyValidator = new PrivateKeyValidator(logger)
-const privateKeyService = new PrivateKeyService(logger)
+const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
 
+const privateKeyService = PrivateKeyServiceBuilder.build()
 const getAddressCommand = new GetAddressCommand(logger, tradingWalletService,
   getAddressCommandValidator, privateKeyService, privateKeyValidator)
 

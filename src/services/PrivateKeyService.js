@@ -10,10 +10,6 @@ const writeFileAsync = promisify(fs.writeFile)
 const readFileAsync = promisify(fs.readFile)
 
 const { BaseError } = require('../utils/errors')
-const log = require('../logger')
-const PrivateKeyValidator = require('../validators/PrivateKeyValidator')
-
-const privateKeyValidatorInstance = new PrivateKeyValidator(log)
 
 class EthereumAddressError extends BaseError {}
 class InvalidPrivateKeyError extends BaseError {}
@@ -26,7 +22,7 @@ const encoding = 'utf8'
  * Class representing a service that manage private key.
  */
 class PrivateKeyService {
-  constructor(privateKeyValidator = privateKeyValidatorInstance, logger = log) {
+  constructor(privateKeyValidator, logger) {
     if (!privateKeyValidator) {
       throw new TypeError(`Invalid "privateKeyValidator" value: ${privateKeyValidator}`)
     }
