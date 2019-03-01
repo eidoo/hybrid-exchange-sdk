@@ -6,8 +6,8 @@ const KeyStoreGenerateCommand = require('../../../commands/ethereum-wallet/KeySt
 const KeyStoreGenerateCommandValidator = require('../../../validators/commands/ethereum-wallet/KeyStoreGenerateCommandValidator')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 
-const privateKeyService = new PrivateKeyService(logger)
 const privateKeyValidator = new PrivateKeyValidator(logger)
+const privateKeyService = new PrivateKeyService()
 
 /**
  * Class representing a simple factory to build KeyStoreGenerateCommandBuilder object.
