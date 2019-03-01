@@ -9,6 +9,7 @@ const OrderCancelCommandBuilder = require('../factories/commands/order/OrderCanc
 const OrderCreateCommandBuilder = require('../factories/commands/order/OrderCreateCommandBuilder')
 const OrderSignCommandBuilder = require('../factories/commands/order/OrderSignCommandBuilder')
 const WithdrawCommandBuilder = require('../factories/commands/trading-wallet/WithdrawCommandBuilder')
+const KeyStoreGenerateCommandBuilder = require('../factories/commands/ehtereum-wallet/KeyStoreGenerateCommandBuilder')
 
 const approveCommand = ApproveCommandBuilder.build()
 const createWalletCommand = CreateWalletCommandBuilder.build()
@@ -17,6 +18,7 @@ const depositTokenCommand = DepositTokenCommandBuilder.build()
 const getAddressCommand = GetAddressCommandBuilder.build()
 const getAllowanceCommand = GetAllowanceCommandBuilder.build()
 const getBalanceCommand = GetBalanceCommandBuilder.build()
+const keyStoreGenerateCommand = KeyStoreGenerateCommandBuilder.build()
 const orderCancelCommand = OrderCancelCommandBuilder.build()
 const orderCreateCommand = OrderCreateCommandBuilder.build()
 const signCommand = OrderSignCommandBuilder.build()
@@ -30,6 +32,7 @@ module.exports = {
   getAddressCommand,
   getAllowanceCommand,
   getBalanceCommand,
+  keyStoreGenerateCommand,
   orderCancelCommand,
   orderCreateCommand,
   signCommand,

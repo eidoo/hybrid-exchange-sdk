@@ -1,5 +1,7 @@
 /* global describe, expect, test */
-const logger = require('../../../src/logger')
+const keythereum = require('keythereum')
+const ethereumUtil = require('ethereumjs-util')
+
 const { InvalidPrivateKeyFile, InvalidMnemonicError,
   PrivateKeyService } = require('../../../src/services/PrivateKeyService')
 
@@ -54,5 +56,16 @@ describe('getPrivateKeyFromMnemonic', () => {
   const invalidMnemonics = ['', undefined, 1, [], {}, 'not 12 words']
   test.each(invalidMnemonics)('should raise InvalidMnemonicError with menmonic = %o', (invalidMnemonic) => {
     expect(() => privateKeyService.getPrivateKeyFromMnemonic(invalidMnemonic)).toThrowError(InvalidMnemonicError)
+  })
+})
+
+describe('generateKeyStore', () => {
+  test('should return the expected privateKey encrypted in the generated keystore', async () => {
+    const privateKey = 'a8345d27c6d41e4816163fe133daddf38298bb74c16ea5f8245727d03a5f85f8'
+    const password = 'password'
+    const keyStore = await privateKeyService.generateKeyStoreAsync(privateKey, password)
+    const retrivedPrivateKey = keythereum.recover(password, keyStore)
+    const expectedPrivateKey = ethereumUtil.bufferToHex(retrivedPrivateKey)
+    expect(`0x${privateKey}`).toEqual(expectedPrivateKey)
   })
 })

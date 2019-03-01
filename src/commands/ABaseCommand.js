@@ -1,3 +1,4 @@
+const inquirer = require('inquirer')
 const { InvalidPrivateKeyError } = require('../services/PrivateKeyService')
 const CommandError = require('./CommandError')
 
@@ -76,6 +77,31 @@ class ABaseCommand {
         error.field || null,
       ))
     return formattedErrors
+  }
+
+  async promptMnemonic() {
+    const { mnemonic } = await inquirer.prompt([
+      {
+        type: 'input',
+        message: 'Enter mnemonic',
+        name: 'mnemonic',
+      },
+    ])
+    this.log.debug({ fn: 'promptMnemonic' }, 'Input mnemonic done.')
+    return mnemonic
+  }
+
+  async promptKeyStorePassword() {
+    const { keyStorePassword } = await inquirer.prompt([
+      {
+        type: 'password',
+        message: 'Enter password to encrypt your keystore',
+        name: 'keyStorePassword',
+        mask: '*',
+      },
+    ])
+    this.log.debug({ fn: 'promptKeyStorePassword' }, 'Input prompt KeyStore password.')
+    return keyStorePassword
   }
 
   /**
