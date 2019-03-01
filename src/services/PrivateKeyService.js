@@ -45,7 +45,7 @@ class PrivateKeyService {
   }
 
   /**
-   * It gets the private key reading it from file.
+   * It gets a palin private key reading it from file.
    *
    * @param {String} privateKeyPath  The path of private key file.
    *
@@ -68,6 +68,44 @@ class PrivateKeyService {
   }
 
   /**
+   * It gets the keystore object from a keystore file.
+   *
+   * @param {String} keystoreFilePath  The path of the keystore.
+   *
+   * @throws {InvalidPrivateKeyFile} If does not exist the file.
+   * TODO: specific error
+   */
+  async getKeystoreAsync(keystoreFilePath) {
+    try {
+      const extractedData = await readFileAsync(keystoreFilePath, encoding)
+      // Regex for both windows and unix system.
+      const keyStoreObject = extractedData.split(/[\r\n]+/).shift()
+      this.log.debug({ keystoreFilePath, fn: 'getKeyStoreAsync' },
+        'Get private keystore from file.')
+      return JSON.parse(keyStoreObject)
+    } catch (err) {
+      this.log.error({ keystoreFilePath, fn: 'getKeyStoreAsync' },
+        'Error getting keystore from file.')
+      throw new InvalidPrivateKeyFile(err)
+    }
+  }
+
+  /**
+   * It gets the private key from a keystore.
+   *
+   * @param {String} password The password to decrypt the keystore.
+   * @param {String} keystore The keystore.
+   * TODO: unit test
+   */
+  async getPrivateKeyFromKeystore(password, keystore) {
+    // TODO: try catch?
+    const bufferPrivateKey = keythereum.recover(password, keystore)
+    const privateKey = bufferPrivateKey.toString('hex')
+    this.log.info({ fn: 'getPrivateKeyFromKeystore', privateKey }, 'Get privatekey from keystore.')
+    return privateKey
+  }
+
+  /**
    * It gets the address from private key.
    *
    * @param {String} privateKey  The  private key.
@@ -76,7 +114,8 @@ class PrivateKeyService {
    */
   getAddressFromPrivateKey(privateKey) {
     try {
-      const privateKeyBuffered = ethereumUtil.toBuffer(privateKey)
+      const privateKeyWithPrefix = ethereumUtil.addHexPrefix(privateKey)
+      const privateKeyBuffered = ethereumUtil.toBuffer(privateKeyWithPrefix)
       const addressBufferedFromPrivateKey = ethereumUtil.privateToAddress(privateKeyBuffered)
       const personalWalletAddress = ethereumUtil.bufferToHex(addressBufferedFromPrivateKey)
       this.log.debug({ fn: 'getAddressFromPrivateKey' },
