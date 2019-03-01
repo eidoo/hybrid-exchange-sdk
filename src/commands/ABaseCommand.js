@@ -82,10 +82,9 @@ class ABaseCommand {
   async promptMnemonic() {
     const { mnemonic } = await inquirer.prompt([
       {
-        type: 'password',
+        type: 'input',
         message: 'Enter mnemonic',
         name: 'mnemonic',
-        mask: '*',
       },
     ])
     this.log.debug({ fn: 'promptMnemonic' }, 'Input mnemonic done.')
