@@ -5,7 +5,8 @@ const depositEthSchema = customJoiValidator.object()
   .keys({
     from: customJoiValidator.address().ethereum().required(),
     to: customJoiValidator.address().ethereum().required(),
-    privateKeyFilePath: customJoiValidator.path().existFile(),
+    keystoreFilePath: customJoiValidator.path().existFile().required(),
+    keystorePassword: customJoiValidator.string().required(),
     quantity: customJoiValidator.bigNumber().valid().required(),
     draft: customJoiValidator.boolean(),
     rawTx: customJoiValidator.boolean(),
