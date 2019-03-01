@@ -15,7 +15,7 @@ let config = {
 let ovverrideConfig
 try {
   // eslint-disable-next-line
-  ovverrideConfig = require('./override.json')
+  ovverrideConfig = config.get('override.config');
   config = _.merge(config, ovverrideConfig)
 } catch (err) {
   // Do nothing

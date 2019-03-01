@@ -1,10 +1,12 @@
+const { promisify } = require('util')
 const bip39 = require('bip39')
+const crypto = require('crypto')
 const ethereumUtil = require('ethereumjs-util')
 const fs = require('fs')
-
 const hdkey = require('ethereumjs-wallet/hdkey')
-const { promisify } = require('util')
+const keythereum = require('keythereum')
 
+const writeFileAsync = promisify(fs.writeFile)
 const readFileAsync = promisify(fs.readFile)
 
 const { BaseError } = require('../utils/errors')
@@ -24,7 +26,7 @@ const encoding = 'utf8'
  * Class representing a service that manage private key.
  */
 class PrivateKeyService {
-  constructor(privateKeyValidator = privateKeyValidatorInstance, logger = log, hdPath = HD_PATH) {
+  constructor(privateKeyValidator = privateKeyValidatorInstance, logger = log) {
     if (!privateKeyValidator) {
       throw new TypeError(`Invalid "privateKeyValidator" value: ${privateKeyValidator}`)
     }
@@ -35,10 +37,15 @@ class PrivateKeyService {
     }
     this.log = logger.child({ module: this.constructor.name })
 
-    if (!hdPath) {
-      throw new TypeError(`Invalid "hdPath" value: ${hdPath}`)
+    this.keyStoreOptions = {
+      kdf: 'pbkdf2',
+      cipher: 'aes-128-ctr',
+      kdfparams: {
+        c: 262144,
+        dklen: 32,
+        prf: 'hmac-sha256',
+      },
     }
-    this.hdPath = hdPath
   }
 
   /**
@@ -93,11 +100,11 @@ class PrivateKeyService {
    *
    * @throws {InvalidMnemonicError} If the menomic is not valid.
    */
-  getPrivateKeyFromMnemonic(mnemonic) {
+  getPrivateKeyFromMnemonic(mnemonic, hdPath = HD_PATH) {
     try {
       const validMnemonic = this.privateKeyValidator.validateMnemonic(mnemonic)
       const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeed(validMnemonic))
-      const wallet = hdwallet.derivePath(this.hdPath).getWallet()
+      const wallet = hdwallet.derivePath(hdPath).getWallet()
       const privateKey = wallet._privKey.toString('hex')
       this.log.debug({ fn: 'getPrivateKeyFromMnemonic' }, 'Retrieve private key from mnemonic.')
       return privateKey
@@ -106,6 +113,25 @@ class PrivateKeyService {
         'Get address from private key.')
       throw new InvalidMnemonicError(err)
     }
+  }
+
+  /**
+   * It generates keystore file.
+   * @param {String} privateKey       The private key.
+   * @param {String} keyStoreFilePath The key store file path destination.
+   * @param {String} keyStorePassword The key store password.
+   */
+  async generateKeyStore(privateKey, keyStoreFilePath, keyStorePassword) {
+    const parsedkeyStoreFilePath = keyStoreFilePath.split(/[\r\n]+/).shift()
+    const params = { keyBytes: 32, ivBytes: 16 }
+    const randomBytes = crypto.randomBytes(params.keyBytes + params.ivBytes + params.keyBytes)
+    const iv = randomBytes.slice(params.keyBytes, params.keyBytes + params.ivBytes)
+    const salt = randomBytes.slice(params.keyBytes + params.ivBytes)
+    const keyStore = keythereum.dump(keyStorePassword, privateKey, salt, iv, this.keyStoreOptions)
+    const filename = `${parsedkeyStoreFilePath}/UTC--${new Date().toISOString()}--${keyStore.address}`
+    await writeFileAsync(filename, JSON.stringify(keyStore))
+    this.log.info({ fn: 'generateKeyStore', filename }, 'Generate keyStore file.')
+    return filename
   }
 }
 

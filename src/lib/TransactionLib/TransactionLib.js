@@ -192,7 +192,6 @@ class TransactionLib extends ITransactionLib {
    */
   async sign(transactionDraftObject, privateKey, nonce, gas, gasPrice) {
     try {
-      // TODO: add validation for privateKey. Handle it in the user story about password management.
       const privateKeyWithPrefix = ethereumUtil.addHexPrefix(privateKey)
       const privateKeyBuffered = ethereumUtil.toBuffer(privateKeyWithPrefix)
       const transactionObject = await getTransactionObject(this, transactionDraftObject, nonce, gas, gasPrice)

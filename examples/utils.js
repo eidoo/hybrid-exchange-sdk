@@ -15,7 +15,6 @@ const getFundedPersonalWallet = async () => {
   console.log(`EOA: ${address}  - private key: ${privateKey}`)
   web3.eth.sendTransaction({ from: web3.eth.coinbase, to: address, value: web3.toWei(10) })
   console.log('Waiting for ETH deposit to EOA...')
-  // TODO: remove in favor of a getTransactionReceipt status
   await sleep(6000)
   return {
     address,
