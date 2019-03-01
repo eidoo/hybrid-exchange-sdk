@@ -118,8 +118,8 @@ class PrivateKeyService {
   /**
    * It generates keystore file.
    * @param {String} privateKey       The private key.
-   * @param {String} keyStoreFilePath The key store file path destination.
-   * @param {String} keyStorePassword The key store password.
+   * @param {String} keyStoreFilePath The keystore file path destination.
+   * @param {String} keyStorePassword The keystore password.
    */
   async generateKeyStore(privateKey, keyStoreFilePath, keyStorePassword) {
     const parsedkeyStoreFilePath = keyStoreFilePath.split(/[\r\n]+/).shift()

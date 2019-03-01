@@ -83,7 +83,7 @@ class KeyStoreGenerateCommand extends ABaseCommand {
    * @param {String} params.keyStoreFilePath The keystore path.
    * @param {String} params.hdPath           The hd path.
    * @param {String} params.mnemonic         The mnemonic.
-   * @param {String} params.keyStorePassword The key store password.
+   * @param {String} params.keyStorePassword The keystore password.
    */
   async doExecuteAsync({ keyStoreFilePath, hdPath, mnemonic, keyStorePassword }) {
     const privateKey = await this.privateKeyService.getPrivateKeyFromMnemonic(mnemonic, hdPath)
