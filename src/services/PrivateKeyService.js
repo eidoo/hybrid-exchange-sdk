@@ -117,21 +117,31 @@ class PrivateKeyService {
 
   /**
    * It generates keystore file.
+   *
    * @param {String} privateKey       The private key.
    * @param {String} keyStoreFilePath The keystore file path destination.
    * @param {String} keyStorePassword The keystore password.
    */
-  async generateKeyStore(privateKey, keyStoreFilePath, keyStorePassword) {
-    const parsedkeyStoreFilePath = keyStoreFilePath.split(/[\r\n]+/).shift()
+  async generateKeyStoreAsync(privateKey, keyStorePassword) {
     const params = { keyBytes: 32, ivBytes: 16 }
     const randomBytes = crypto.randomBytes(params.keyBytes + params.ivBytes + params.keyBytes)
     const iv = randomBytes.slice(params.keyBytes, params.keyBytes + params.ivBytes)
     const salt = randomBytes.slice(params.keyBytes + params.ivBytes)
     const keyStore = keythereum.dump(keyStorePassword, privateKey, salt, iv, this.keyStoreOptions)
-    const filename = `${parsedkeyStoreFilePath}/UTC--${new Date().toISOString()}--${keyStore.address}`
-    await writeFileAsync(filename, JSON.stringify(keyStore))
-    this.log.info({ fn: 'generateKeyStore', filename }, 'Generate keyStore file.')
-    return filename
+    return keyStore
+  }
+
+  /**
+   * It writes the keystore into a file.
+   *
+   * @param {String} keyStoreFilePath The keystore file path destination.
+   */
+  async writeKeyStoreToFileAsync(keyStore, keyStoreFilePath) {
+    const parsedkeyStoreFilePath = keyStoreFilePath.split(/[\r\n]+/).shift()
+    const fileName = `${parsedkeyStoreFilePath}/UTC--${new Date().toISOString()}--${keyStore.address}`
+    await writeFileAsync(fileName, JSON.stringify(keyStore))
+    this.log.info({ fn: 'generateKeyStore', fileName }, 'Generate keyStore file.')
+    return fileName
   }
 }
 
