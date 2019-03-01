@@ -1,14 +1,14 @@
 const logger = require('../../../logger')
-const { PrivateKeyService } = require('../../../services/PrivateKeyService')
 
+const PrivateKeyServiceBuilder = require('../../../factories/PrivateKeyServiceBuilder')
 const KeyStoreGenerateCommand = require('../../../commands/ethereum-wallet/KeyStoreGenerateCommand')
 // eslint-disable-next-line
 const KeyStoreGenerateCommandValidator = require('../../../validators/commands/ethereum-wallet/KeyStoreGenerateCommandValidator')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 
 const privateKeyValidator = new PrivateKeyValidator(logger)
-const privateKeyService = new PrivateKeyService()
 
+const privateKeyService = PrivateKeyServiceBuilder.build()
 /**
  * Class representing a simple factory to build KeyStoreGenerateCommandBuilder object.
  */
