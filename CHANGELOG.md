@@ -31,6 +31,9 @@ Release date: 2019-02-REPLEACE_ME.
 
 - [Approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/43)
 
+### Fixed
+- [Config](https://github.com/eidoo/hybrid-exchange-sdk/issues/56)
+
 ## [v1.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/fa85a7...v1.1.0)
 
 Release date: 2019-02-12.
