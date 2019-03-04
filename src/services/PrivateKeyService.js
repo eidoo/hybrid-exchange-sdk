@@ -82,6 +82,7 @@ class PrivateKeyService {
       const keyStoreObject = extractedData.split(/[\r\n]+/).shift()
       this.log.debug({ keystoreFilePath, fn: 'getKeyStoreAsync' },
         'Get private keystore from file.')
+      // TODO: keystore validation
       return JSON.parse(keyStoreObject)
     } catch (err) {
       this.log.error({ keystoreFilePath, fn: 'getKeyStoreAsync' },
@@ -95,7 +96,6 @@ class PrivateKeyService {
    *
    * @param {String} password The password to decrypt the keystore.
    * @param {String} keystore The keystore.
-   * TODO: unit test
    */
   async getPrivateKeyFromKeystore(password, keystore) {
     // TODO: try catch?
