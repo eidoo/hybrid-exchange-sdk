@@ -15,6 +15,7 @@ class EthereumAddressError extends BaseError {}
 class InvalidPrivateKeyError extends BaseError {}
 class InvalidPrivateKeyFile extends BaseError {}
 class InvalidMnemonicError extends BaseError {}
+class InvalidKeystoreFile extends BaseError {}
 
 const HD_PATH = "m/44'/60'/0/0"
 const encoding = 'utf8'
@@ -72,8 +73,7 @@ class PrivateKeyService {
    *
    * @param {String} keystoreFilePath  The path of the keystore.
    *
-   * @throws {InvalidPrivateKeyFile} If does not exist the file.
-   * TODO: specific error
+   * @throws {InvalidKeystoreFile} If does not exist the file.
    */
   async getKeystoreAsync(keystoreFilePath) {
     try {
@@ -86,7 +86,7 @@ class PrivateKeyService {
     } catch (err) {
       this.log.error({ keystoreFilePath, fn: 'getKeyStoreAsync' },
         'Error getting keystore from file.')
-      throw new InvalidPrivateKeyFile(err)
+      throw new InvalidKeystoreFile(err)
     }
   }
 
@@ -180,4 +180,4 @@ class PrivateKeyService {
   }
 }
 
-module.exports = { PrivateKeyService, InvalidPrivateKeyError, InvalidPrivateKeyFile, InvalidMnemonicError }
+module.exports = { PrivateKeyService, InvalidPrivateKeyError, InvalidKeystoreFile, InvalidPrivateKeyFile, InvalidMnemonicError }
