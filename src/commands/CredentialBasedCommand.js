@@ -29,7 +29,7 @@ class CredentialBasedCommand extends ABaseCommand {
     this.privateKeyValidator = privateKeyValidator
   }
 
-  async promptMnemonic() {
+  async promptMnemonicAsync() {
     const { mnemonic } = await inquirer.prompt([
       {
         type: 'input',
@@ -41,7 +41,7 @@ class CredentialBasedCommand extends ABaseCommand {
     return mnemonic
   }
 
-  async promptKeyStorePassword() {
+  async promptKeyStorePasswordAsync() {
     const { keyStorePassword } = await inquirer.prompt([
       {
         type: 'password',
@@ -85,6 +85,23 @@ class CredentialBasedCommand extends ABaseCommand {
       throw new InvalidPrivateKeyError(`The private key does not match the personal wallet address given in input:${personalWalletAddress}`)
     }
     return personalWalletAddressFromPrivateKey
+  }
+
+  /**
+   * It extract private key from keystore and password specified.
+   *
+   * @param {String} keystoreFilePath The keystore file path.
+   * @param {String} keyStorePassword The keystore descrypt passowrd.
+   *
+   * @throws {InvalidKeystoreFile}    If does not exist the file.
+   * @throws {InvalidKeystoreParams}  If something wrong during the recovering from keystore.
+   */
+  async extractPrivateKeyFromKeystore(keystoreFilePath, keyStorePassword) {
+    this.privateKeyValidator.validateKeystoreFilePath({ keystoreFilePath })
+    const keystore = await this.privateKeyService.getKeystoreAsync(keystoreFilePath)
+    const privateKey = await this.privateKeyService.getPrivateKeyFromKeystore(keyStorePassword, keystore)
+    this.privateKeyValidator.validatePrivateKey({ privateKey })
+    return privateKey
   }
 }
 

@@ -71,8 +71,8 @@ class KeyStoreGenerateCommand extends CredentialBasedCommand {
    * @param {String} params.hdPathArg        The hd path.
    */
   async doValidateAsync({ keystoreFilePath, hdPath }) {
-    const mnemonic = await this.promptMnemonic()
-    const keystorePassword = await this.promptKeyStorePassword()
+    const mnemonic = await this.promptMnemonicAsync()
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
     const params = this.keyStoreGenerateCommandValidator.keyStoreGenerate({ keystoreFilePath, hdPath, mnemonic, keystorePassword })
     return params
   }

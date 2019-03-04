@@ -34,7 +34,7 @@ describe('trading-wallet deposit-eth', () => {
         .returns(gasEstimationResponse)
       sandbox.stub(depositEthCommand.tradingWalletService.transactionLib.ethApiClient, 'sendRawTransactionAsync')
         .returns({ hash: expectedTransactionHash })
-      sandbox.stub(depositEthCommand, 'promptKeyStorePassword')
+      sandbox.stub(depositEthCommand, 'promptKeyStorePasswordAsync')
         .returns(keystorePassword)
 
       const result = await depositEthCommand
@@ -49,7 +49,7 @@ describe('trading-wallet deposit-eth', () => {
         to,
         value: '0x6f05b59d3b20000',
       }
-      sandbox.stub(depositEthCommand, 'promptKeyStorePassword')
+      sandbox.stub(depositEthCommand, 'promptKeyStorePasswordAsync')
         .returns(keystorePassword)
       const result = await depositEthCommand
         .executeAsync({ from, to, quantity, keystoreFilePath, keystorePassword, draft: true })
@@ -66,7 +66,7 @@ describe('trading-wallet deposit-eth', () => {
         .returns(gasEstimationResponse)
       sandbox.stub(depositEthCommand.tradingWalletService.transactionLib.ethApiClient, 'sendRawTransactionAsync')
         .returns({ hash: expectedTransactionHash })
-      sandbox.stub(depositEthCommand, 'promptKeyStorePassword').returns(keystorePassword)
+      sandbox.stub(depositEthCommand, 'promptKeyStorePasswordAsync').returns(keystorePassword)
 
       const result = await depositEthCommand
         .executeAsync({ from, to, quantity, keystoreFilePath, keystorePassword, draft: false, rawTx })
@@ -79,7 +79,7 @@ describe('trading-wallet deposit-eth', () => {
         .returns(nonceResponse)
       sandbox.stub(depositEthCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync')
         .returns(gasEstimationResponse)
-      sandbox.stub(depositEthCommand, 'promptKeyStorePassword')
+      sandbox.stub(depositEthCommand, 'promptKeyStorePasswordAsync')
         .returns(keystorePassword)
 
       const result = await depositEthCommand

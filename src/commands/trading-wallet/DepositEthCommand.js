@@ -89,7 +89,7 @@ class DepositEthCommand extends CredentialBasedCommand {
    * @param {String} params.rawTwx           The raw tx flag. If set to true it shows the signed transaction data.
    */
   async doValidateAsync({ from, to, quantity, keystoreFilePath, draft, rawTx }) {
-    const keystorePassword = await this.promptKeyStorePassword()
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
     const params = this.depositEthCommandValidator
       .depositEth({ from, to, quantity, keystoreFilePath, keystorePassword, draft, rawTx })
     return params
