@@ -16,6 +16,7 @@ class InvalidPrivateKeyError extends BaseError {}
 class InvalidPrivateKeyFile extends BaseError {}
 class InvalidMnemonicError extends BaseError {}
 class InvalidKeystoreFile extends BaseError {}
+class InvalidKeystoreParams extends BaseError {}
 
 const HD_PATH = "m/44'/60'/0/0"
 const encoding = 'utf8'
@@ -82,7 +83,6 @@ class PrivateKeyService {
       const keyStoreObject = extractedData.split(/[\r\n]+/).shift()
       this.log.debug({ keystoreFilePath, fn: 'getKeyStoreAsync' },
         'Get private keystore from file.')
-      // TODO: keystore validation
       return JSON.parse(keyStoreObject)
     } catch (err) {
       this.log.error({ keystoreFilePath, fn: 'getKeyStoreAsync' },
@@ -94,15 +94,22 @@ class PrivateKeyService {
   /**
    * It gets the private key from a keystore.
    *
-   * @param {String} password The password to decrypt the keystore.
-   * @param {String} keystore The keystore.
+   * @param {String} password        The password to decrypt the keystore.
+   * @param {String} keystore        The keystore.
+   *
+   * @throws {InvalidKeystoreParams} If something goes wrong during the recovering.
    */
   async getPrivateKeyFromKeystore(password, keystore) {
-    // TODO: try catch?
-    const bufferPrivateKey = keythereum.recover(password, keystore)
-    const privateKey = bufferPrivateKey.toString('hex')
-    this.log.info({ fn: 'getPrivateKeyFromKeystore', privateKey }, 'Get privatekey from keystore.')
-    return privateKey
+    try {
+      const bufferPrivateKey = keythereum.recover(password, keystore)
+      const privateKey = bufferPrivateKey.toString('hex')
+      this.log.info({ fn: 'getPrivateKeyFromKeystore', privateKey }, 'Get privatekey from keystore using the password.')
+      return privateKey
+    } catch (err) {
+      this.log.error({ keystore, fn: 'getPrivateKeyFromKeystore' },
+        'Error recovering keystore using the password.')
+      throw new InvalidKeystoreParams(err)
+    }
   }
 
   /**
@@ -180,4 +187,11 @@ class PrivateKeyService {
   }
 }
 
-module.exports = { PrivateKeyService, InvalidPrivateKeyError, InvalidKeystoreFile, InvalidPrivateKeyFile, InvalidMnemonicError }
+module.exports = {
+  InvalidKeystoreFile,
+  InvalidKeystoreParams,
+  InvalidMnemonicError,
+  InvalidPrivateKeyError,
+  InvalidPrivateKeyFile,
+  PrivateKeyService,
+}
