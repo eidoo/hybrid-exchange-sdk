@@ -1,10 +1,10 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing DepositEthCommand.
  */
-class DepositEthCommand extends ABaseCommand {
+class DepositEthCommand extends CredentialBasedCommand {
   /**
    * Create a deposit ethereum command controller.
    * @param {Object} logger                     The logger helper.

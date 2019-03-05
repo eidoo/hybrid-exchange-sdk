@@ -1,13 +1,13 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing CreateWalletCommand. */
-class CreateWalletCommand extends ABaseCommand {
+class CreateWalletCommand extends CredentialBasedCommand {
   /**
    * Create a signer controller.
    * @param {Object} logger                       The logger helper.
- * @param {Object} tradingWalletService           The tradingWallet service.
+   * @param {Object} tradingWalletService         The tradingWallet service.
    * @param {Object} createWalletCommandValidator The CreateWalletCommand validator.
    * @param {Object} privateKeyService            The privateKeyService.
    * @param {Object} privateKeyValidator          The privateKeyValidator.

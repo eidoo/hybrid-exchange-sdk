@@ -1,12 +1,12 @@
 const _ = require('lodash')
 
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 const { Erc20TokenServiceBuilder } = require('../../factories')
 
 /**
  * Class representing GetAllowanceCommand. */
-class GetAllowanceCommand extends ABaseCommand {
+class GetAllowanceCommand extends CredentialBasedCommand {
   /**
    * Create a GetAllowanceCommand object.
    * @param {Object} logger                       The logger helper.

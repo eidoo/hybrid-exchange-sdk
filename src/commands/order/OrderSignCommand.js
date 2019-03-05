@@ -1,11 +1,11 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 const validRequestType = require('../../models/Request').TYPES
 
 /**
  * Class representing orderSignCommand. */
 
-class OrderSignCommand extends ABaseCommand {
+class OrderSignCommand extends CredentialBasedCommand {
   /**
    * Create a signer controller.
    * @param {Object} logger                    The logger helper.

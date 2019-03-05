@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 const Erc20TokenServiceBuilder = require('../../factories/Erc20TokenServiceBuilder')
 const Erc20TokenTransactionBuilder = require('../../factories/Erc20TokenTransactionBuilder')
@@ -13,7 +13,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 /**
  * Class representing DepositTokenCommand.
  */
-class DepositTokenCommand extends ABaseCommand {
+class DepositTokenCommand extends CredentialBasedCommand {
   /**
    * Create a deposit token command controller.
    * @param {Object} logger                       The logger helper.

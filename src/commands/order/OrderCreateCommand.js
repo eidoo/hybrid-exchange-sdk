@@ -1,9 +1,9 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing OrderCreateCommand. */
-class OrderCreateCommand extends ABaseCommand {
+class OrderCreateCommand extends CredentialBasedCommand {
   /**
    * Create a OrderCreateCommand controller.
    * @param {Object} logger                      The logger helper.

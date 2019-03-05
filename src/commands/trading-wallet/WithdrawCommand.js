@@ -1,10 +1,10 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing WithdrawCommand.
  */
-class WithdrawCommand extends ABaseCommand {
+class WithdrawCommand extends CredentialBasedCommand {
   /**
    * Create a signer controller.
    * @param {Object} logger                   The logger helper.
