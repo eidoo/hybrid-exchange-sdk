@@ -1,11 +1,11 @@
 const _ = require('lodash')
 
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing GetBalanceCommand. */
-class GetBalanceCommand extends ABaseCommand {
+class GetBalanceCommand extends CredentialBasedCommand {
   /**
    * Create a GetBalanceCommand controller.
    * @param {Object} logger                     The logger helper.

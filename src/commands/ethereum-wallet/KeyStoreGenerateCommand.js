@@ -1,11 +1,12 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 const HD_PATH = "m/44'/60'/0/0"
 
 /**
- * Class representing KeyStoreGenerateCommand. */
-class KeyStoreGenerateCommand extends ABaseCommand {
+ * Class representing KeyStoreGenerateCommand.
+ */
+class KeyStoreGenerateCommand extends CredentialBasedCommand {
   /**
    * Create a KeyStoreGenerateCommand.
    * @param {Object} logger                           The logger helper.

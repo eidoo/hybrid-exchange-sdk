@@ -1,18 +1,18 @@
 const _ = require('lodash')
 
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing GetAddressCommand. */
-class GetAddressCommand extends ABaseCommand {
+class GetAddressCommand extends CredentialBasedCommand {
   /**
    * Create a signer controller.
    * @param {Object} logger                     The logger helper.
    * @param {Object} tradingWalletService       The tradingWallet service.
    * @param {Object} getAddressCommandValidator The getAddressCommand validator.
-   * @param {Object} privateKeyService          The privateKeyService.
-   * @param {Object} privateKeyValidator        The privateKeyValidator.
+   * @param {Object} privateKeyService            The privateKeyService.
+   * @param {Object} privateKeyValidator          The privateKeyValidator.
    * @throws {TypeError}                        If some required property is missing.
    */
   constructor(logger, tradingWalletService, getAddressCommandValidator,

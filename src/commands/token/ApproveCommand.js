@@ -1,11 +1,11 @@
-const ABaseCommand = require('../ABaseCommand')
+const CredentialBasedCommand = require('../CredentialBasedCommand')
 const CommandArg = require('../../models/CommandArg')
 const Erc20TokenServiceBuilder = require('../../factories/Erc20TokenServiceBuilder')
 
 /**
  * Class representing approve command.
 */
-class ApproveCommand extends ABaseCommand {
+class ApproveCommand extends CredentialBasedCommand {
   /**
    * Create an ApproveCommand controller.
    * @param {Object} logger                       The logger helper.

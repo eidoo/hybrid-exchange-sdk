@@ -10,6 +10,7 @@ Release date: 2019-02-REPLEACE_ME.
 
 ### Added
 
+- [CredentialBaseCommand](https://github.com/eidoo/hybrid-exchange-sdk/issues/60) Add `CredentialBaseCommand` to separate private key and keystore object utilities from `ABaseCommand`.
 - [CLI generate keystore command](https://github.com/eidoo/hybrid-exchange-sdk/issues/50)
 - [CLI create order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/46)
 - [Command factories](https://github.com/eidoo/hybrid-exchange-sdk/issues/40)
