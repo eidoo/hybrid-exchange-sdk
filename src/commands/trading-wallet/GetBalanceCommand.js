@@ -1,23 +1,20 @@
 const _ = require('lodash')
 
-const CredentialBasedCommand = require('../CredentialBasedCommand')
+const ABaseCommand = require('../ABaseCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing GetBalanceCommand. */
-class GetBalanceCommand extends CredentialBasedCommand {
+class GetBalanceCommand extends ABaseCommand {
   /**
    * Create a GetBalanceCommand controller.
    * @param {Object} logger                     The logger helper.
    * @param {Object} tradingWalletService       The tradingWallet service.
    * @param {Object} getBalanceCommandValidator The getBalanceCommand validator.
-   * @param {Object} privateKeyService          The privateKeyService.
-   * @param {Object} privateKeyValidator        The privateKeyValidator.
    * @throws {TypeError}                        If some required property is missing.
    */
-  constructor(logger, tradingWalletService, getBalanceCommandValidator,
-    privateKeyService, privateKeyValidator) {
-    super(logger, privateKeyService, privateKeyValidator)
+  constructor(logger, tradingWalletService, getBalanceCommandValidator) {
+    super(logger)
 
     if (!tradingWalletService) {
       const errorMessage = `Invalid "tradingWalletService" value: ${tradingWalletService}`
@@ -58,11 +55,9 @@ class GetBalanceCommand extends CredentialBasedCommand {
       'string', 't', 'The to address.', 1, true)
     const tokenArg = new CommandArg('token',
       'string', 'tk', 'The token address.', 1, true)
-    const privateKeyFilePathArg = new CommandArg('private-key-path',
-      'string', 'prv', 'The private key file path.', 1, false)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
-    return [fromArg, toArg, tokenArg, privateKeyFilePathArg, draftArg]
+    return [fromArg, toArg, tokenArg, draftArg]
   }
 
   /**
@@ -83,12 +78,10 @@ class GetBalanceCommand extends CredentialBasedCommand {
    * @param {String} params.from               The personal wallet address (EOA).
    * @param {String} params.to                 The trading wallet address.
    * @param {String} params.token              The token wallet address.
-   * @param {String} params.privateKeyFilePath The EOA private key.
    * @param {String} params.draft              The draft parameter.
    */
-  async doValidateAsync({ from, to, token, privateKeyFilePath, draft }) {
-    const params = this.getBalanceCommandValidator
-      .getBalance({ from, to, token, privateKeyFilePath, draft })
+  async doValidateAsync({ from, to, token, draft }) {
+    const params = this.getBalanceCommandValidator.getBalance({ from, to, token, draft })
     return params
   }
 
@@ -99,22 +92,14 @@ class GetBalanceCommand extends CredentialBasedCommand {
    * @param {String} params.from               The personal wallet address (EOA).
    * @param {String} params.to                 The trading wallet address.
    * @param {String} params.token              The token wallet address.
-   * @param {String} params.privateKeyFilePath The EOA private key.
    * @param {String} params.draft              The draft. If set to true it shows the TransactionObjectDraft.
    */
-  async doExecuteAsync({ from, to, token, privateKeyFilePath, draft }) {
-    let personalWalletAddressRetrived = _.cloneDeep(from)
-    if (privateKeyFilePath) {
-      const privateKey = await this.extractPrivateKey(privateKeyFilePath)
-      personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
-    }
-
+  async doExecuteAsync({ from, to, token, draft }) {
     if (draft) {
       return this.tradingWalletService.transactionBuilder.buildAssetBalanceTransactionDraft(from, to, token)
     }
 
-    const result = await this.tradingWalletService
-      .getAssetBalanceAsync(personalWalletAddressRetrived, token, to)
+    const result = await this.tradingWalletService.getAssetBalanceAsync(from, token, to)
     return result
   }
 }
