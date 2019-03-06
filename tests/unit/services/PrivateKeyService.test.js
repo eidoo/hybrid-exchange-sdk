@@ -3,7 +3,11 @@ const keythereum = require('keythereum')
 const ethereumUtil = require('ethereumjs-util')
 const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
 
-const { InvalidPrivateKeyFile, InvalidMnemonicError } = require('../../../src/services/PrivateKeyService')
+const {
+  InvalidKeystoreParams,
+  InvalidPrivateKeyFile,
+  InvalidMnemonicError,
+} = require('../../../src/services/PrivateKeyService')
 
 let privateKeyService
 
@@ -48,6 +52,7 @@ describe('getAddressFromPrivateKey', () => {
 describe('getPrivateKeyFromMnemonic', () => {
   test('should get the private key', () => {
     const expectedPrivateKey = 'a8345d27c6d41e4816163fe133daddf38298bb74c16ea5f8245727d03a5f85f8'
+    // eslint-disable-next-line max-len
     const mnemonic = 'cedibile elica espresso castello poltrona chicca settimana regalato gelatina bulbo microbo assurdo'
     const result = privateKeyService.getPrivateKeyFromMnemonic(mnemonic)
     expect(result).toEqual(expectedPrivateKey)
@@ -63,9 +68,41 @@ describe('generateKeyStore', () => {
   test('should return the expected privateKey encrypted in the generated keystore', async () => {
     const privateKey = 'a8345d27c6d41e4816163fe133daddf38298bb74c16ea5f8245727d03a5f85f8'
     const password = 'password'
-    const keyStore = await privateKeyService.generateKeyStoreAsync(privateKey, password)
-    const retrivedPrivateKey = keythereum.recover(password, keyStore)
+    const keystore = await privateKeyService.generateKeyStoreAsync(privateKey, password)
+    const retrivedPrivateKey = keythereum.recover(password, keystore)
     const expectedPrivateKey = ethereumUtil.bufferToHex(retrivedPrivateKey)
     expect(`0x${privateKey}`).toEqual(expectedPrivateKey)
+  })
+})
+
+describe('getPrivateKeyFromKeystore', () => {
+  test('should return the expected privateKey from encrypted keystore', async () => {
+    const expectedPrivateKey = 'a8345d27c6d41e4816163fe133daddf38298bb74c16ea5f8245727d03a5f85f8'
+    // eslint-disable-next-line max-len
+    const keystore = { address: 'db1b9e1708aec862fee256821702fa1906ceff67', crypto: { cipher: 'aes-128-ctr', ciphertext: '5ca9d296c08a74d0badf3e70b170fd9c2f7652ff0fdbac8f37d982a26f564fe1', cipherparams: { iv: '6e4b0b42ba976a586e7550fc3ce190d7' }, mac: '7c87b34ce6ae422e2ee1b7aba9552d553efaa03c5a6bd903277b4235803eb881', kdf: 'pbkdf2', kdfparams: { c: 262144, dklen: 32, prf: 'hmac-sha256', salt: '4e2a8eba6d206fbf6f231bc37e7cd1a08e6509aa8cae76fdcf3719aec4326397' } }, id: '2ff913ac-a333-4ca3-a681-5e6a8f97629e', version: 3 }
+    const password = 'password'
+    const retrivedPrivateKey = await privateKeyService.getPrivateKeyFromKeystore(password, keystore)
+    expect(retrivedPrivateKey).toEqual(expectedPrivateKey)
+  })
+  test('should raise InvalidKeystoreParams with wrong password', () => {
+    // eslint-disable-next-line max-len
+    const keystore = { address: 'db1b9e1708aec862fee256821702fa1906ceff67', crypto: { cipher: 'aes-128-ctr', ciphertext: '5ca9d296c08a74d0badf3e70b170fd9c2f7652ff0fdbac8f37d982a26f564fe1', cipherparams: { iv: '6e4b0b42ba976a586e7550fc3ce190d7' }, mac: '7c87b34ce6ae422e2ee1b7aba9552d553efaa03c5a6bd903277b4235803eb881', kdf: 'pbkdf2', kdfparams: { c: 262144, dklen: 32, prf: 'hmac-sha256', salt: '4e2a8eba6d206fbf6f231bc37e7cd1a08e6509aa8cae76fdcf3719aec4326397' } }, id: '2ff913ac-a333-4ca3-a681-5e6a8f97629e', version: 3 }
+    const password = 'wrongPassword'
+    return expect(privateKeyService.getPrivateKeyFromKeystore(password, keystore))
+      .rejects.toBeInstanceOf(InvalidKeystoreParams)
+  })
+  test('should raise InvalidKeystoreParams with wrong keystore format', () => {
+    // eslint-disable-next-line max-len
+    const keystore = { address: 'db1b9e1708aec862fee256821702fa1906ceff67', test: { test: 'aes-128-ctr', ciphertext: '5ca9d296c08a74d0badf3e70b170fd9c2f7652ff0fdbac8f37d982a26f564fe1', cipherparams: { iv: '6e4b0b42ba976a586e7550fc3ce190d7' }, mac: '7c87b34ce6ae422e2ee1b7aba9552d553efaa03c5a6bd903277b4235803eb881', kdf: 'pbkdf2', kdfparams: { c: 262144, dklen: 32, prf: 'hmac-sha256', salt: '4e2a8eba6d206fbf6f231bc37e7cd1a08e6509aa8cae76fdcf3719aec4326397' } }, id: '2ff913ac-a333-4ca3-a681-5e6a8f97629e', version: 3 }
+    const password = 'password'
+    return expect(privateKeyService.getPrivateKeyFromKeystore(password, keystore))
+      .rejects.toBeInstanceOf(InvalidKeystoreParams)
+  })
+  test('should raise InvalidKeystoreParams with wrong option', () => {
+    // eslint-disable-next-line max-len
+    const keystore = { address: 'db1b9e1708aec862fee256821702fa1906ceff67', crypto: { cipher: 'aes-256-ctr', ciphertext: '5ca9d296c08a74d0badf3e70b170fd9c2f7652ff0fdbac8f37d982a26f564fe1', cipherparams: { iv: '6e4b0b42ba976a586e7550fc3ce190d7' }, mac: '7c87b34ce6ae422e2ee1b7aba9552d553efaa03c5a6bd903277b4235803eb881', kdf: 'pbkdf2', kdfparams: { c: 262144, dklen: 32, prf: 'hmac-sha256', salt: '4e2a8eba6d206fbf6f231bc37e7cd1a08e6509aa8cae76fdcf3719aec4326397' } }, id: '2ff913ac-a333-4ca3-a681-5e6a8f97629e', version: 3 }
+    const password = 'password'
+    return expect(privateKeyService.getPrivateKeyFromKeystore(password, keystore))
+      .rejects.toBeInstanceOf(InvalidKeystoreParams)
   })
 })
