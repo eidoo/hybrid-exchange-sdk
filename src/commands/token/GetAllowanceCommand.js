@@ -1,22 +1,20 @@
 const _ = require('lodash')
 
-const CredentialBasedCommand = require('../CredentialBasedCommand')
+const ABaseCommand = require('../ABaseCommand')
 const CommandArg = require('../../models/CommandArg')
 const { Erc20TokenServiceBuilder } = require('../../factories')
 
 /**
  * Class representing GetAllowanceCommand. */
-class GetAllowanceCommand extends CredentialBasedCommand {
+class GetAllowanceCommand extends ABaseCommand {
   /**
    * Create a GetAllowanceCommand object.
    * @param {Object} logger                       The logger helper.
    * @param {Object} getAllowanceCommandValidator The get allowance command validator.
-   * @param {Object} privateKeyService            The privateKeyService.
-   * @param {Object} privateKeyValidator          The privateKeyValidator.
    * @throws {TypeError}                          If some required property is missing.
    */
-  constructor(logger, getAllowanceCommandValidator, privateKeyService, privateKeyValidator) {
-    super(logger, privateKeyService, privateKeyValidator)
+  constructor(logger, getAllowanceCommandValidator) {
+    super(logger)
 
     if (!getAllowanceCommandValidator) {
       const errorMessage = `Invalid "getAllowanceCommandValidator" value: ${getAllowanceCommandValidator}`
@@ -53,11 +51,9 @@ class GetAllowanceCommand extends CredentialBasedCommand {
     const owner = new CommandArg('owner', 'string', 'o', 'the funds owner.', 1, true)
     const spender = new CommandArg('spender', 'string', 's', 'The spender i.e. the trading wallet address.', 1, true)
     const tokenArg = new CommandArg('token', 'string', 'tk', 'The token address.', 1, true)
-    const privateKeyFilePathArg = new CommandArg('private-key-file-path',
-      'string', 'prv', 'The private key file path.', 1, false)
     const draftArg = new CommandArg('draft', 'boolean', 'd',
       'If set, it returns the TransactionObjectDraft.', 0, false, false)
-    return [owner, spender, tokenArg, privateKeyFilePathArg, draftArg]
+    return [owner, spender, tokenArg, draftArg]
   }
 
   /**
@@ -78,11 +74,10 @@ class GetAllowanceCommand extends CredentialBasedCommand {
    * @param {String} params.owner              The owner parameter.
    * @param {String} params.spender            The spender.
    * @param {String} params.token              The token address.
-   * @param {String} params.privateKeyFilePath The private key file path.
    * @param {String} params.draft              The draft flag. If set to true it shows the TransactionObjectDraft.
    */
-  async doValidateAsync({ owner, spender, token, privateKeyFilePath, draft }) {
-    const params = this.getAllowanceCommandValidator.getAllowance({ owner, spender, token, privateKeyFilePath, draft })
+  async doValidateAsync({ owner, spender, token, draft }) {
+    const params = this.getAllowanceCommandValidator.getAllowance({ owner, spender, token, draft })
     return params
   }
 
@@ -93,23 +88,15 @@ class GetAllowanceCommand extends CredentialBasedCommand {
    * @param {String} params.owner               The owner parameter.
    * @param {String} params.spender            The spender.
    * @param {String} params.token              The token address.
-   * @param {String} params.privateKeyFilePath The private key file path.
    * @param {String} params.draft              The draft flag. If set to true it shows the TransactionObjectDraft.
    */
-  async doExecuteAsync({ owner, spender, token, privateKeyFilePath, draft }) {
-    let ownerAddressRetrived = _.cloneDeep(owner)
+  async doExecuteAsync({ owner, spender, token, draft }) {
     this.setErc20Tokenservice(token)
 
-    if (privateKeyFilePath) {
-      const privateKey = await this.extractPrivateKey(privateKeyFilePath)
-      ownerAddressRetrived = this.getAddressFromPrivateKey(owner, privateKey)
-    }
-
     if (draft) {
-      return this.erc20TokenService.transactionBuilder
-        .buildGetAllowanceTransactionDraft(ownerAddressRetrived, spender)
+      return this.erc20TokenService.transactionBuilder.buildGetAllowanceTransactionDraft(owner, spender)
     }
-    const result = await this.erc20TokenService.getAllowanceAsync(ownerAddressRetrived, spender)
+    const result = await this.erc20TokenService.getAllowanceAsync(owner, spender)
     return result
   }
 }
