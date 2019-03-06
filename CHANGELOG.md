@@ -6,10 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.0.0...HEAD)
 
-Release date: 2019-02-REPLEACE_ME.
+## [v2.0.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.1.0...v2.0.0)
+
+Release date: 2019-03-06.
 
 ### Added
-
 - [CredentialBaseCommand](https://github.com/eidoo/hybrid-exchange-sdk/issues/60) Add `CredentialBaseCommand` to separate private key and keystore object utilities from `ABaseCommand`.
 - [CLI generate keystore command](https://github.com/eidoo/hybrid-exchange-sdk/issues/50)
 - [CLI create order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/46)
@@ -29,7 +30,6 @@ Release date: 2019-02-REPLEACE_ME.
 - [Pair last price](https://github.com/eidoo/hybrid-exchange-sdk/issues/3)
 
 ### Changed
-
 - [Approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/43)
 
 ### Fixed
