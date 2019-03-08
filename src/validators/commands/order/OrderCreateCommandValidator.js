@@ -4,7 +4,8 @@ const customJoiValidator = require('../../../utils/customJoiValidator')
 
 const orderCreateCommandSchema = customJoiValidator.object().keys({
   cliInputJson: customJoiValidator.json().valid().required(),
-  privateKeyFilePath: customJoiValidator.path().existFile().required(),
+  keystoreFilePath: customJoiValidator.path().existFile().required(),
+  keystorePassword: customJoiValidator.string().required(),
 })
 
 class OrderCreateCommandValidator extends BaseValidator {
