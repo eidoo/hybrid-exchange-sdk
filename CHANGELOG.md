@@ -6,18 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.0.0...HEAD)
 
+Release date: 2019-03-XX.
+
 ### Changed
 - [Keystore in deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/45) Update `deposit-eth` command using keystore instead of private key.
 - [Keystore in withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/67) Update `withdraw` command using keystore instead of private key.
-- [CLI get balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/58) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetBalanceCommand`.
-- [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/59) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAllowanceCommand`.
+- [CLI get balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/58) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetBalanceCommand`
+- [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/59) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAllowanceCommand`
+- [CLI get address command](https://github.com/eidoo/hybrid-exchange-sdk/issues/47) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAddressCommand`
 
 ## [v2.0.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.1.0...v2.0.0)
 
 Release date: 2019-03-06.
 
 ### Added
-- [CredentialBaseCommand](https://github.com/eidoo/hybrid-exchange-sdk/issues/60) Add `CredentialBaseCommand` to separate private key and keystore object utilities from `ABaseCommand`.
+- [CredentialBaseCommand](https://github.com/eidoo/hybrid-exchange-sdk/issues/60) Add `CredentialBaseCommand` to separate private key and keystore object utilities from `ABaseCommand`
 - [CLI generate keystore command](https://github.com/eidoo/hybrid-exchange-sdk/issues/50)
 - [CLI create order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/46)
 - [Command factories](https://github.com/eidoo/hybrid-exchange-sdk/issues/40)

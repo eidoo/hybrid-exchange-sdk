@@ -1,23 +1,18 @@
-const _ = require('lodash')
-
-const CredentialBasedCommand = require('../CredentialBasedCommand')
+const ABaseCommand = require('../ABaseCommand')
 const CommandArg = require('../../models/CommandArg')
 
 /**
  * Class representing GetAddressCommand. */
-class GetAddressCommand extends CredentialBasedCommand {
+class GetAddressCommand extends ABaseCommand {
   /**
    * Create a signer controller.
    * @param {Object} logger                     The logger helper.
    * @param {Object} tradingWalletService       The tradingWallet service.
    * @param {Object} getAddressCommandValidator The getAddressCommand validator.
-   * @param {Object} privateKeyService            The privateKeyService.
-   * @param {Object} privateKeyValidator          The privateKeyValidator.
    * @throws {TypeError}                        If some required property is missing.
    */
-  constructor(logger, tradingWalletService, getAddressCommandValidator,
-    privateKeyService, privateKeyValidator) {
-    super(logger, privateKeyService, privateKeyValidator)
+  constructor(logger, tradingWalletService, getAddressCommandValidator) {
+    super(logger)
 
     if (!tradingWalletService) {
       const errorMessage = `Invalid "tradingWalletService" value: ${tradingWalletService}`
@@ -54,11 +49,9 @@ class GetAddressCommand extends CredentialBasedCommand {
   static setBuilderArgs() {
     const personalWalletAddressArg = new CommandArg('personal-wallet-address',
       'string', 'eoa', 'The personal wallet address (EOA).', 1, true)
-    const privateKeyPathArg = new CommandArg('private-key-path',
-      'string', 'prv', 'The private key file path.', 1, false)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
-    return [personalWalletAddressArg, privateKeyPathArg, draftArg]
+    return [personalWalletAddressArg, draftArg]
   }
 
   /**
@@ -77,12 +70,11 @@ class GetAddressCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.personalWalletAddress The personal wallet address (EOA).
-   * @param {String} params.privateKeyPath        The private key file path.
    * @param {String} params.draft                 The draft parameter.
    */
-  async doValidateAsync({ personalWalletAddress, privateKeyPath, draft }) {
+  async doValidateAsync({ personalWalletAddress, draft }) {
     const params = this.getAddressCommandValidator
-      .getTradingWalletAddress({ personalWalletAddress, privateKeyPath, draft })
+      .getTradingWalletAddress({ personalWalletAddress, draft })
     return params
   }
 
@@ -91,23 +83,16 @@ class GetAddressCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.personalWalletAddress The personal wallet address (EOA).
-   * @param {String} params.privateKeyPath        The private key file path.
    * @param {String} params.draft                 The draft. If set to true it shows the TransactionObjectDraft.
    */
-  async doExecuteAsync({ personalWalletAddress, privateKeyPath, draft }) {
-    let personalWalletAddressRetrived = _.cloneDeep(personalWalletAddress)
-
-    if (privateKeyPath) {
-      const privateKey = await this.extractPrivateKey(privateKeyPath)
-      personalWalletAddressRetrived = this.getAddressFromPrivateKey(personalWalletAddress, privateKey)
-    }
-
+  async doExecuteAsync({ personalWalletAddress, draft }) {
     if (draft) {
-      return this.tradingWalletService.transactionBuilder.buildTradingWalletAddressTransactionDraft(personalWalletAddressRetrived)
+      return this.tradingWalletService.transactionBuilder
+        .buildTradingWalletAddressTransactionDraft(personalWalletAddress)
     }
 
     const result = await this.tradingWalletService
-      .getTradingWalletAddressAsync(personalWalletAddressRetrived)
+      .getTradingWalletAddressAsync(personalWalletAddress)
     return result
   }
 }

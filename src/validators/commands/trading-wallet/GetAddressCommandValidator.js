@@ -3,7 +3,6 @@ const customJoiValidator = require('../../../utils/customJoiValidator')
 
 const getTradingWalletAddressSchema = customJoiValidator.object()
   .keys({ personalWalletAddress: customJoiValidator.address().ethereum().required(),
-    privateKeyPath: customJoiValidator.path().existFile(),
     draft: customJoiValidator.boolean() })
 
 
