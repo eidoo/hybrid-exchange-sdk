@@ -15,16 +15,22 @@ const gasEstimationResponse = {
   },
 }
 
+const keystorePassword = 'password'
+beforeEach(() => {
+  sandbox.stub(depositTokenCommand, 'promptKeyStorePasswordAsync')
+    .returns(keystorePassword)
+})
+
 afterEach(() => {
   sandbox.restore()
 })
 
 describe('tws deposit-token', () => {
-  const from = '0x9c858489661158d1721a66319f8683925d5a8b70'
+  const from = '0xdb1b9e1708aec862fee256821702fa1906ceff67'
   const to = '0x230cd1dc412c44bb95aa39018e2a2aed28ebadfc'
   const quantity = '500000000000000000'
   const token = '0x230cd1dc412c44bb95aa39018e2a2aed28eccaec'
-  const validPrivateKeyFilePath = 'tests/fixtures/privateKeys/privateKey.key'
+  const keystoreFilePath = 'tests/fixtures/keyStore/validKeystore'
   describe('execute deposit token command ', () => {
     test('should return the expected transaction hash', async () => {
       const expectedTransactionHash = '0xTransactionHash'
@@ -36,7 +42,7 @@ describe('tws deposit-token', () => {
         .returns({ hash: expectedTransactionHash })
 
       const result = await depositTokenCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, withApprove: false })
+        .executeAsync({ from, to, quantity, token, keystoreFilePath, draft: false, withApprove: false })
 
       expect(result).toBe(expectedTransactionHash)
     })
@@ -48,7 +54,7 @@ describe('tws deposit-token', () => {
       value: '0x0' }
 
       const result = await depositTokenCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: true, withApprove: false })
+        .executeAsync({ from, to, quantity, token, keystoreFilePath, draft: true, withApprove: false })
 
       expect(result).toMatchObject(expectedTransactionObjectDraft)
     })
