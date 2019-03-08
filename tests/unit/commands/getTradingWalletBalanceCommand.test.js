@@ -1,23 +1,10 @@
 /* eslint-env node, jest */
 const sandbox = require('sinon').createSandbox()
 
-const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
-const logger = require('../../../src/logger')
+const { getBalanceCommand } = require('../../../src/commands/commandList')
 const TradingWalletServiceBuilder = require('../../../src/factories/TradingWalletServiceBuilder')
-const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
-
-const GetBalanceCommandValidator = require('../../../src/validators/commands/trading-wallet/GetBalanceCommandValidator')
-const GetBalanceCommand = require('../../../src/commands/trading-wallet/GetBalanceCommand')
-
-const getBalanceCommandValidator = new GetBalanceCommandValidator(logger)
 
 const tradingWalletService = TradingWalletServiceBuilder.build()
-const privateKeyService = PrivateKeyServiceBuilder.build()
-
-const privateKeyValidator = new PrivateKeyValidator(logger)
-
-const getBalanceCommand = new GetBalanceCommand(logger, tradingWalletService,
-  getBalanceCommandValidator, privateKeyService, privateKeyValidator)
 
 afterEach(() => {
   sandbox.restore()
