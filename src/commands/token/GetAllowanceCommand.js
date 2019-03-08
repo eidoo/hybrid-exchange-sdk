@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const ABaseCommand = require('../ABaseCommand')
 const CommandArg = require('../../models/CommandArg')
 const { Erc20TokenServiceBuilder } = require('../../factories')
