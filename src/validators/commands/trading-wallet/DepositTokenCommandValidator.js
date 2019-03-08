@@ -7,7 +7,8 @@ const depositTokenSchema = customJoiValidator.object()
     to: customJoiValidator.address().ethereum().required(),
     quantity: customJoiValidator.bigNumber().valid().required(),
     token: customJoiValidator.address().ethereum().required(),
-    privateKeyFilePath: customJoiValidator.path().existFile().required(),
+    keystoreFilePath: customJoiValidator.path().existFile().required(),
+    keystorePassword: customJoiValidator.string().required(),
     draft: customJoiValidator.boolean(),
     withApprove: customJoiValidator.boolean().required(),
   })
