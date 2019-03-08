@@ -4,18 +4,25 @@ const sandbox = require('sinon').createSandbox()
 const { orderCancelCommand } = require('../../../src/commands/commandList')
 const ExchangeApiLibError = require('../../../src/lib/ExchangeApiLib/ExchangeApiLibError')
 
+const keystorePassword = 'password'
+
+beforeEach(() => {
+  sandbox.stub(orderCancelCommand, 'promptKeyStorePasswordAsync')
+    .returns(keystorePassword)
+})
+
 afterEach(() => {
   sandbox.restore()
 })
 
+const validKeustorePath = 'tests/fixtures/keyStore/validKeystore'
 describe('os cancel', () => {
-  const validPrivateKeyFilePath = 'tests/fixtures/privateKeys/privateKey.key'
   const orderId = '0xOrderId'
   test('should return the expected order id deleted', async () => {
     sandbox.stub(orderCancelCommand.orderService, 'cancelOrderAsync').returns(orderId)
 
     const result = await orderCancelCommand
-      .executeAsync({ orderId, privateKeyFilePath: validPrivateKeyFilePath })
+      .executeAsync({ orderId, keystorePassword, keystoreFilePath: validKeustorePath })
 
     expect(result).toBe(orderId)
   })
@@ -29,7 +36,7 @@ describe('os cancel', () => {
     sandbox.stub(orderCancelCommand.orderService, 'cancelOrderAsync').throws(new ExchangeApiLibError(errorMessage))
 
     const result = await orderCancelCommand
-      .executeAsync({ orderId, privateKeyFilePath: validPrivateKeyFilePath })
+      .executeAsync({ orderId, keystorePassword, keystoreFilePath: validKeustorePath })
 
     expect(result).toEqual(expetedResult)
   })
