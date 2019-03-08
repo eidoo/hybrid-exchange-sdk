@@ -11,10 +11,12 @@ Release date: 2019-03-XX.
 ### Changed
 - [Keystore in withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/67) Update `withdraw` command using keystore instead of private key
 - [Keystore in deposit token command](https://github.com/eidoo/hybrid-exchange-sdk/issues/66) Update `deposit-token` command using keystore instead of private key
+- [Keystore in create wallet command](https://github.com/eidoo/hybrid-exchange-sdk/issues/65) Update `create-wallet` command using keystore instead of private key
 - [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/59) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAllowanceCommand`
 - [CLI get balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/58) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetBalanceCommand`
 - [CLI get address command](https://github.com/eidoo/hybrid-exchange-sdk/issues/47) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAddressCommand`
-- [Keystore in deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/45) Update `deposit-eth` command using keystore instead of private key.
+- [Keystore in deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/45) Update `deposit-eth` command using keystore instead of private key
+
 
 ## [v2.0.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.1.0...v2.0.0)
 
