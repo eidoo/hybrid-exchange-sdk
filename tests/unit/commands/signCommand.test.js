@@ -96,22 +96,6 @@ describe('os sign', () => {
 })
 
 describe('sign create order', () => {
-  test('should raise ValidationError if the private key is not a valid ethereum private key', async() => {
-    const invalidPrivateKey = 'tests/fixtures/privateKeys/invalidPrivateKey.key'
-    const cliInputJson = MockCreateOrderDataToSign.build()
-
-    const expectedResult = [{
-      code: 'ValidationError',
-      field: 'privateKey',
-      message: 'privateKey is an invalid ethereum private key.',
-    }]
-
-    const result = await signCommand
-      .executeAsync({ privateKeyPath: invalidPrivateKey, cliInputJson: JSON.stringify(cliInputJson) })
-
-    expect(result).toMatchObject(expectedResult)
-  })
-
   describe('should raise validationError if', () => {
     const invalidEthereumAddressFields = ['exchangeAddress', 'maker', 'offerTokenAddress', 'wantTokenAddress']
     test.each(invalidEthereumAddressFields)('should raise ValidationError if %o is not a valid ethereum address.', async(invalidEthereumAddressField) => {
