@@ -2,23 +2,10 @@
 const sandbox = require('sinon').createSandbox()
 
 const { exchange } = require('../../../src/config')
-
-const logger = require('../../../src/logger')
+const { getAddressCommand } = require('../../../src/commands/commandList')
 const TradingWalletServiceBuilder = require('../../../src/factories/TradingWalletServiceBuilder')
-const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
-const GetAddressCommandValidator = require('../../../src/validators/commands/trading-wallet/GetAddressCommandValidator')
-const GetAddressCommand = require('../../../src/commands/trading-wallet/GetAddressCommand')
-
-const getAddressCommandValidator = new GetAddressCommandValidator(logger)
 
 const tradingWalletService = TradingWalletServiceBuilder.build()
-
-const privateKeyValidator = new PrivateKeyValidator(logger)
-const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
-
-const privateKeyService = PrivateKeyServiceBuilder.build()
-const getAddressCommand = new GetAddressCommand(logger, tradingWalletService,
-  getAddressCommandValidator, privateKeyService, privateKeyValidator)
 
 afterEach(() => {
   sandbox.restore()
@@ -63,7 +50,7 @@ describe('tws get-address', () => {
       const expectedTradingWalletAddress = '0x966b39c20dbd2d502f7a2aa8f47f38c01eac8d80'
       sandbox.stub(tradingWalletService.transactionLib.ethApiClient, 'transactionCallAsync')
         .returns(`0x000000000000000000000000${expectedTradingWalletAddress.substring(2)}`)
-
+      // eslint-disable-next-line max-len
       const result = await getAddressCommand.executeAsync({ personalWalletAddress, privateKeyPath: validPrivateKeyPath, draft })
       expect(result).toBe(expectedTradingWalletAddress)
     })
