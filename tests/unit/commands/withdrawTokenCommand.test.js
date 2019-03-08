@@ -14,17 +14,23 @@ const gasEstimationResponse = {
     low: '0',
   },
 }
+const keystorePassword = 'password'
+
+beforeEach(() => {
+  sandbox.stub(withdrawCommand, 'promptKeyStorePasswordAsync')
+    .returns(keystorePassword)
+})
 
 afterEach(() => {
   sandbox.restore()
 })
 
 describe('tws withdraw', () => {
-  const from = '0x9c858489661158d1721a66319f8683925d5a8b70'
+  const from = '0xdb1b9e1708aec862fee256821702fa1906ceff67'
   const to = '0x230cd1dc412c44bb95aa39018e2a2aed28ebadfc'
   const token = '0xf6d686e52ffc5b9d224a9eb60b8e9c57978d5189'
   const quantity = '500000000000000000'
-  const validPrivateKeyFilePath = 'tests/fixtures/privateKeys/privateKey.key'
+  const keystoreFilePath = 'tests/fixtures/keyStore/validKeystore'
   describe('execute withdraw command ', () => {
     test('should return the expected transaction hash', async () => {
       const expectedTransactionHash = '0xTransactionHash'
@@ -36,7 +42,7 @@ describe('tws withdraw', () => {
         .returns({ hash: expectedTransactionHash })
 
       const result = await withdrawCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false })
+        .executeAsync({ from, to, quantity, token, keystoreFilePath })
 
       expect(result).toBe(expectedTransactionHash)
     })
@@ -49,7 +55,7 @@ describe('tws withdraw', () => {
       value: '0x0' }
 
       const result = await withdrawCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: true })
+        .executeAsync({ from, to, quantity, token, keystoreFilePath, keystorePassword, draft: true })
 
       expect(result).toMatchObject(expectedTransactionObjectDraft)
     })
@@ -62,17 +68,17 @@ describe('tws withdraw', () => {
         .returns({ hash: expectedTransactionHash })
 
       const result = await withdrawCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx })
+        .executeAsync({ from, to, quantity, token, keystoreFilePath, keystorePassword, draft: false, rawTx })
       expect(result).toBe(expectedTransactionHash)
     })
 
     test('should return the signed transaction data to create wallet', async () => {
-      const expectedTransactionSignedData = '0xf8a882113082633382520894230cd1dc412c44bb95aa39018e2a2aed28ebadfc80b844f3fef3a3000000000000000000000000f6d686e52ffc5b9d224a9eb60b8e9c57978d518900000000000000000000000000000000000000000000000006f05b59d3b200001ca0658fd577bda7281c9535e12e61ab271a87a2731ffdab753cfbf30d45124aa890a077b19ecf24bfd9ccc3ce9b2bed3ee2e3e56ad61967eb5127af41d5ad8adc42b5'
+      const expectedTransactionSignedData = '0xf8a882113082633382520894230cd1dc412c44bb95aa39018e2a2aed28ebadfc80b844f3fef3a3000000000000000000000000f6d686e52ffc5b9d224a9eb60b8e9c57978d518900000000000000000000000000000000000000000000000006f05b59d3b200001ca0f85836c9ad66a178d6ff0245f810210c5b55068debebe00fe8160fc25354d9c5a05b944520c0e0bff58563b9d8cc16e760505dc6bac8d0124f4f8a12043a28c16d'
       sandbox.stub(withdrawCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
       sandbox.stub(withdrawCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
       const result = await withdrawCommand
-        .executeAsync({ from, to, quantity, token, privateKeyFilePath: validPrivateKeyFilePath, draft: false, rawTx: true })
+        .executeAsync({ from, to, quantity, token, keystoreFilePath, keystorePassword, draft: false, rawTx: true })
       expect(result).toEqual(expectedTransactionSignedData)
     })
   })
