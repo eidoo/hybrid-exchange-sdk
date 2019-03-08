@@ -81,13 +81,13 @@ class DepositTokenCommand extends CredentialBasedCommand {
       'string', 'q', 'The quantity to deposit.', 1, true)
     const tokenArg = new CommandArg('token',
       'string', 'tk', 'The token address.', 1, true)
-    const privateKeyFilePathArg = new CommandArg('private-key-file-path',
-      'string', 'prv', 'The private key file path.', 1, true)
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
+      'string', 'ksp', 'The private key file path.', 1, true)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
     const withApproveArg = new CommandArg('with-approve',
       'boolean', 'wap', 'It executes the deposit transaction managing the approve flow.', 0, true)
-    return [fromArg, toArg, quantityArg, tokenArg, privateKeyFilePathArg, draftArg, withApproveArg]
+    return [fromArg, toArg, quantityArg, tokenArg, keystoreFilePathArg, draftArg, withApproveArg]
   }
 
   /**
@@ -105,17 +105,18 @@ class DepositTokenCommand extends CredentialBasedCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.from           The personal wallet address (EOA).
-   * @param {String} params.to             The trading wallet address.
-   * @param {String} params.quantity       The amount of ETH to be deposited.
-   * @param {String} params.token          The Token address to be deposited.
-   * @param {String} params.privateKeyPath The private key file path.
-   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.withApprove    The approve flag. Default false, it will automatically handle the approve flow required for the deposit.
+   * @param {String} params.from             The personal wallet address (EOA).
+   * @param {String} params.to               The trading wallet address.
+   * @param {String} params.quantity         The amount of ETH to be deposited.
+   * @param {String} params.token            The Token address to be deposited.
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.draft            The draft flag. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.withApprove      The approve flag. Default false, it will automatically handle the approve flow required for the deposit.
    */
-  async doValidateAsync({ from, to, quantity, token, privateKeyFilePath, draft, withApprove }) {
+  async doValidateAsync({ from, to, quantity, token, keystoreFilePath, draft, withApprove }) {
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
     const params = this.depositTokenCommandValidator
-      .depositToken({ from, to, quantity, token, privateKeyFilePath, draft, withApprove })
+      .depositToken({ from, to, quantity, token, keystoreFilePath, keystorePassword, draft, withApprove })
     return params
   }
 
@@ -123,16 +124,17 @@ class DepositTokenCommand extends CredentialBasedCommand {
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.from           The personal wallet address (EOA).
-   * @param {String} params.to             The trading wallet address.
-   * @param {String} params.quantity       The amount of ETH to be deposited.
-   * @param {String} params.token          The Token address to be deposited.
-   * @param {String} params.privateKeyPath The private key file path.
-   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.withApprove    The approve flag. Default false, it will automatically handle the approve flow required for the deposit.
+   * @param {String} params.from             The personal wallet address (EOA).
+   * @param {String} params.to               The trading wallet address.
+   * @param {String} params.quantity         The amount of ETH to be deposited.
+   * @param {String} params.token            The Token address to be deposited.
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.keystorePassword The password to decrypt the keystore.
+   * @param {String} params.draft            The draft flag. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.withApprove      The approve flag. Default false, it will automatically handle the approve flow required for the deposit.
    */
-  async doExecuteAsync({ from, to, quantity, token, privateKeyFilePath, draft, withApprove }) {
-    const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+  async doExecuteAsync({ from, to, quantity, token, keystoreFilePath, keystorePassword, draft, withApprove }) {
+    const privateKey = await this.extractPrivateKeyFromKeystore(keystoreFilePath, keystorePassword)
     const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
     this.setTradingWalletFacade(token)
 
