@@ -1,10 +1,9 @@
 /* eslint-env node, jest */
 const sandbox = require('sinon').createSandbox()
 
-const config = require('../../../src/config')
 const { createWalletCommand } = require('../../../src/commands/commandList')
 
-const { smartContractAddress: exchangeSmartContractAddress } = config.exchange
+const exchangeSmartContractAddress = '0xf1c525a488a848b58b95d79da48c21ce434290f7'
 
 const nonceResponse = {
   nonce: 4400,
