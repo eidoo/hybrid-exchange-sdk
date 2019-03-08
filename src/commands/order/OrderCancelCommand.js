@@ -52,9 +52,9 @@ class OrderCancelCommand extends CredentialBasedCommand {
   static setBuilderArgs() {
     const orderId = new CommandArg('order-id',
       'string', 'id', 'The order id to cancel.', 1, true)
-    const privateKeyFilePathArg = new CommandArg('private-key-file-path',
-      'string', 'prv', 'The private key file path.', 1, true)
-    return [orderId, privateKeyFilePathArg]
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
+      'string', 'ksp', 'The private key file path.', 1, true)
+    return [orderId, keystoreFilePathArg]
   }
 
   /**
@@ -72,11 +72,12 @@ class OrderCancelCommand extends CredentialBasedCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.orderId            The orderId.
-   * @param {String} params.privateKeyFilePath The private key file path.
+   * @param {String} params.orderId           The orderId.
+   * @param {String} params.keystoreFilePath  The keystore file path.
    */
-  async doValidateAsync({ orderId, privateKeyFilePath }) {
-    const params = this.orderCancelCommandValidator.orderCancel({ orderId, privateKeyFilePath })
+  async doValidateAsync({ orderId, keystoreFilePath }) {
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
+    const params = this.orderCancelCommandValidator.orderCancel({ orderId, keystoreFilePath, keystorePassword })
     return params
   }
 
@@ -85,10 +86,11 @@ class OrderCancelCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.orderId            The orderId.
-   * @param {String} params.privateKeyFilePath The private key file path.
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.keystorePassword The password to decrypt the keystore.
    */
-  async doExecuteAsync({ orderId, privateKeyFilePath }) {
-    const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+  async doExecuteAsync({ orderId, keystoreFilePath, keystorePassword }) {
+    const privateKey = await this.extractPrivateKeyFromKeystore(keystoreFilePath, keystorePassword)
     const cancelledOrderId = await this.orderService.cancelOrderAsync(orderId, privateKey)
     return cancelledOrderId
   }
