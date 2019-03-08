@@ -52,13 +52,13 @@ class CreateWalletCommand extends CredentialBasedCommand {
   static setBuilderArgs() {
     const personalWalletAddressArg = new CommandArg('personal-wallet-address',
       'string', 'eoa', 'The personal wallet address (EOA).', 1, true)
-    const privateKeyPathArg = new CommandArg('private-key-path',
-      'string', 'prv', 'The private key file path.', 1, false)
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
+      'string', 'ksp', 'The private key file path.', 1, true)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
     const rawTxArg = new CommandArg('raw-tx',
       'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
-    return [personalWalletAddressArg, privateKeyPathArg, draftArg, rawTxArg]
+    return [personalWalletAddressArg, keystoreFilePathArg, draftArg, rawTxArg]
   }
 
   /**
@@ -77,13 +77,14 @@ class CreateWalletCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.personalWalletAddress The personal wallet address (EOA).
-   * @param {String} params.privateKeyPath        The private key file path.
+   * @param {String} params.keystoreFilePath      The keystore file path.
    * @param {String} params.draft                 The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx                The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doValidateAsync({ personalWalletAddress, privateKeyPath, draft, rawTx }) {
+  async doValidateAsync({ personalWalletAddress, keystoreFilePath, draft, rawTx }) {
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
     const params = this.createWalletCommandValidator
-      .createWallet({ personalWalletAddress, privateKeyPath, draft, rawTx })
+      .createWallet({ personalWalletAddress, keystoreFilePath, keystorePassword, draft, rawTx })
     return params
   }
 
@@ -92,13 +93,14 @@ class CreateWalletCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.personalWalletAddress The personal wallet address (EOA).
-   * @param {String} params.privateKeyPath        The private key file path.
+   * @param {String} params.keystoreFilePath      The keystore file path.
+   * @param {String} params.keystorePassword      The password to decrypt the keystore.
    * @param {String} params.draft                 The draft flag. If set to true it shows the TransactionObjectDraft.
    * @param {String} params.rawTwx                The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doExecuteAsync({ personalWalletAddress, privateKeyPath, draft, rawTx }) {
+  async doExecuteAsync({ personalWalletAddress, keystoreFilePath, keystorePassword, draft, rawTx }) {
     let personalWalletAddressRetrived = personalWalletAddress
-    const privateKey = await this.extractPrivateKey(privateKeyPath)
+    const privateKey = await this.extractPrivateKeyFromKeystore(keystoreFilePath, keystorePassword)
     personalWalletAddressRetrived = this.getAddressFromPrivateKey(personalWalletAddress, privateKey)
     const transactionObjectDraft = this.tradingWalletService.transactionBuilder
       .buildCreateWalletTransactionDraft(personalWalletAddressRetrived, privateKey)
