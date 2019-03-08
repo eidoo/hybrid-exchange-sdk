@@ -6,12 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.0.0...HEAD)
 
-
-
 ### Changed
 - [Keystore in deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/45) Update `deposit-eth` command using keystore instead of private key.
 - [Keystore in withdraw command](https://github.com/eidoo/hybrid-exchange-sdk/issues/67) Update `withdraw` command using keystore instead of private key.
 - [CLI get balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/58) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetBalanceCommand`.
+- [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/59) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAllowanceCommand`.
 
 ## [v2.0.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.1.0...v2.0.0)
 

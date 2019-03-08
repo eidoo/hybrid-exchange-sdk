@@ -50,7 +50,6 @@ describe('tks getAllowance', () => {
   })
 
   describe('should execute GetAAllowanceCommand as expected', () => {
-    const validPrivateKeyPath = 'tests/fixtures/privateKeys/privateKey.key'
     const draftValues = [false, undefined]
     test.each(draftValues)('should return the tradingWallet address with draft value = %o', async (draft) => {
       const owner = '0x9c858489661158d1721a66319f8683925d5a8b70'
@@ -58,7 +57,7 @@ describe('tks getAllowance', () => {
       sandbox.stub(getAllowanceCommand.erc20TokenService.transactionLib.ethApiClient, 'transactionCallAsync')
         .returns(allowedQuantity)
 
-      const result = await getAllowanceCommand.executeAsync({ owner, spender, token, validPrivateKeyPath, draft })
+      const result = await getAllowanceCommand.executeAsync({ owner, spender, token, draft })
       expect(result).toBe(allowedQuantity)
     })
 
@@ -72,7 +71,7 @@ describe('tks getAllowance', () => {
       }
 
       const result = await getAllowanceCommand
-        .executeAsync({ owner, spender, token, privateKeyPath: validPrivateKeyPath, draft: true })
+        .executeAsync({ owner, spender, token, draft: true })
 
       expect(result).toMatchObject(expectedTransactionObjectDraft)
     })
