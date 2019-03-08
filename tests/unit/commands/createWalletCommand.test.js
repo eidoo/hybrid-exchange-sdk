@@ -78,8 +78,7 @@ describe('tws create-trading-wallet', () => {
 
     test('should return the signed transaction data to create wallet', async () => {
       const personalWalletAddress = '0xdb1b9e1708aec862fee256821702fa1906ceff67'
-      const exchangeAddressWithoutHexPrefix = exchangeSmartContractAddress.substring(2)
-      const expectedTransactionSignedData = `0xf88782113082633382520894${exchangeAddressWithoutHexPrefix}80a4c1d5e84f000000000000000000000000db1b9e1708aec862fee256821702fa1906ceff671ba08e16c9a40e610b2a7facbb8c04fbd020c76d6e9fbdc62f720593038756b3073ea07e5726d2797dd59891574e3c8576044790b40b8d71770ce0ffecf6c3c40d0024`
+      const expectedTransactionSignedData = '0xf88782113082633382520894f1c525a488a848b58b95d79da48c21ce434290f780a4c1d5e84f000000000000000000000000db1b9e1708aec862fee256821702fa1906ceff671ca0826ed3c2f8d016d307f3cffe416e5bfabee7517064a661a0bb90862b83a10e9ca053ee1253ff9e9c74885842491b5d92832c296a24127df9c2c9244c33a92665f0'
       sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
       sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
