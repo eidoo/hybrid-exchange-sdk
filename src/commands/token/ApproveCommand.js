@@ -57,13 +57,13 @@ class ApproveCommand extends CredentialBasedCommand {
       'string', 'q', 'The quantity to withdraw.', 1, true)
     const spenderArg = new CommandArg('spender',
       'string', 's', 'The spender address.', 1, true)
-    const privateKeyFilePathArg = new CommandArg('private-key-file-path',
-      'string', 'prv', 'The private key file path.', 1, true)
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
+      'string', 'ksp', 'The private key file path.', 1, true)
     const draftArg = new CommandArg('draft',
       'boolean', 'd', 'If set, it returns the TransactionObjectDraft.', 0, false, false)
     const rawTxArg = new CommandArg('raw-tx',
       'boolean', 'rtx', 'If set, it returns the signed raw transaction data.', 0, false, false)
-    return [fromArg, toArg, quantityArg, spenderArg, privateKeyFilePathArg, draftArg, rawTxArg]
+    return [fromArg, toArg, quantityArg, spenderArg, keystoreFilePathArg, draftArg, rawTxArg]
   }
 
   /**
@@ -81,21 +81,23 @@ class ApproveCommand extends CredentialBasedCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.from           The personal wallet address (EOA).
-   * @param {String} params.to             The token address.
-   * @param {String} params.quantity       The quantity to approve.
-   * @param {String} params.spender        The spender address (i.e. trading wallet address)
-   * @param {String} params.privateKeyPath The private key file path.
-   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
+   * @param {String} params.from             The personal wallet address (EOA).
+   * @param {String} params.to               The token address.
+   * @param {String} params.quantity         The quantity to approve.
+   * @param {String} params.spender          The spender address (i.e. trading wallet address)
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.draft            The draft flag. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.rawTwx           The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doValidateAsync({ from, to, quantity, spender, privateKeyFilePath, draft, rawTx }) {
+  async doValidateAsync({ from, to, quantity, spender, keystoreFilePath, draft, rawTx }) {
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
     const params = this.approveCommandValidator.approve({
       from,
       to,
       quantity,
       spender,
-      privateKeyFilePath,
+      keystoreFilePath,
+      keystorePassword,
       draft,
       rawTx,
     })
@@ -106,16 +108,17 @@ class ApproveCommand extends CredentialBasedCommand {
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.from           The personal wallet address (EOA).
-   * @param {String} params.to             The token address.
-   * @param {String} params.quantity       The quantity to approve.
-   * @param {String} params.spender        The spender address (i.e. trading wallet address)
-   * @param {String} params.privateKeyPath The private key file path.
-   * @param {String} params.draft          The draft flag. If set to true it shows the TransactionObjectDraft.
-   * @param {String} params.rawTwx         The raw tx flag. If set to true it shows the signed transaction data.
+   * @param {String} params.from             The personal wallet address (EOA).
+   * @param {String} params.to               The token address.
+   * @param {String} params.quantity         The quantity to approve.
+   * @param {String} params.spender          The spender address (i.e. trading wallet address)
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.keystorePassword The password to decrypt the keystore.
+   * @param {String} params.draft            The draft flag. If set to true it shows the TransactionObjectDraft.
+   * @param {String} params.rawTwx           The raw tx flag. If set to true it shows the signed transaction data.
    */
-  async doExecuteAsync({ from, to, quantity, spender, privateKeyFilePath, draft, rawTx }) {
-    const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+  async doExecuteAsync({ from, to, quantity, spender, keystoreFilePath, keystorePassword, draft, rawTx }) {
+    const privateKey = await this.extractPrivateKeyFromKeystore(keystoreFilePath, keystorePassword)
     const personalWalletAddressRetrived = this.getAddressFromPrivateKey(from, privateKey)
     this.setErc20Tokenservice(to)
 
