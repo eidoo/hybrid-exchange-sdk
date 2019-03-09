@@ -1,9 +1,42 @@
 /* eslint-env node, jest */
+const { EidooEthApiLib } = require('@eidoo/ethapi-lib')
 const sandbox = require('sinon').createSandbox()
+const Web3 = require('web3')
 
-const { createWalletCommand } = require('../../../src/commands/commandList')
+const { TransactionLib } = require('../../../src/lib/TransactionLib')
+const CreateWalletCommand = require('../../../src/commands/trading-wallet/CreateWalletCommand')
+// eslint-disable-next-line max-len
+const CreateWalletCommandValidator = require('../../../src/validators/commands/trading-wallet/CreateWalletCommandValidator')
+const logger = require('../../../src/logger')
+const PrivateKeyServiceBuilder = require('../../../src/factories/PrivateKeyServiceBuilder')
+const PrivateKeyValidator = require('../../../src/validators/PrivateKeyValidator')
+const TradingWalletService = require('../../../src/services/TradingWalletService')
+const TradingWalletTransactionBuilder = require('../../../src/factories/TradingWalletTransactionBuilder')
+
+const providerUrl = 'urlToProvider'
+const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
 const exchangeSmartContractAddress = '0xf1c525a488a848b58b95d79da48c21ce434290f7'
+const ethApiLibConf = {
+  host: 'http:host.eidoo.io',
+  port: 8080,
+  useTLS: false,
+}
+
+const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const transactionLib = new TransactionLib(web3, logger, ethApiLib)
+const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
+  web3, { exchangeSmartContractAddress, transactionLib, logger },
+)
+const tradingWalletService = new TradingWalletService(web3, transactionLib, tradingWalletTransactionBuilder, logger)
+
+const privateKeyValidator = new PrivateKeyValidator(logger)
+const privateKeyService = PrivateKeyServiceBuilder.build()
+
+const createWalletCommandValidator = new CreateWalletCommandValidator(logger)
+const createWalletCommand = new CreateWalletCommand(logger, tradingWalletService,
+  createWalletCommandValidator, privateKeyService, privateKeyValidator)
+
 
 const nonceResponse = {
   nonce: 4400,
@@ -33,8 +66,14 @@ describe('tws create-trading-wallet', () => {
     test('should return the transaction hash with draft value = %o', async () => {
       const personalWalletAddress = '0xdb1b9e1708aec862fee256821702fa1906ceff67'
       const expectedTransactionHash = '0xTransactionHash'
-      sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
-      sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
+      sandbox.stub(
+        createWalletCommand.tradingWalletService.transactionLib.ethApiClient,
+        'getAddressNonceAsync',
+      ).returns(nonceResponse)
+      sandbox.stub(
+        createWalletCommand.tradingWalletService.transactionLib.ethApiClient,
+        'getEstimateGasAsync',
+      ).returns(gasEstimationResponse)
 
       sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'sendRawTransactionAsync')
         .returns({ hash: expectedTransactionHash })
@@ -65,8 +104,14 @@ describe('tws create-trading-wallet', () => {
     test.each(rawTxValues)('should return the transaction hash with rawTx value = %o', async (rawTx) => {
       const personalWalletAddress = '0xdb1b9e1708aec862fee256821702fa1906ceff67'
       const expectedTransactionHash = '0xTransactionHash'
-      sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
-      sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
+      sandbox.stub(
+        createWalletCommand.tradingWalletService.transactionLib.ethApiClient,
+        'getAddressNonceAsync',
+      ).returns(nonceResponse)
+      sandbox.stub(
+        createWalletCommand.tradingWalletService.transactionLib.ethApiClient,
+        'getEstimateGasAsync',
+      ).returns(gasEstimationResponse)
 
       sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'sendRawTransactionAsync')
         .returns({ hash: expectedTransactionHash })
@@ -78,9 +123,16 @@ describe('tws create-trading-wallet', () => {
 
     test('should return the signed transaction data to create wallet', async () => {
       const personalWalletAddress = '0xdb1b9e1708aec862fee256821702fa1906ceff67'
+      // eslint-disable-next-line max-len
       const expectedTransactionSignedData = '0xf88782113082633382520894f1c525a488a848b58b95d79da48c21ce434290f780a4c1d5e84f000000000000000000000000db1b9e1708aec862fee256821702fa1906ceff671ca0826ed3c2f8d016d307f3cffe416e5bfabee7517064a661a0bb90862b83a10e9ca053ee1253ff9e9c74885842491b5d92832c296a24127df9c2c9244c33a92665f0'
-      sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
-      sandbox.stub(createWalletCommand.tradingWalletService.transactionLib.ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
+      sandbox.stub(
+        createWalletCommand.tradingWalletService.transactionLib.ethApiClient,
+        'getAddressNonceAsync',
+      ).returns(nonceResponse)
+      sandbox.stub(
+        createWalletCommand.tradingWalletService.transactionLib.ethApiClient,
+        'getEstimateGasAsync',
+      ).returns(gasEstimationResponse)
 
       const result = await createWalletCommand
         .executeAsync({ personalWalletAddress, keystoreFilePath, keystorePassword, draft: false, rawTx: true })
@@ -93,11 +145,15 @@ describe('tws create-trading-wallet', () => {
     test(`should raise InvalidPrivateKeyError if the private key in private key path 
       does not refer to EOA provided in input`, async() => {
       const misMatchPersonalWalletAddress = '0x966b39c20dbd2d502f7a2aa8f47f38c01eac8c77'
-      const expectedResult = [{ code: 'InvalidPrivateKeyError',
+      const expectedResult = [{
+        code: 'InvalidPrivateKeyError',
         field: null,
-        message: `The private key does not match the personal wallet address given in input:${misMatchPersonalWalletAddress}` }]
+        // eslint-disable-next-line max-len
+        message: `The private key does not match the personal wallet address given in input:${misMatchPersonalWalletAddress}`,
+      }]
 
-      const result = await createWalletCommand.executeAsync({ personalWalletAddress: misMatchPersonalWalletAddress, keystoreFilePath, keystorePassword })
+      const result = await createWalletCommand
+        .executeAsync({ personalWalletAddress: misMatchPersonalWalletAddress, keystoreFilePath, keystorePassword })
 
       expect(result).toMatchObject(expectedResult)
     })
