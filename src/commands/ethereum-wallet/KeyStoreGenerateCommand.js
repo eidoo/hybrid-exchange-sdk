@@ -46,7 +46,7 @@ class KeyStoreGenerateCommand extends CredentialBasedCommand {
    */
   static setBuilderArgs() {
     const keystoreFilePathArg = new CommandArg('keystore-file-path',
-      'string', 'ksp', 'The private key file path.', 1, true)
+      'string', 'ksp', 'The keystore file path.', 1, true)
     const hdPathArg = new CommandArg('hd-path',
       'string', 'p', 'It is the hd path used to derive the private key from mnemonic.', 1, false, HD_PATH)
     return [keystoreFilePathArg, hdPathArg]

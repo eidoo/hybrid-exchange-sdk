@@ -53,7 +53,7 @@ class OrderSignCommand extends CredentialBasedCommand {
    */
   static setBuilderArgs() {
     const keystoreFilePathArg = new CommandArg('keystore-file-path',
-      'string', 'ksp', 'The private key file path.', 1, true)
+      'string', 'ksp', 'The keystore file path.', 1, true)
     const cliInputJSON = new CommandArg('cli-input-json',
       'string', 'cij', 'Performs service operation based on the JSON string provided.', 1, true)
     return [keystoreFilePathArg, cliInputJSON]

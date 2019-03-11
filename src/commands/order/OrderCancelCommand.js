@@ -53,7 +53,7 @@ class OrderCancelCommand extends CredentialBasedCommand {
     const orderId = new CommandArg('order-id',
       'string', 'id', 'The order id to cancel.', 1, true)
     const keystoreFilePathArg = new CommandArg('keystore-file-path',
-      'string', 'ksp', 'The private key file path.', 1, true)
+      'string', 'ksp', 'The keystore file path.', 1, true)
     return [orderId, keystoreFilePathArg]
   }
 

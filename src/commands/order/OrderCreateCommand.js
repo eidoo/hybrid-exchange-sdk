@@ -53,7 +53,7 @@ class OrderCreateCommand extends CredentialBasedCommand {
     const cliInputJsonArg = new CommandArg('cli-input-JSON',
       'string', 'input', 'The order creation payload.', 1, true, undefined)
     const keystoreFilePathArg = new CommandArg('keystore-file-path',
-      'string', 'ksp', 'The private key file path.', 1, true)
+      'string', 'ksp', 'The keystore file path.', 1, true)
     return [cliInputJsonArg, keystoreFilePathArg]
   }
 

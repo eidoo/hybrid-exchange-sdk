@@ -15,6 +15,7 @@ Release date: 2019-03-XX.
 - [Keystore in order sign command](https://github.com/eidoo/hybrid-exchange-sdk/issues/63) Update `sign` command using keystore instead of private key
 - [Keystore in create order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/62) Update `create order` command using keystore instead of private key
 - [Keystore in cancel order command](https://github.com/eidoo/hybrid-exchange-sdk/issues/61) Update `order cancel` command using keystore instead of private key
+- [Keystore in approve command](https://github.com/eidoo/hybrid-exchange-sdk/issues/64) Update `approve` command using keystore instead of private key
 - [CLI get allowance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/59) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAllowanceCommand`
 - [CLI get balance command](https://github.com/eidoo/hybrid-exchange-sdk/issues/58) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetBalanceCommand`
 - [CLI get address command](https://github.com/eidoo/hybrid-exchange-sdk/issues/47) Remove `privateKeyValidator` and `privateKeyService` dependencies from `GetAddressCommand`
