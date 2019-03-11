@@ -52,11 +52,11 @@ class OrderSignCommand extends CredentialBasedCommand {
    * It set the builder args necessary to set args cli command.
    */
   static setBuilderArgs() {
-    const privateKeyPathArg = new CommandArg('private-key-path',
-      'string', 'prv', 'The private key file path.', 1, false)
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
+      'string', 'ksp', 'The private key file path.', 1, true)
     const cliInputJSON = new CommandArg('cli-input-json',
       'string', 'cij', 'Performs service operation based on the JSON string provided.', 1, true)
-    return [privateKeyPathArg, cliInputJSON]
+    return [keystoreFilePathArg, cliInputJSON]
   }
 
   /**
@@ -74,11 +74,11 @@ class OrderSignCommand extends CredentialBasedCommand {
    * It validates the input parameters in order to execute the command.
    *
    * @param {Object} params
-   * @param {String} params.privateKeyPath The private key file path.
-   * @param {String} params.cliInputJSON   The order payload.
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.cliInputJSON     The order payload.
    */
-  async doValidateAsync({ privateKeyPath, cliInputJson }) {
-    await this.extractPrivateKey(privateKeyPath)
+  async doValidateAsync({ keystoreFilePath, cliInputJson }) {
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
 
     const cliInputJsonParsed = this.orderSignCommandValidator.jsonValidate(cliInputJson)
 
@@ -89,18 +89,19 @@ class OrderSignCommand extends CredentialBasedCommand {
       ? this.orderSignCommandValidator.signOrderCreation(cliInputJsonParsed)
       : this.orderSignCommandValidator.signOrderCancellation(cliInputJsonParsed)
 
-    return { privateKeyPath, cliInputJson: params }
+    return { keystoreFilePath, keystorePassword, cliInputJson: params }
   }
 
   /**
    * It executes the command after the validation step.
    *
    * @param {Object} params
-   * @param {String} params.privateKeyPath The private key file path.
-   * @param {String} params.cliInputJSON   The order payload.
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.keystorePassword The password to decrypt the keystore.
+   * @param {String} params.cliInputJSON     The order payload.
    */
-  async doExecuteAsync({ privateKeyPath, cliInputJson }) {
-    const privateKey = await this.extractPrivateKey(privateKeyPath)
+  async doExecuteAsync({ keystoreFilePath, keystorePassword, cliInputJson }) {
+    const privateKey = await this.extractPrivateKeyFromKeystore(keystoreFilePath, keystorePassword)
     const { type, order } = cliInputJson
 
     return type === validRequestType.creation
