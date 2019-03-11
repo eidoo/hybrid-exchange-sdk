@@ -6,14 +6,14 @@
 After the installation the SDK will put at your disposal its functionalities through a CLI (command line interface).
 
 The CLI has been designed in 4 macro functionalities:
-- [ethereum wallet]()
-- [order]()
-- [token]()
-- [trading wallet]()
+- [ethereum wallet](#Ethereum-wallet)
+- [order](#Order)
+- [token](#Token)
+- [trading wallet](#Trading-wallet)
 
 You can check every command documentation at any time by simply typing: `yarn hybrid-exchange-cli --help`
 
-## Ethereum wallet
+# Ethereum wallet
 The ethereum wallet functionality let you create a keystore from a specific ethereum account.<br>
 A keystore file is a JSON file that encrypts your ethereum account using a password.
 
@@ -24,10 +24,10 @@ Args:<br>
 - `--keystore-file-path` Destination path of the generated keystore <br>
 - `--hd-path [default: m/44'/60'/0/0]` The path for ethereum account derivation
 
-## Order
+# Order
 The order functionalities let you *create*, *cancel* and *sign* orders to the Eidoo hybrid exchange.
 
-### Create
+## Create
 Submit an order creation to the Eidoo hybrid exchange.
 
 Command:<br>
@@ -42,7 +42,7 @@ Remember that it needs to be stringify: `'{"exchangeAddress":"0xbfd9aaac82281b54
 
 The command returns the orderId.
 
-### Cancel order
+## Cancel order
 Submit an order cancel to the Eidoo hybrid exchange.
 
 Command:<br>
@@ -52,7 +52,7 @@ Args:<br>
 - `--order-id` The orderId<br>
 - `--keystore-file-path` The path of your keystore
 
-### Sign order
+## Sign order
 The create order command is automatically adding to the passed order object an `ecSignature` field if not provided.<br>
 The `ecSignature` field can be manually generated and so later added to the order object using the `sign command`.
 
@@ -68,10 +68,10 @@ Remember that it needs to be stringify: `'{"exchangeAddress":"0xbfd9aaac82281b54
 
 The command returns the `ecSignature` value.
 
-## Token
+# Token
 The token functionalities let you interact with ERC20 tokens.
 
-### Approve
+## Approve
 It execute an ERC20 token approve method.
 
 Command:<br>
@@ -82,7 +82,7 @@ Args:<br>
 - `--to` The token address<br>
 - `--quantity` The amount to be approved<br>
 - `--spender` The spender account public key<br>
-- `--keystore-file-path` The path of your keystore<br>
+- `--keystore-file-path` The path of your keystore
 
 Optional
 - `--draft` It will not execute the transaction but will return the transaction object<br>
@@ -90,7 +90,7 @@ Optional
 
 It returns the transaction hash.
 
-### Allowance
+## Allowance
 It retrieves the ERC20 allowance property value.
 
 Command:<br>
@@ -105,3 +105,109 @@ Optional
 - `--draft` It will not execute the transaction but will return the transaction object
 
 It returns the allowed amount in WEI.
+
+# Trading wallet
+The trading wallet functionalities let you *create* and manage your trading wallet smart contract by *deposit* and *withdraw* funds.<br>
+You can also retrieve your trading wallet address and funds balances.
+
+## Create wallet
+It creates a trading wallet instance.
+
+Command:<br>
+- `yarn hybrid-exchange-cli trading-wallet create-wallet`
+
+Args:<br>
+- `--eoa` The personal wallet address<br>
+- `--keystore-file-path` The spender account public key
+
+Optional
+- `--draft` It will not execute the transaction but will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+
+It returns the transaction hash.
+
+## Get trading wallet address
+It retrieves the address of the trading wallet connected to the specified personal wallet address.
+
+Command:<br>
+- `yarn hybrid-exchange-cli trading-wallet get-address`
+
+Args:<br>
+- `--eoa` The personal wallet address
+
+Optional
+- `--draft` It will not execute the transaction but will return the transaction object
+
+It returns the trading wallet address.
+
+## Deposit ether
+It deposits a specified amount of ETH to your trading wallet.
+
+Command:<br>
+- `yarn hybrid-exchange-cli trading-wallet deposit-eth`
+
+Args:<br>
+- `--from` The personal wallet address<br>
+- `--to` The trading wallet<br>
+- `--quantity` The amount of ETH in WEI<br>
+- `--keystore-file-path` The path of your keystore
+
+Optional
+- `--draft` It will not execute the transaction but will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+
+It returns the transaction hash.
+
+## Deposit token
+It deposits a specified amount of an ERC20 token to your trading wallet.
+
+Command:<br>
+- `yarn hybrid-exchange-cli trading-wallet deposit-token`
+
+Args:<br>
+- `--from` The personal wallet address<br>
+- `--to` The trading wallet<br>
+- `--quantity` The amount of the token in WEI<br>
+- `--token` The token address<br>
+- `--keystore-file-path` The path of your keystore
+
+Optional
+- `--draft` It will not execute the transaction but will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+
+It returns the transaction hash.
+
+## Get trading wallet asset balance
+It retrieves the asset balance of a trading wallet.
+
+Command:<br>
+- `yarn hybrid-exchange-cli trading-wallet get-balance`
+
+Args:<br>
+- `--from` The personal wallet address<br>
+- `--to` The trading wallet address<br>
+- `--token` The asset address
+
+Optional
+- `--draft` It will not execute the transaction but will return the transaction object
+
+It returns the asset balance in WEI.
+
+## Withdraw
+It withdraws a specified amount of a specified asset from your trading wallet.
+
+Command:<br>
+- `yarn hybrid-exchange-cli trading-wallet withdraw`
+
+Args:<br>
+- `--from` The personal wallet address<br>
+- `--to` The trading wallet<br>
+- `--quantity` The amount of the asset in WEI<br>
+- `--token` The asset address (`0x0000000000000000000000000000000000000000` for ETH)<br>
+- `--keystore-file-path` The path of your keystore
+
+Optional
+- `--draft` It will not execute the transaction but will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+
+It returns the transaction hash.
