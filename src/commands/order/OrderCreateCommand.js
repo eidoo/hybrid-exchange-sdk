@@ -52,9 +52,9 @@ class OrderCreateCommand extends CredentialBasedCommand {
   static setBuilderArgs() {
     const cliInputJsonArg = new CommandArg('cli-input-JSON',
       'string', 'input', 'The order creation payload.', 1, true, undefined)
-    const privateKeyFilePathArg = new CommandArg('private-key-file-path',
-      'string', 'prv', 'The private key file path.', 1, true)
-    return [cliInputJsonArg, privateKeyFilePathArg]
+    const keystoreFilePathArg = new CommandArg('keystore-file-path',
+      'string', 'ksp', 'The private key file path.', 1, true)
+    return [cliInputJsonArg, keystoreFilePathArg]
   }
 
   /**
@@ -73,12 +73,14 @@ class OrderCreateCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.cliInputJson        The order create command payload.
-   * @param {String} params.privateKeyFilePath  The private key file path.
+   * @param {String} params.keystoreFilePath The keystore file path.
    */
-  async doValidateAsync({ cliInputJson, privateKeyFilePath }) {
+  async doValidateAsync({ cliInputJson, keystoreFilePath }) {
+    const keystorePassword = await this.promptKeyStorePasswordAsync()
     const params = this.orderCreateCommandValidator.orderCreate({
       cliInputJson,
-      privateKeyFilePath,
+      keystoreFilePath,
+      keystorePassword,
     })
     return params
   }
@@ -88,10 +90,11 @@ class OrderCreateCommand extends CredentialBasedCommand {
    *
    * @param {Object} params
    * @param {String} params.cliInputJson       The order create command payload.
-   * @param {String} params.privateKeyFilePath The private key file path.
+   * @param {String} params.keystoreFilePath The keystore file path.
+   * @param {String} params.keystorePassword The password to decrypt the keystore.
    */
-  async doExecuteAsync({ cliInputJson, privateKeyFilePath }) {
-    const privateKey = await this.extractPrivateKey(privateKeyFilePath)
+  async doExecuteAsync({ cliInputJson, keystoreFilePath, keystorePassword }) {
+    const privateKey = await this.extractPrivateKeyFromKeystore(keystoreFilePath, keystorePassword)
     const order = await this.orderService.createOrderAsync(cliInputJson, privateKey)
     return order
   }
