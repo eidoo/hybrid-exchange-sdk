@@ -3,7 +3,7 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/eidoo/hybrid-exchange-sdk/issues)
 [![CircleCI](https://circleci.com/gh/eidoo/hybrid-exchange-sdk/tree/dev.svg?style=svg)](https://circleci.com/gh/eidoo/hybrid-exchange-sdk/tree/dev)
 
-The SDK package put at your disposal its functionalities through a **CLI** (command line interface).
+With the **Eidoo hybrid exchange CLI** you can enjoy the SDK package features with a command line interface.
 
 You can install it globallly with:
 
@@ -17,7 +17,7 @@ or
 npm install -g eidoo/hybrid-exchange-sdk
 ```
 
-and access to it with:
+and access it with:
 
 ```bash
 hybrid-exchange-cli <domain> <command> <options>
@@ -59,13 +59,13 @@ Args:<br>
 - `--cli-input-json` Order JSON <br>
 - `--keystore-file-path` The path of your keystore
 
-You can find an order JSON sample [here](../../examples/lib/orders/createOrder.js).<br>
-Remember that it needs to be stringify: `'{"exchangeAddress":"0xbfd9aaac82281b54ecf60b7d53ccc9cdf13cd14e"...}'`
+You can find a JSON order sample [here](../../examples/lib/orders/createOrder.js).<br>
+Remember that it needs to be stringified: `'{"exchangeAddress":"0xbfd9aaac82281b54ecf60b7d53ccc9cdf13cd14e"...}'`
 
 The command returns the orderId.
 
 ## Cancel order
-Submit an order cancel to the Eidoo hybrid exchange.
+Submit a cancel order to the Eidoo hybrid exchange.
 
 Command:<br>
 ```bash
@@ -77,8 +77,8 @@ Args:<br>
 - `--keystore-file-path` The path of your keystore
 
 ## Sign order
-The create order command is automatically adding to the passed order object an `ecSignature` field if not provided.<br>
-The `ecSignature` field can be manually generated and so later added to the order object using the `sign command`.
+The create order command automatically adds an `ecSignature` field to the order object if not provided.<br>
+The `ecSignature` field can be manually generated and added to the order object using the `sign command`.
 
 Command:<br>
 ```bash
@@ -89,8 +89,8 @@ Args:<br>
 - `--cli-input-json` Order JSON <br>
 - `--keystore-file-path` The path of your keystore
 
-You can find an order JSON sample [here](../../examples/lib/orders/createOrder.js).<br>
-Remember that it needs to be stringify: `'{"exchangeAddress":"0xbfd9aaac82281b54ecf60b7d53ccc9cdf13cd14e"...}'`
+You can find a JSON order sample [here](../../examples/lib/orders/createOrder.js).<br>
+Remember that it needs to be stringified: `'{"exchangeAddress":"0xbfd9aaac82281b54ecf60b7d53ccc9cdf13cd14e"...}'`
 
 The command returns the `ecSignature` value.
 
@@ -98,7 +98,7 @@ The command returns the `ecSignature` value.
 The token functionalities let you interact with ERC20 tokens.
 
 ## Approve
-It execute an ERC20 token approve method.
+It executes an ERC20 token approve method.
 
 Command:<br>
 ```bash
@@ -113,8 +113,8 @@ Args:<br>
 - `--keystore-file-path` The path of your keystore
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object<br>
-- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+- `--draft` It will not execute the transaction but it will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but it will return the signed raw transaction
 
 It returns the transaction hash.
 
@@ -132,7 +132,7 @@ Args:<br>
 - `--token` The token address
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object
+- `--draft` It will not execute the transaction but it will return the transaction object
 
 It returns the allowed amount in WEI.
 
@@ -153,8 +153,8 @@ Args:<br>
 - `--keystore-file-path` The spender account public key
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object<br>
-- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+- `--draft` It will not execute the transaction but it will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but it will return the signed raw transaction
 
 It returns the transaction hash.
 
@@ -170,7 +170,7 @@ Args:<br>
 - `--eoa` The personal wallet address
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object
+- `--draft` It will not execute the transaction but it will return the transaction object
 
 It returns the trading wallet address.
 
@@ -189,8 +189,8 @@ Args:<br>
 - `--keystore-file-path` The path of your keystore
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object<br>
-- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+- `--draft` It will not execute the transaction but it will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but it will return the signed raw transaction
 
 It returns the transaction hash.
 
@@ -210,8 +210,8 @@ Args:<br>
 - `--keystore-file-path` The path of your keystore
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object<br>
-- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+- `--draft` It will not execute the transaction but it will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but it will return the signed raw transaction
 
 It returns the transaction hash.
 
@@ -229,7 +229,7 @@ Args:<br>
 - `--token` The asset address
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object
+- `--draft` It will not execute the transaction but it will return the transaction object
 
 It returns the asset balance in WEI.
 
@@ -249,7 +249,7 @@ Args:<br>
 - `--keystore-file-path` The path of your keystore
 
 Optional
-- `--draft` It will not execute the transaction but will return the transaction object<br>
-- `--raw-tx` It will not execute the transaction but will return the signed raw transaction
+- `--draft` It will not execute the transaction but it will return the transaction object<br>
+- `--raw-tx` It will not execute the transaction but it will return the signed raw transaction
 
 It returns the transaction hash.
