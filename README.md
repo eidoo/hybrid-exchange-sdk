@@ -8,13 +8,12 @@ Learn more about [Eidoo](https://eidoo.io/hybrid-crypto-exchange/) and the [Eido
 
 This project is designed to make the interaction with **Eidoo Hybrid Exchange** easier.<br>
 You will be able to:
-  - create a trading wallet smart contract,
-  - deposit and withdraw funds from a trading wallet,  withdraw from trading wallet,
-  - list, create and delete orders,
+  - create a trading wallet smart contract
+  - deposit and withdraw funds from a trading wallet
+  - list, create and delete orders
   - retrieve order book informations
 
 For release notes, please see the [CHANGELOG](./CHANGELOG.md).
-
 
 ## Installation
 If you want you can install it with npm:
@@ -34,6 +33,8 @@ Then within your application, you can reference SDK with the following:
 ```javascript
 const hybridExchangeSdk = require('@eidoo/hybrid-exchange-sdk')
 ```
+
+> After the installation **the SDK is also available as CLI** (command line interface), check the documentation [here](./src/cli/README.md).
 
 ## Quick start
 To interact with the Eidoo hybrid exchange and submit an order based on what you would like to trade you need to check the [available pairs](./examples/lib/pair/listPair.js).<br>
@@ -74,7 +75,6 @@ You can create and cancel an order without building and signing the order, but i
 
 ## Opening Issues
 If you encounter a bug in the **EIDOO HYBRID EXCHANGE SDK** please check the [existing issues](https://github.com/eidoo/hybrid-exchange-sdk/issues) and try to make sure your problem doesn’t already exist before opening a new issue. Please include the version of the SDK you are using and all the relevant information to reproduce the bug.
-
 
 ## License
 This SDK is distributed under the
