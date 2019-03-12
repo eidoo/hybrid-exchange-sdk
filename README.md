@@ -8,9 +8,9 @@ Learn more about [Eidoo](https://eidoo.io/hybrid-crypto-exchange/) and the [Eido
 
 This project is designed to make the interaction with **Eidoo Hybrid Exchange** easier.<br>
 You will be able to:
-  - create a trading wallet smart contract,
-  - deposit and withdraw funds from a trading wallet,  withdraw from trading wallet,
-  - list, create and delete orders,
+  - create a trading wallet smart contract
+  - deposit and withdraw funds from a trading wallet
+  - list, create and delete orders
   - retrieve order book informations
 
 For release notes, please see the [CHANGELOG](./CHANGELOG.md).
