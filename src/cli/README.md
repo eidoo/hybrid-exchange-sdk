@@ -3,22 +3,42 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/eidoo/hybrid-exchange-sdk/issues)
 [![CircleCI](https://circleci.com/gh/eidoo/hybrid-exchange-sdk/tree/dev.svg?style=svg)](https://circleci.com/gh/eidoo/hybrid-exchange-sdk/tree/dev)
 
-After the installation the SDK will put at your disposal its functionalities through a CLI (command line interface).
+The SDK package put at your disposal its functionalities through a **CLI** (command line interface).
 
-The CLI has been designed in 4 macro functionalities:
+You can install it globallly with:
+
+```bash
+yarn global add eidoo/hybrid-exchange-sdk
+```
+
+or
+
+```bash
+npm install -g eidoo/hybrid-exchange-sdk
+```
+
+and access to it with:
+
+```bash
+hybrid-exchange-cli <domain> <command> <options>
+```
+
+The CLI has been designed in four macro domains:
 - [ethereum wallet](#Ethereum-wallet)
 - [order](#Order)
 - [token](#Token)
 - [trading wallet](#Trading-wallet)
 
-You can check every command documentation at any time by simply typing: `yarn hybrid-exchange-cli --help`
+For release notes, please see the [CHANGELOG](../../CHANGELOG.md).
 
 # Ethereum wallet
 The ethereum wallet functionality let you create a keystore from a specific ethereum account.<br>
 A keystore file is a JSON file that encrypts your ethereum account using a password.
 
 Command:<br>
-- `yarn hybrid-exchange-cli ethereum-wallet keystore-generate`
+```bash
+hybrid-exchange-cli ethereum-wallet keystore-generate
+```
 
 Args:<br>
 - `--keystore-file-path` Destination path of the generated keystore <br>
@@ -31,7 +51,9 @@ The order functionalities let you *create*, *cancel* and *sign* orders to the Ei
 Submit an order creation to the Eidoo hybrid exchange.
 
 Command:<br>
-- `yarn hybrid-exchange-cli order create`
+```bash
+hybrid-exchange-cli order create
+```
 
 Args:<br>
 - `--cli-input-json` Order JSON <br>
@@ -46,7 +68,9 @@ The command returns the orderId.
 Submit an order cancel to the Eidoo hybrid exchange.
 
 Command:<br>
-- `yarn hybrid-exchange-cli order cancel`
+```bash
+hybrid-exchange-cli order cancel
+```
 
 Args:<br>
 - `--order-id` The orderId<br>
@@ -57,7 +81,9 @@ The create order command is automatically adding to the passed order object an `
 The `ecSignature` field can be manually generated and so later added to the order object using the `sign command`.
 
 Command:<br>
-- `yarn hybrid-exchange-cli order sign`
+```bash
+hybrid-exchange-cli order sign
+```
 
 Args:<br>
 - `--cli-input-json` Order JSON <br>
@@ -75,7 +101,9 @@ The token functionalities let you interact with ERC20 tokens.
 It execute an ERC20 token approve method.
 
 Command:<br>
-- `yarn hybrid-exchange-cli token approve`
+```bash
+hybrid-exchange-cli token approve
+```
 
 Args:<br>
 - `--from` The token holder public key<br>
@@ -94,7 +122,9 @@ It returns the transaction hash.
 It retrieves the ERC20 allowance property value.
 
 Command:<br>
-- `yarn hybrid-exchange-cli token get-allowance`
+```bash
+hybrid-exchange-cli token get-allowance
+```
 
 Args:<br>
 - `--owner` The token holder public key<br>
@@ -114,7 +144,9 @@ You can also retrieve your trading wallet address and funds balances.
 It creates a trading wallet instance.
 
 Command:<br>
-- `yarn hybrid-exchange-cli trading-wallet create-wallet`
+```bash
+hybrid-exchange-cli trading-wallet create-wallet
+```
 
 Args:<br>
 - `--eoa` The personal wallet address<br>
@@ -130,7 +162,9 @@ It returns the transaction hash.
 It retrieves the address of the trading wallet connected to the specified personal wallet address.
 
 Command:<br>
-- `yarn hybrid-exchange-cli trading-wallet get-address`
+```bash
+hybrid-exchange-cli trading-wallet get-address
+```
 
 Args:<br>
 - `--eoa` The personal wallet address
@@ -144,7 +178,9 @@ It returns the trading wallet address.
 It deposits a specified amount of ETH to your trading wallet.
 
 Command:<br>
-- `yarn hybrid-exchange-cli trading-wallet deposit-eth`
+```bash
+hybrid-exchange-cli trading-wallet deposit-eth
+```
 
 Args:<br>
 - `--from` The personal wallet address<br>
@@ -162,7 +198,9 @@ It returns the transaction hash.
 It deposits a specified amount of an ERC20 token to your trading wallet.
 
 Command:<br>
-- `yarn hybrid-exchange-cli trading-wallet deposit-token`
+```bash
+hybrid-exchange-cli trading-wallet deposit-token
+```
 
 Args:<br>
 - `--from` The personal wallet address<br>
@@ -181,7 +219,9 @@ It returns the transaction hash.
 It retrieves the asset balance of a trading wallet.
 
 Command:<br>
-- `yarn hybrid-exchange-cli trading-wallet get-balance`
+```bash
+hybrid-exchange-cli trading-wallet get-balance
+```
 
 Args:<br>
 - `--from` The personal wallet address<br>
@@ -197,7 +237,9 @@ It returns the asset balance in WEI.
 It withdraws a specified amount of a specified asset from your trading wallet.
 
 Command:<br>
-- `yarn hybrid-exchange-cli trading-wallet withdraw`
+```bash
+hybrid-exchange-cli trading-wallet withdraw
+```
 
 Args:<br>
 - `--from` The personal wallet address<br>
