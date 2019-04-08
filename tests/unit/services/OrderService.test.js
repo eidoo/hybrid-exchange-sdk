@@ -13,7 +13,7 @@ const exchangeApiLib = new ExchangeApiLib(ExchangeApiLibUrl)
 let orderService
 
 beforeEach(() => {
-  orderService = new OrderService(logger, exchangeApiLib)
+  orderService = new OrderService(exchangeApiLib, logger)
 })
 
 afterEach(() => {

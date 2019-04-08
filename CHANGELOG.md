@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Release date: 2019-03-XX.
 
+### Changed
+- [OrderService](https://github.com/eidoo/hybrid-exchange-sdk/issues/87) Change OrderService constructor.
+
 ## [v2.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v2.0.0...v2.1.0)
 
 Release date: 2019-03-12.
