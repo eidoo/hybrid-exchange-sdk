@@ -6,7 +6,7 @@ const OrderCancelCommandValidator = require('../../../validators/commands/order/
 const OrderService = require('../../../services/OrderService')
 const PrivateKeyValidator = require('../../../validators/PrivateKeyValidator')
 
-const orderService = new OrderService(logger)
+const orderService = new OrderService()
 const privateKeyService = PrivateKeyServiceBuilder.build()
 const privateKeyValidator = new PrivateKeyValidator(logger)
 

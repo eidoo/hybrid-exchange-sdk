@@ -16,7 +16,7 @@ const orderSignerHelperInstance = new OrderSignerHelper(log)
  * Class representing a service that manage orders.
  */
 class OrderService {
-  constructor(logger = log, exchangeApiClient = exchangeApiLib,
+  constructor(exchangeApiClient = exchangeApiLib, logger = log,
     orderSignerHelper = orderSignerHelperInstance, orderBuilder = orderBuilderInstance) {
     if (!logger) {
       throw new TypeError(`Invalid "logger" value: ${logger}`)
