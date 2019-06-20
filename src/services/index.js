@@ -4,6 +4,7 @@ const OrderService = require('./OrderService')
 const PairService = require('./PairService')
 const PrivateKeyService = require('./PrivateKeyService')
 const TradingWalletService = require('./TradingWalletService')
+const TradeService = require('./TradeService')
 
 module.exports = {
   BaseTransactionService,
@@ -12,4 +13,5 @@ module.exports = {
   PairService,
   PrivateKeyService,
   TradingWalletService,
+  TradeService,
 }
