@@ -145,7 +145,7 @@ class ExchangeApiLib extends IExchangeApiLib {
     }
 
     const response = await this.callAsync({ method, endpoint })
-    return response.data.results
+    return response.data
   }
 
   async listTradesPerPairAsync(baseSymbol, quoteSymbol, from, to) {
@@ -161,7 +161,7 @@ class ExchangeApiLib extends IExchangeApiLib {
     }
 
     const response = await this.callAsync({ method, endpoint })
-    return response.data.results
+    return response.data
   }
 }
 

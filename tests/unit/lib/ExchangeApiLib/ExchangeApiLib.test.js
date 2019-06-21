@@ -4,6 +4,7 @@ const sandbox = require('sinon').createSandbox()
 const { ExchangeApiLib } = require('../../../../src/lib/ExchangeApiLib')
 const ExchangeApiLibError = require('../../../../src/lib/ExchangeApiLib/ExchangeApiLibError')
 const MockOrderFactory = require('../../../factories/MockOrderFactory')
+const MockTradeFactory = require('../../../factories/MockTradeFactory')
 
 const ExchangeApiLibUrl = 'fakeurl'
 const exchangeApiLib = new ExchangeApiLib(ExchangeApiLibUrl)
@@ -202,5 +203,57 @@ describe('getLastPriceAsync', () => {
 
     expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint })).toBe(true)
     expect(result).toEqual(getLastPriceAsyncResponse.data.last)
+  })
+})
+
+describe('listAllTradesAsync', () => {
+  test('returns expected response', async () => {
+    const from = null
+    const to = null
+    const expectedMethod = 'get'
+    const expectedEndpoint = '/trading-wallet/v1/trades'
+    const tradeListResponse = {
+      status: 'success',
+      data: {
+        items: MockTradeFactory.buildList(4),
+        paging: {
+          total: 4,
+        },
+      },
+    }
+    const callAsyncMock = sandbox.stub(exchangeApiLib, 'callAsync').returns(tradeListResponse)
+
+    const trades = await exchangeApiLib.listAllTradesAsync(from, to)
+
+    expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint })).toBe(true)
+    expect(trades).toMatchObject(tradeListResponse.data)
+  })
+})
+
+describe('listTradesPerPairAsync', () => {
+  test('returns expected response', async () => {
+    const baseSymbol = 'EDO'
+    const quoteSymbol = 'ETH'
+    const from = null
+    const to = null
+
+    const expectedMethod = 'get'
+    const expectedEndpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/trades`
+
+    const tradeListResponse = {
+      status: 'success',
+      data: {
+        items: MockTradeFactory.buildList(4),
+        paging: {
+          total: 4,
+        },
+      },
+    }
+    const callAsyncMock = sandbox.stub(exchangeApiLib, 'callAsync').returns(tradeListResponse)
+
+    const trades = await exchangeApiLib.listTradesPerPairAsync(baseSymbol, quoteSymbol, from, to)
+
+    expect(callAsyncMock.calledOnceWith({ method: expectedMethod, endpoint: expectedEndpoint })).toBe(true)
+    expect(trades).toMatchObject(tradeListResponse.data)
   })
 })
