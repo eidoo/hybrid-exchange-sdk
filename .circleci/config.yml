@@ -20,26 +20,6 @@ jobs:
       - run: yarn --no-progress --frozen-lockfile
       - save-cache: *save-cache
 
-  test-node-8:
-    docker:
-      - image: circleci/node:8
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile
-      - save-cache: *save-cache
-      - run:
-          command: yarn test
-  test-node-9:
-    docker:
-      - image: circleci/node:9
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile
-      - save-cache: *save-cache
-      - run:
-          command: yarn test
   test-node-10:
     docker:
       - image: circleci/node:10
@@ -56,12 +36,6 @@ workflows:
   build_test_deploy:
     jobs:
       - build
-      - test-node-8:
-          requires:
-            - build
-      - test-node-9:
-          requires:
-            - build
       - test-node-10:
           requires:
             - build
