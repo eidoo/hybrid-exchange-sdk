@@ -1,4 +1,4 @@
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const customJoiValidator = require('../utils/customJoiValidator')
 
 const BaseValidator = require('./BaseValidator')

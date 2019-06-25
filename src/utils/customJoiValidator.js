@@ -1,5 +1,5 @@
 const ethereumUtil = require('ethereumjs-util')
-const Joi = require('joi')
+const Joi = require('@hapi/joi')
 const Web3 = require('web3')
 
 const { existsSync } = require('fs')
