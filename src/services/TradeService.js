@@ -10,29 +10,26 @@ const exchangeApiLib = new ExchangeApiLib(ExchangeApiLibUrl)
  */
 class TradeService {
   constructor(exchangeApiClient = exchangeApiLib, logger = log) {
-    if (!logger) {
-      throw new TypeError(`Invalid "logger" value: ${logger}`)
-    }
-    this.log = logger.child({ module: this.constructor.name })
-
     if (!exchangeApiClient) {
       throw new TypeError(`Invalid "exchangeApiClient" value: ${exchangeApiClient}`)
     }
     this.exchangeApiClient = exchangeApiClient
+
+    if (!logger) {
+      throw new TypeError(`Invalid "logger" value: ${logger}`)
+    }
+    this.log = logger.child({ module: this.constructor.name })
   }
 
   /** It gets the list of the all trades on the DEX.
    *
-   * @throws {ExchangeApiLibError}         If there was an error during read model api call.
+   * @param {String} from          The from date.
+   * @param {String} to            The to date.
+   * @throws {ExchangeApiLibError} If there was an error during read model api call.
    */
   async listAllTradesAsync(from, to) {
-    try {
-      const trades = await this.exchangeApiClient.listAllTradesAsync(from, to)
-      return trades
-    } catch (err) {
-      this.log.error({ err, fn: 'listAllTradesAsync' }, 'There was an error getting all trades')
-      throw err
-    }
+    const trades = await this.exchangeApiClient.listAllTradesAsync(from, to)
+    return trades
   }
 
   /** It gets the list of the all trades per pair on the DEX.
@@ -44,14 +41,8 @@ class TradeService {
    * @throws {ExchangeApiLibError} If there was an error during read model api call.
    */
   async listTradesPerPairAsync(baseSymbol, quoteSymbol, from, to) {
-    try {
-      const trades = await this.exchangeApiClient.listTradesPerPairAsync(baseSymbol, quoteSymbol, from, to)
-      return trades
-    } catch (err) {
-      this.log.error({ err, fn: 'listTradesPerPairAsync', baseSymbol, quoteSymbol, from, to },
-        `There was an error getting trades for pair ${baseSymbol}/${quoteSymbol}`)
-      throw err
-    }
+    const trades = await this.exchangeApiClient.listTradesPerPairAsync(baseSymbol, quoteSymbol, from, to)
+    return trades
   }
 }
 
