@@ -3,8 +3,8 @@ const Erc20TokenService = require('./Erc20TokenService')
 const OrderService = require('./OrderService')
 const PairService = require('./PairService')
 const PrivateKeyService = require('./PrivateKeyService')
-const TradingWalletService = require('./TradingWalletService')
 const TradeService = require('./TradeService')
+const TradingWalletService = require('./TradingWalletService')
 
 module.exports = {
   BaseTransactionService,
@@ -12,6 +12,6 @@ module.exports = {
   OrderService,
   PairService,
   PrivateKeyService,
-  TradingWalletService,
   TradeService,
+  TradingWalletService,
 }
