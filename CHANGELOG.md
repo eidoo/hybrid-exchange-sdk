@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Release date: 2019-03-XX.
 
+### Added
+- [Add Trade service](https://github.com/eidoo/hybrid-exchange-sdk/issues/92)
+
 ### Changed
 - [Change OrderService constructor](https://github.com/eidoo/hybrid-exchange-sdk/issues/87)
 - [Update NodeJS and project packages due to security warnings](https://github.com/eidoo/hybrid-exchange-sdk/issues/91)
