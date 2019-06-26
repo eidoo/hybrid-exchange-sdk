@@ -131,6 +131,38 @@ class ExchangeApiLib extends IExchangeApiLib {
     const response = await this.callAsync({ method, endpoint, body })
     return response.result
   }
+
+  async listAllTradesAsync(from, to) {
+    const method = 'get'
+    let endpoint = '/trading-wallet/v1/trades'
+
+    if (from) {
+      endpoint += `?from=${from}`
+    }
+
+    if (to) {
+      endpoint += from ? `&to=${to}` : `?to=${to}`
+    }
+
+    const response = await this.callAsync({ method, endpoint })
+    return response.data
+  }
+
+  async listTradesPerPairAsync(baseSymbol, quoteSymbol, from, to) {
+    const method = 'get'
+    let endpoint = `/trading-wallet/v1/pairs/base/${baseSymbol}/quote/${quoteSymbol}/trades`
+
+    if (from) {
+      endpoint += `?from=${from}`
+    }
+
+    if (to) {
+      endpoint += from ? `&to=${to}` : `?to=${to}`
+    }
+
+    const response = await this.callAsync({ method, endpoint })
+    return response.data
+  }
 }
 
 module.exports = ExchangeApiLib

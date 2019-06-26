@@ -31,6 +31,16 @@ class IExchangeApiLib {
   createOrderAsync() {
     return Promise.reject(new Error('Method "createOrderAsync" has not been implemented yet.'))
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  listAllTradesAsync() {
+    return Promise.reject(new Error('Method "listAllTradesAsync" has not been implemented yet.'))
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  listTradesPerPairAsync() {
+    return Promise.reject(new Error('Method "listTradesPerPairAsync" has not been implemented yet.'))
+  }
 }
 
 module.exports = IExchangeApiLib
