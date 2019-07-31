@@ -196,7 +196,7 @@ class TradingWalletService extends BaseTransactionService {
    * @throws {SignTransactionError}        If there was an error signing the transaction to create the wallet.
    * @throws {TransactionExecutionError}   If there was an error during the execution of the transaction.
    */
-  async updateExchange(personalWalletAddress, tradingWalletAddress, exchangeAddress, privateKey) {
+  async updateExchangeAsync(personalWalletAddress, tradingWalletAddress, exchangeAddress, privateKey) {
     this.checkEtherumAddress(personalWalletAddress)
     this.checkEtherumAddress(tradingWalletAddress)
     this.checkEtherumAddress(exchangeAddress)

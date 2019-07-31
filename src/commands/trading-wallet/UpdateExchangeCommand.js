@@ -124,7 +124,7 @@ class UpdateExchangeCommand extends CredentialBasedCommand {
       )
       return signedTransactionData
     }
-    const result = await this.tradingWalletService.updateExchange(
+    const result = await this.tradingWalletService.updateExchangeAsync(
       personalWalletAddressRetrived,
       to,
       exchange,
