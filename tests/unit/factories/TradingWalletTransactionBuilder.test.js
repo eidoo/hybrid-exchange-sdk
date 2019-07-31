@@ -268,3 +268,49 @@ describe('buildAssetBalanceTransactionDraft', () => {
       }
     })
 })
+
+describe('buildUpdateExchangeTransactionDraft', () => {
+  test('returns correct transaction object', () => {
+    const personalWalletAddress = '0x300be6824289b48cb6726f99c16e51fb41d480da'
+    const fakeExchangeAddress = '0x300be6824289b48cb6726f99c16e51fb41d480da'
+    const updateExchangeEncodedData = '0x648a0c91000000000000000000000000300be6824289b48cb6726f99c16e51fb41d480da'
+    const expectedTransactionObjectDraft = MockTransactionDraftFactory.build({
+      from: personalWalletAddress,
+      data: updateExchangeEncodedData,
+      to: tradingWalletSmartContractAddress,
+    })
+
+    const result = tradingWalletTransactionBuilder.buildUpdateExchangeTransactionDraft(
+      personalWalletAddress,
+      tradingWalletSmartContractAddress,
+      fakeExchangeAddress,
+    )
+
+    expect(result).toMatchObject(expectedTransactionObjectDraft)
+  })
+  const invalidAddresses = [{}, [], 'I am not a valid ethereum address', 1, undefined, NaN, '0xNOOP']
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the personalWalletAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildUpdateExchangeTransactionDraft(invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the tradingWalletAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildUpdateExchangeTransactionDraft('0x300be6824289b48cb6726f99c16e51fb41d480da', invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the exchangeAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildUpdateExchangeTransactionDraft('0x300be6824289b48cb6726f99c16e51fb41d480da', '0x300be6824289b48cb6726f99c16e51fb41d480da', invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+})
