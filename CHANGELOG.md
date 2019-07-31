@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v2.2.0...HEAD)
 
-Release date: 2019-06-XX.
+Release date: 2019-XX-XX.
+
+### Added
+- [Add trading wallet update exchange](https://github.com/eidoo/hybrid-exchange-sdk/issues/93)
 
 ## [v2.2.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v2.1.0...v2.2.0)
 
