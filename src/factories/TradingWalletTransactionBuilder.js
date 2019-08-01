@@ -221,6 +221,33 @@ class TradingWalletTransactionBuilder extends BaseTransactionBuilder {
       'Asset balance transaction draft created successfully.')
     return transactionDraft
   }
+
+  /**
+   * It builds the updateExchange transaction object used by trading wallets.
+   *
+   * @param {String} personalWalletAddress The personal wallet address (EOA).
+   * @param {String} tradingWalletAddress  The trading wallet address.
+   * @param {String} exchangeAddress       The quantity of token to withdraw.
+   */
+  buildUpdateExchangeTransactionDraft(personalWalletAddress, tradingWalletAddress, exchangeAddress) {
+    this.constructor.checkEtherumAddress(personalWalletAddress)
+    this.constructor.checkEtherumAddress(tradingWalletAddress)
+    this.constructor.checkEtherumAddress(exchangeAddress)
+
+    const tradingWalletIstance = this.web3.eth.contract(this.tradingWalletSmartContractAbi).at(tradingWalletAddress)
+
+    const smartContractMethodName = 'updateExchange'
+    const smartContractParams = [exchangeAddress]
+    const transactionParams = {
+      from: personalWalletAddress,
+      to: tradingWalletAddress,
+    }
+
+    const transactionDraft = this.transactionLib.buildDraft(tradingWalletIstance, transactionParams,
+      smartContractMethodName, smartContractParams)
+    this.log.debug({ fn: 'buildUpdateExchangeTransactionDraft' }, 'Update exchange transaction draft created successfully.')
+    return transactionDraft
+  }
 }
 
 module.exports = TradingWalletTransactionBuilder

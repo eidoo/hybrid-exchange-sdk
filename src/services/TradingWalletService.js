@@ -183,6 +183,33 @@ class TradingWalletService extends BaseTransactionService {
 
     return this.web3.toBigNumber(assetBalance).toString(10)
   }
+
+  /**
+   * It updates the trading wallet exchange smart contract addrress reference.
+   *
+   * @param {String} personalWalletAddress The personal wallet address (EOA).
+   * @param {String} tradingWalletAddress  The trading wallet address.
+   * @param {String} exchangeAddress       The personal wallet address (EOA).
+   * @param {String} privateKey            The private key.
+   *
+   * @throws {InvalidEthereumAddress}      If no valid ethereum addresses are present.
+   * @throws {SignTransactionError}        If there was an error signing the transaction to create the wallet.
+   * @throws {TransactionExecutionError}   If there was an error during the execution of the transaction.
+   */
+  async updateExchangeAsync(personalWalletAddress, tradingWalletAddress, exchangeAddress, privateKey) {
+    this.checkEtherumAddress(personalWalletAddress)
+    this.checkEtherumAddress(tradingWalletAddress)
+    this.checkEtherumAddress(exchangeAddress)
+
+    const transactionParams = [personalWalletAddress, tradingWalletAddress, exchangeAddress]
+    const transactionDraftBuilderName = 'buildUpdateExchangeTransactionDraft'
+    const transactionHash = this.transactionExecutor(
+      privateKey,
+      transactionDraftBuilderName,
+      transactionParams,
+    )
+    return transactionHash
+  }
 }
 
 module.exports = TradingWalletService
