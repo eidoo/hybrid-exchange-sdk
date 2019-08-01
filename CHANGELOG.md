@@ -4,14 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v2.2.0...HEAD)
+## [Unreleased](https://github.com/eidoo/hybrid-exchange-sdk/compare/v2.3.0...HEAD)
 
-Release date: 2019-XX-XX.
+Release date: 2019-08-XX.
+
+## [v2.3.0](https:/github.com/eidoo/hybrid-exchange-sdk/compare/v2.2.0...v2.3.0)
+
+Release date: 2019-08-01.
 
 ### Added
 - [Add trading wallet update exchange](https://github.com/eidoo/hybrid-exchange-sdk/issues/93)
 
-## [v2.2.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v2.1.0...v2.2.0)
+## [v2.2.0](https://github.com/eidoo/hybrid-exchange-sdk/compare/v2.1.0...v2.2.0)
 
 Release date: 2019-06-28.
 
@@ -22,7 +26,7 @@ Release date: 2019-06-28.
 - [Change OrderService constructor](https://github.com/eidoo/hybrid-exchange-sdk/issues/87)
 - [Update NodeJS and project packages due to security warnings](https://github.com/eidoo/hybrid-exchange-sdk/issues/91)
 
-## [v2.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v2.0.0...v2.1.0)
+## [v2.1.0](https://github.com/eidoo/hybrid-exchange-sdk/compare/v2.0.0...v2.1.0)
 
 Release date: 2019-03-12.
 
@@ -40,7 +44,7 @@ Release date: 2019-03-12.
 - [Keystore in deposit ETH command](https://github.com/eidoo/hybrid-exchange-sdk/issues/45) Update `deposit-eth` command using keystore instead of private key
 
 
-## [v2.0.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/v1.1.0...v2.0.0)
+## [v2.0.0](https://github.com/eidoo/hybrid-exchange-sdk/compare/v1.1.0...v2.0.0)
 
 Release date: 2019-03-06.
 
@@ -69,7 +73,7 @@ Release date: 2019-03-06.
 ### Fixed
 - [Config](https://github.com/eidoo/hybrid-exchange-sdk/issues/56)
 
-## [v1.1.0](https://gitlab.com/eidoo_io/hybrid-exchange-sdk/compare/fa85a7...v1.1.0)
+## [v1.1.0](https://github.com/eidoo/hybrid-exchange-sdk/compare/fa85a7...v1.1.0)
 
 Release date: 2019-02-12.
 
