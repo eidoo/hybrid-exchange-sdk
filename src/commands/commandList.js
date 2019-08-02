@@ -6,6 +6,7 @@ const GetAddressCommandBuilder = require('../factories/commands/trading-wallet/G
 const GetAllowanceCommandBuilder = require('../factories/commands/token/GetAllowanceCommandBuilder')
 const GetBalanceCommandBuilder = require('../factories/commands/trading-wallet/GetBalanceCommandBuilder')
 const GetExchangeCommandBuilder = require('../factories/commands/trading-wallet/GetExchangeCommandBuilder')
+const GetOwnerCommandBuilder = require('../factories/commands/trading-wallet/GetOwnerCommandBuilder')
 const OrderCancelCommandBuilder = require('../factories/commands/order/OrderCancelCommandBuilder')
 const OrderCreateCommandBuilder = require('../factories/commands/order/OrderCreateCommandBuilder')
 const OrderSignCommandBuilder = require('../factories/commands/order/OrderSignCommandBuilder')
@@ -21,6 +22,7 @@ const getAddressCommand = GetAddressCommandBuilder.build()
 const getAllowanceCommand = GetAllowanceCommandBuilder.build()
 const getBalanceCommand = GetBalanceCommandBuilder.build()
 const getExchangeCommand = GetExchangeCommandBuilder.build()
+const getOwnerCommand = GetOwnerCommandBuilder.build()
 const keyStoreGenerateCommand = KeyStoreGenerateCommandBuilder.build()
 const orderCancelCommand = OrderCancelCommandBuilder.build()
 const orderCreateCommand = OrderCreateCommandBuilder.build()
@@ -37,6 +39,7 @@ module.exports = {
   getAllowanceCommand,
   getBalanceCommand,
   getExchangeCommand,
+  getOwnerCommand,
   keyStoreGenerateCommand,
   orderCancelCommand,
   orderCreateCommand,
