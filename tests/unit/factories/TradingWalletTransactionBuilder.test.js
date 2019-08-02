@@ -344,7 +344,43 @@ describe('buildGetExchangeTransactionDraft', () => {
   test.each(invalidAddresses)('raise InvalidEthereumAddress error if the tradingWalletAddress s not a valid ethereum address %s',
     (invalidAddress) => {
       try {
-        tradingWalletTransactionBuilder.buildUpdateExchangeTransactionDraft('0x300be6824289b48cb6726f99c16e51fb41d480da', invalidAddress)
+        tradingWalletTransactionBuilder.buildGetExchangeTransactionDraft('0x300be6824289b48cb6726f99c16e51fb41d480da', invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+})
+
+describe('buildGetOwnerTransactionDraft', () => {
+  test('returns correct transaction object', () => {
+    const personalWalletAddress = '0x300be6824289b48cb6726f99c16e51fb41d480da'
+    const getExchangeEncodedData = '0xe7663079'
+    const expectedTransactionObjectDraft = MockTransactionDraftFactory.build({
+      from: personalWalletAddress,
+      to: tradingWalletSmartContractAddress,
+      data: getExchangeEncodedData,
+    })
+
+    const result = tradingWalletTransactionBuilder.buildGetOwnerTransactionDraft(
+      personalWalletAddress,
+      tradingWalletSmartContractAddress,
+    )
+
+    expect(result).toMatchObject(expectedTransactionObjectDraft)
+  })
+  const invalidAddresses = [{}, [], 'I am not a valid ethereum address', 1, undefined, NaN, '0xNOOP']
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the personalWalletAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildGetOwnerTransactionDraft(invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the tradingWalletAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildGetOwnerTransactionDraft('0x300be6824289b48cb6726f99c16e51fb41d480da', invalidAddress)
       } catch (e) {
         expect(e instanceof InvalidEthereumAddress).toBe(true)
       }

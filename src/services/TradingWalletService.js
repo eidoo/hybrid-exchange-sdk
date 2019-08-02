@@ -248,6 +248,28 @@ class TradingWalletService extends BaseTransactionService {
 
     return ethereumUtil.addHexPrefix(ethereumUtil.unpad(exchangeAddress))
   }
+
+  /**
+   * It get the owner address of a trading wallet.
+   *
+   * @param {String} personalWalletAddress A personal wallet address (EOA) to be used for the tx call. It can be TW unrelated since you wont know the actual owner.
+   * @param {String} tradingWalletAddress  The trading wallet address.
+   *
+   * @throws {InvalidEthereumAddress}      If no valid ethereum addresses are present.
+   */
+  async getOwnerAsync(personalWalletAddress, tradingWalletAddress) {
+    this.checkEtherumAddress(personalWalletAddress)
+    this.checkEtherumAddress(tradingWalletAddress)
+
+    const transactionObjectDraft = this.transactionBuilder.buildGetOwnerTransactionDraft(
+      personalWalletAddress,
+      tradingWalletAddress,
+    )
+
+    const ownerAddress = await this.transactionLib.call(transactionObjectDraft)
+
+    return ethereumUtil.addHexPrefix(ethereumUtil.unpad(ownerAddress))
+  }
 }
 
 module.exports = TradingWalletService
