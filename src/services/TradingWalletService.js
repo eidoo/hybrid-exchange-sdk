@@ -231,7 +231,7 @@ class TradingWalletService extends BaseTransactionService {
       retrievedTradingWalletAddress = await this.getTradingWalletAddressAsync(personalWalletAddress)
     }
 
-    if (retrievedTradingWalletAddress === null) {
+    if (!retrievedTradingWalletAddress) {
       this.log.error(
         { fn: 'getExchangeAsync' },
         `tradingWallet not found for EOA:${personalWalletAddress}`,
