@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Release date: 2019-08-XX.
 
 ### Added
+- [Add trading wallet get owner](https://github.com/eidoo/hybrid-exchange-sdk/issues/97)
 - [Add trading wallet get exchange](https://github.com/eidoo/hybrid-exchange-sdk/issues/95)
 
 ## [v2.3.0](https:/github.com/eidoo/hybrid-exchange-sdk/compare/v2.2.0...v2.3.0)
