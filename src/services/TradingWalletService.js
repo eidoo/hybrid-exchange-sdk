@@ -1,3 +1,5 @@
+const ethereumUtil = require('ethereumjs-util')
+
 const { TradingWalletNotFoundError } = require('../utils/errors')
 const BaseTransactionService = require('./BaseTransactionService')
 
@@ -209,6 +211,42 @@ class TradingWalletService extends BaseTransactionService {
       transactionParams,
     )
     return transactionHash
+  }
+
+  /**
+   * It get the exchange address pointed by a trading wallet.
+   *
+   * @param {String} personalWalletAddress The personal wallet address (EOA).
+   * @param {String} tradingWalletAddress  The trading wallet address.
+   *
+   * @throws {InvalidEthereumAddress}      If no valid ethereum addresses are present.
+   * @throws {TradingWalletNotFoundError}  If no trading wallet is available.
+   */
+  async getExchangeAsync(personalWalletAddress, tradingWalletAddress = null) {
+    this.checkEtherumAddress(personalWalletAddress)
+
+    let retrievedTradingWalletAddress = tradingWalletAddress
+
+    if (!tradingWalletAddress) {
+      retrievedTradingWalletAddress = await this.getTradingWalletAddressAsync(personalWalletAddress)
+    }
+
+    if (!retrievedTradingWalletAddress) {
+      this.log.error(
+        { fn: 'getExchangeAsync' },
+        `tradingWallet not found for EOA:${personalWalletAddress}`,
+      )
+      throw new TradingWalletNotFoundError(`No trading wallet address for: ${personalWalletAddress}`)
+    }
+
+    const transactionObjectDraft = this.transactionBuilder.buildGetExchangeTransactionDraft(
+      personalWalletAddress,
+      retrievedTradingWalletAddress,
+    )
+
+    const exchangeAddress = await this.transactionLib.call(transactionObjectDraft)
+
+    return ethereumUtil.addHexPrefix(ethereumUtil.unpad(exchangeAddress))
   }
 }
 

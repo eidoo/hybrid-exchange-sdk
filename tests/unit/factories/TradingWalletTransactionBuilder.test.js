@@ -314,3 +314,39 @@ describe('buildUpdateExchangeTransactionDraft', () => {
       }
     })
 })
+
+describe('buildGetExchangeTransactionDraft', () => {
+  test('returns correct transaction object', () => {
+    const personalWalletAddress = '0x300be6824289b48cb6726f99c16e51fb41d480da'
+    const getExchangeEncodedData = '0xc0668179'
+    const expectedTransactionObjectDraft = MockTransactionDraftFactory.build({
+      from: personalWalletAddress,
+      to: tradingWalletSmartContractAddress,
+      data: getExchangeEncodedData,
+    })
+
+    const result = tradingWalletTransactionBuilder.buildGetExchangeTransactionDraft(
+      personalWalletAddress,
+      tradingWalletSmartContractAddress,
+    )
+
+    expect(result).toMatchObject(expectedTransactionObjectDraft)
+  })
+  const invalidAddresses = [{}, [], 'I am not a valid ethereum address', 1, undefined, NaN, '0xNOOP']
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the personalWalletAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildGetExchangeTransactionDraft(invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+  test.each(invalidAddresses)('raise InvalidEthereumAddress error if the tradingWalletAddress s not a valid ethereum address %s',
+    (invalidAddress) => {
+      try {
+        tradingWalletTransactionBuilder.buildUpdateExchangeTransactionDraft('0x300be6824289b48cb6726f99c16e51fb41d480da', invalidAddress)
+      } catch (e) {
+        expect(e instanceof InvalidEthereumAddress).toBe(true)
+      }
+    })
+})
