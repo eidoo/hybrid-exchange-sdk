@@ -139,9 +139,9 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@eidoo/ethapi-lib@eidoo/ethapi-lib#release/v1.0.2":
-  version "1.0.2"
-  resolved "https://codeload.github.com/eidoo/ethapi-lib/tar.gz/26d2b9580065c947c48e928b1b3144b65468b3b8"
+"@eidoo/ethapi-lib@eidoo/ethapi-lib#release/v1.0.3":
+  version "1.0.3"
+  resolved "https://codeload.github.com/eidoo/ethapi-lib/tar.gz/e959e7ff53b2ab9f578ab78594376a2801f65e4e"
   dependencies:
     axios "0.19.0"
 

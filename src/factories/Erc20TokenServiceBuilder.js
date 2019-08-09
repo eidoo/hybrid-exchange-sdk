@@ -9,7 +9,7 @@ const { Erc20TokenService } = require('../services')
 const providerUrl = 'urlToProvider'
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
-const transactionLibInstance = new TransactionLib(web3, logger)
+const transactionLibInstance = new TransactionLib({ web3, logger })
 
 /**
    * Class representing a simple factory to build Erc20TokenService object.

@@ -19,14 +19,14 @@ const ethApiLibConf = {
   port: 8080,
   useTLS: false,
 }
-const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const ethApiClient = new EidooEthApiLib(ethApiLibConf)
 const privateKey = '70f3b9e0f71cda37356c605c88cd93eef0813795e75ce78c293856f1889403b6'
 
 
 let transactionLib
 
 beforeEach(() => {
-  transactionLib = new TransactionLib(web3, logger, ethApiLib)
+  transactionLib = new TransactionLib({ web3, logger, ethApiClient })
 })
 
 afterEach(() => {
@@ -46,8 +46,8 @@ describe('sign', () => {
     },
   }
   test('returns correct signed hash', async () => {
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     const fromEthereumAddress = '0xd57cb05ef66d2c7c952656ddf5096e02281e3d2e'
     const toEtherumAddress = '0x0ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba'
@@ -62,14 +62,14 @@ describe('sign', () => {
   })
 
   test('raise SignTransactionError if getNonce raise NonceError.', async () => {
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').throws(new NonceError('Nonce error'))
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').throws(new NonceError('Nonce error'))
     const transactionDraft = MockTransactionDraftFactory.build()
     return expect(transactionLib.sign(transactionDraft, privateKey)).rejects.toBeInstanceOf(SignTransactionError)
   })
 
   test('raise SignTransactionError if getEstimateGasAsync raise GasEstimationError.', async() => {
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').throws(new GasEstimationError('Gas price is equal to zero'))
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').throws(new GasEstimationError('Gas price is equal to zero'))
     const transactionDraft = MockTransactionDraftFactory.build()
     return expect(transactionLib.sign(transactionDraft, privateKey)).rejects.toBeInstanceOf(SignTransactionError)
   })
@@ -92,8 +92,8 @@ describe('sign', () => {
   }]
   test.each(badGasValues)('raise SignTransactionError since gas value is %o',
     async(badGasValue) => {
-      sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-      sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(badGasValue)
+      sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+      sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(badGasValue)
       const transactionDraft = MockTransactionDraftFactory.build()
       return expect(transactionLib.sign(transactionDraft, privateKey)).rejects.toBeInstanceOf(SignTransactionError)
     })
@@ -109,17 +109,17 @@ describe('sign', () => {
 })
 
 describe('execute', () => {
-  test('call EthApiLib.sendRawTransaction as expected', async () => {
+  test('call ethApiClient.sendRawTransaction as expected', async () => {
     const transactionSignedData = '0xdsaib234ihfksanda'
-    const sendRawTransactionAsyncMock = sandbox.stub(ethApiLib, 'sendRawTransactionAsync')
+    const sendRawTransactionAsyncMock = sandbox.stub(ethApiClient, 'sendRawTransactionAsync')
       .returns({ hash: transactionSignedData })
 
     await transactionLib.execute(transactionSignedData)
 
     expect(sendRawTransactionAsyncMock.calledOnceWithExactly({ rawTx: transactionSignedData })).toBe(true)
   })
-  test('raise TransactionExecutionError if EthApiLib.sendRawTransaction raise an Error', async () => {
-    sandbox.stub(ethApiLib, 'sendRawTransactionAsync').throws(new Error())
+  test('raise TransactionExecutionError if ethApiClient.sendRawTransaction raise an Error', async () => {
+    sandbox.stub(ethApiClient, 'sendRawTransactionAsync').throws(new Error())
     const transactionSignedData = '0xdsaib234ihfksanda'
 
     return expect(transactionLib.execute(transactionSignedData)).rejects.toBeInstanceOf(TransactionExecutionError)
@@ -137,18 +137,18 @@ describe('execute', () => {
 
 
 describe('call', () => {
-  test('call EthApiLib.transactionCallAsync as expected', async () => {
+  test('call ethApiClient.transactionCallAsync as expected', async () => {
     const transactionObjectDraft = MockTransactionDraftFactory.build()
 
-    const transactionCallAsyncMock = sandbox.stub(ethApiLib, 'transactionCallAsync')
+    const transactionCallAsyncMock = sandbox.stub(ethApiClient, 'transactionCallAsync')
       .returns()
 
     await transactionLib.call(transactionObjectDraft)
 
     expect(transactionCallAsyncMock.calledOnceWithExactly({ transactionObject: transactionObjectDraft })).toBe(true)
   })
-  test('raise TransactionCallError if EthApiLib.transactionCallAsync raise an Error', async () => {
-    sandbox.stub(ethApiLib, 'transactionCallAsync').throws(new Error())
+  test('raise TransactionCallError if ethApiClient.transactionCallAsync raise an Error', async () => {
+    sandbox.stub(ethApiClient, 'transactionCallAsync').throws(new Error())
     const transactionObjectDraft = MockTransactionDraftFactory.build()
 
     return expect(transactionLib.call({ transactionObject: transactionObjectDraft })).rejects.toBeInstanceOf(TransactionCallError)

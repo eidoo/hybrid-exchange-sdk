@@ -17,7 +17,7 @@
     "version:current": "echo $npm_package_version"
   },
   "engines": {
-    "node": ">=10.0.0 <=10.16.0"
+    "node": ">=10.0.0 <=10.16.1"
   },
   "keywords": [
     "eidoo",
@@ -36,7 +36,7 @@
     "sinon": "7.2.2"
   },
   "dependencies": {
-    "@eidoo/ethapi-lib": "eidoo/ethapi-lib#release/v1.0.2",
+    "@eidoo/ethapi-lib": "eidoo/ethapi-lib#release/v1.0.3",
     "@hapi/joi": "^15.1.0",
     "axios": "0.19.0",
     "bip39": "2.5.0",

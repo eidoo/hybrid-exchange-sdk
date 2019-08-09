@@ -35,9 +35,9 @@ const ethApiLibConf = {
   port: 8080,
   useTLS: false,
 }
-const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const ethApiClient = new EidooEthApiLib(ethApiLibConf)
 
-const transactionLibInstance = new TransactionLib(web3, log, ethApiLib)
+const transactionLibInstance = new TransactionLib({ web3, log, ethApiClient })
 
 const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
   web3, { exchangeSmartContractAddress }, transactionLibInstance,
@@ -79,9 +79,9 @@ describe('createWalletAsync', () => {
     const expectedSignedData = '0xf88782113082633382520894f1c525a488a848b58b95d79da48c21ce434290f780a4c1d5e84f000000000000000000000000d57cb05ef66d2c7c952656ddf5096e02281e3d2e1ba0c5f79b5bb10700cc384f4484edf376ef9e38bb6ada947db27e7f763e2898f2e3a06afd43f801275a1107abead95ad0d5af8a8fa4b2289db091d70e82f04e26ac57'
     const expectedTransactionHash = '0xTransactionHash'
 
-    const ethApiLibMock = sandbox.stub(ethApiLib, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    const ethApiLibMock = sandbox.stub(ethApiClient, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     await tradingWalletService.createWalletAsync(personalWalletAddress, privateKey)
 
@@ -99,9 +99,9 @@ describe('depositEtherAsync', () => {
     const expectedSignedData = '0xf86f821130826333825208941cfda0c9a3e4e89865795a6370d87037c489a88988016345785d8a00008498ea5fca1ba0243468cd2260ca0917acc53519de367ac68ca68b0ec61586a904908e205cd551a01981a50d6c14e4a11c4c77e42968b60c49a0803783291e972c9db5a3ef7da329'
     const expectedTransactionHash = '0xTransactionHash'
 
-    const ethApiLibMock = sandbox.stub(ethApiLib, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    const ethApiLibMock = sandbox.stub(ethApiClient, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     await tradingWalletService.depositEtherAsync(personalWalletAddress, tradingWalletAddress, quantity, privateKey)
 
@@ -117,9 +117,9 @@ describe('depositTokenAsync', () => {
     const expectedSignedData = '0xf8a8821130826333825208940ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba80b8442039d9fd000000000000000000000000d67cb05ef66d1c7c952656ddf5096e02281e3d2e000000000000000000000000000000000000000000000000016345785d8a00001ba07c6b535c2a82feec42401e2ae9568cf92ea732dcd85c84fa1026d0cb2c0fec8aa05c062bdc3d21c820e0cd74ed1816b9e53033e417c97961d23c90293ca1f59114'
     const expectedTransactionHash = '0xTransactionHash'
 
-    const ethApiLibMock = sandbox.stub(ethApiLib, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    const ethApiLibMock = sandbox.stub(ethApiClient, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     await tradingWalletService.depositTokenAsync(personalWalletAddress, tradingWalletSmartContractAddress,
       quantity, validtokenAddress, privateKey)
@@ -136,9 +136,9 @@ describe('WithdrawAsync', () => {
     const expectedTransactionHash = '0xTransactionHash'
     const expectedSignedData = '0xf8a9821130826333830186a0940ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba80b844f3fef3a3000000000000000000000000d67cb05ef66d1c7c952656ddf5096e02281e3d2e000000000000000000000000000000000000000000000000016345785d8a00001ba05ec9740db856df484f1364161b99ddec3be9fe09834f8a84c8739d072da186c4a00a52a235fef3d4888bcacee94ee3e1149f764a2b41a25f71b013708b27285369'
 
-    const ethApiLibMock = sandbox.stub(ethApiLib, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    const ethApiLibMock = sandbox.stub(ethApiClient, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     await tradingWalletService.withdrawAsync(personalWalletAddress,
       tradingWalletSmartContractAddress, quantity, validtokenAddress, privateKey)
@@ -149,10 +149,10 @@ describe('WithdrawAsync', () => {
     const expectedTransactionHash = '0xTransactionHash'
     const expectedSignedData = '0xf8a9821130826333830186a0940ba8f4ca1ba7a76a9da66e1629c24eb432aa96ba80b844f3fef3a3000000000000000000000000d67cb05ef66d1c7c952656ddf5096e02281e3d2e000000000000000000000000000000000000000000000000016345785d8a00001ba05ec9740db856df484f1364161b99ddec3be9fe09834f8a84c8739d072da186c4a00a52a235fef3d4888bcacee94ee3e1149f764a2b41a25f71b013708b27285369'
 
-    const sendRawTransactionAsyncMock = sandbox.stub(ethApiLib, 'sendRawTransactionAsync')
+    const sendRawTransactionAsyncMock = sandbox.stub(ethApiClient, 'sendRawTransactionAsync')
       .returns({ hash: expectedTransactionHash })
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     await tradingWalletService.withdrawAsync(personalWalletAddress,
       tradingWalletSmartContractAddress, quantity, validtokenAddress, privateKey)
@@ -166,7 +166,7 @@ describe('getTradingWalletAddress', () => {
   test('calls correctly ethapi transactionCallAsync correctly', async() => {
     const expectedResult = '0xresult'
     const transactionCallAsyncResponse = `0x000000000000000000000000${expectedResult.substring(2)}`
-    sandbox.stub(ethApiLib, 'transactionCallAsync').returns(transactionCallAsyncResponse)
+    sandbox.stub(ethApiClient, 'transactionCallAsync').returns(transactionCallAsyncResponse)
 
     const transactionCallResult = await tradingWalletService.getTradingWalletAddressAsync(personalWalletAddress)
 
@@ -190,7 +190,7 @@ describe('getAssetBalanceAsync', () => {
     const expectedAssetBalance = web3.toBigNumber(web3.toWei(5)).toString(10)
 
     sandbox.stub(tradingWalletService, 'getTradingWalletAddressAsync').returns(tradingWalletOfThePersonalWallet)
-    sandbox.stub(ethApiLib, 'transactionCallAsync').returns(expectedAssetBalance)
+    sandbox.stub(ethApiClient, 'transactionCallAsync').returns(expectedAssetBalance)
 
     const tradingWalletAssetBalanceResult = await tradingWalletService.getAssetBalanceAsync(
       personalWalletAddress,
@@ -201,7 +201,7 @@ describe('getAssetBalanceAsync', () => {
   })
   test('calls correctly ethapi transactionCallAsync correctly specifying a trading wallet address', async() => {
     const expectedAssetBalance = web3.toBigNumber(web3.toWei(5)).toString(10)
-    sandbox.stub(ethApiLib, 'transactionCallAsync').returns(expectedAssetBalance)
+    sandbox.stub(ethApiClient, 'transactionCallAsync').returns(expectedAssetBalance)
 
     const tradingWalletAssetBalanceResult = await tradingWalletService.getAssetBalanceAsync(
       personalWalletAddress,
