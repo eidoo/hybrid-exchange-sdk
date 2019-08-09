@@ -21,9 +21,9 @@ const ethApiLibConf = {
   port: 8080,
   useTLS: false,
 }
-const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const ethApiClient = new EidooEthApiLib(ethApiLibConf)
 
-const transactionLib = new TransactionLib(web3, logger, ethApiLib)
+const transactionLib = new TransactionLib({ web3, logger, ethApiClient })
 
 const erc20TokenSmartContractAddress = '0xd67cb05ef66d1c7c952656ddf5096e02281e3d2e'
 
@@ -59,9 +59,9 @@ describe('approveTransferAsync', () => {
       },
     }
     sandbox.stub(transactionLib, 'sign')
-    sandbox.stub(ethApiLib, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
-    sandbox.stub(ethApiLib, 'getAddressNonceAsync').returns(nonceResponse)
-    sandbox.stub(ethApiLib, 'getEstimateGasAsync').returns(gasEstimationResponse)
+    sandbox.stub(ethApiClient, 'sendRawTransactionAsync').returns({ hash: expectedTransactionHash })
+    sandbox.stub(ethApiClient, 'getAddressNonceAsync').returns(nonceResponse)
+    sandbox.stub(ethApiClient, 'getEstimateGasAsync').returns(gasEstimationResponse)
 
     const transactionHash = await erc20TokenService.approveTransferAsync(personalWalletAddress,
       tradingWalletAddress, quantity, tokenAddress, privateKey)
@@ -77,7 +77,7 @@ describe('getAllowanceAsync', () => {
   test('calls correctly ethapi transactionCallAsync correctly', async() => {
     const expectedAllowed = '10000000000000'
 
-    sandbox.stub(ethApiLib, 'transactionCallAsync').returns(expectedAllowed)
+    sandbox.stub(ethApiClient, 'transactionCallAsync').returns(expectedAllowed)
 
     const result = await erc20TokenService.getAllowanceAsync(
       personalWalletAddress,
@@ -93,7 +93,7 @@ describe('getBalanceOfAsync', () => {
   test('calls correctly ethapi transactionCallAsync correctly', async() => {
     const expectedBalance = '10000000000000'
 
-    sandbox.stub(ethApiLib, 'transactionCallAsync').returns(expectedBalance)
+    sandbox.stub(ethApiClient, 'transactionCallAsync').returns(expectedBalance)
 
     const result = await erc20TokenService.getBalanceOfAsync(personalWalletAddress)
     expect(result).toEqual(expectedBalance)

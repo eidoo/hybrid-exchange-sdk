@@ -18,9 +18,9 @@ const ethApiLibConf = {
   port: 'FAKE_PORT',
   useTLS: false,
 }
-const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const ethApiClient = new EidooEthApiLib(ethApiLibConf)
 
-const transactionLib = new TransactionLib(web3, logger, ethApiLib)
+const transactionLib = new TransactionLib({ web3, logger, ethApiClient })
 
 const erc20TokenSmartContractAddress = '0xd67cb05ef66d1c7c952656ddf5096e02281e3d2e'
 const erc20TokenTransactionBuilder = new Erc20TokenTransactionBuilder(

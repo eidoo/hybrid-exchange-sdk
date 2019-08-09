@@ -23,9 +23,9 @@ const ethApiLibConf = {
   port: 8080,
   useTLS: false,
 }
-const ethApiLib = new EidooEthApiLib(ethApiLibConf)
+const ethApiClient = new EidooEthApiLib(ethApiLibConf)
 
-const transactionLibInstance = new TransactionLib(web3, log, ethApiLib)
+const transactionLibInstance = new TransactionLib({ web3, log, ethApiClient })
 
 let tradingWalletTransactionBuilder
 

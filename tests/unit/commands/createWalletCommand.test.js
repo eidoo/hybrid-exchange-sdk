@@ -23,8 +23,8 @@ const ethApiLibConf = {
   useTLS: false,
 }
 
-const ethApiLib = new EidooEthApiLib(ethApiLibConf)
-const transactionLib = new TransactionLib(web3, logger, ethApiLib)
+const ethApiClient = new EidooEthApiLib(ethApiLibConf)
+const transactionLib = new TransactionLib({ web3, logger, ethApiClient })
 const tradingWalletTransactionBuilder = new TradingWalletTransactionBuilder(
   web3, { exchangeSmartContractAddress, transactionLib, logger },
 )
