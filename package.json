@@ -1,6 +1,6 @@
 {
   "name": "@eidoo/hybrid-exchange-sdk",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "cliVersion": "0.1.0",
   "bin": {
     "hybrid-exchange-cli": "bin/hybrid-exchange-cli.js"
