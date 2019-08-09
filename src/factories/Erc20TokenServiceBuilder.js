@@ -9,30 +9,35 @@ const { Erc20TokenService } = require('../services')
 const providerUrl = 'urlToProvider'
 const web3 = new Web3(new Web3.providers.HttpProvider(providerUrl))
 
-const transactionLibInstance = new TransactionLib({ web3, logger })
+const transactionLib = new TransactionLib({ web3, logger })
 
 /**
    * Class representing a simple factory to build Erc20TokenService object.
    */
 
 class Erc20TokenServiceBuilder {
-  constructor(tokenAddress) {
+  constructor(tokenAddress, { transactionLibInstance = transactionLib } = {}) {
     if (!tokenAddress) {
       const errorMessage = `Invalid "tokenAddress" value: ${tokenAddress}`
       throw new TypeError(errorMessage)
     }
+    if (!transactionLibInstance) {
+      const errorMessage = `Invalid "transactionLibInstance" value: ${transactionLibInstance}`
+      throw new TypeError(errorMessage)
+    }
 
     this.tokenAddress = tokenAddress
+    this.transactionLibInstance = transactionLibInstance
   }
 
   build() {
     const erc20TokenTransactionBuilder = new Erc20TokenTransactionBuilder(
       web3,
       { erc20TokenSmartContractAddress: this.tokenAddress,
-        transactionLib: transactionLibInstance },
+        transactionLib: this.transactionLibInstance },
       logger,
     )
-    return new Erc20TokenService(web3, transactionLibInstance, erc20TokenTransactionBuilder, logger)
+    return new Erc20TokenService(web3, this.transactionLibInstance, erc20TokenTransactionBuilder, logger)
   }
 }
 

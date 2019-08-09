@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Release date: 2019-08-XX.
 
+### Changed
+- [Change Erc20TokenServiceBuilder constructor](https://github.com/eidoo/hybrid-exchange-sdk/issues/103)
+
 ## [v2.3.1](https://github.com/eidoo/hybrid-exchange-sdk/compare/v2.3.0...v2.3.1)
 
 Release date: 2019-08-09.
