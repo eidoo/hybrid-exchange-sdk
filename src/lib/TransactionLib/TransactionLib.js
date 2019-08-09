@@ -74,7 +74,7 @@ class TransactionLib extends ITransactionLib {
      * @param  {Object}    ethApiClient The ethApiClient instance.
      * @throws {TypeError}              If logger objecs is not defined.
      */
-  constructor(web3 = web3Instance, logger = log, ethApiClient = ethApiLibClient) {
+  constructor({ web3 = web3Instance, logger = log, ethApiClient = ethApiLibClient } = {}) {
     super()
     if (!logger) {
       throw new TypeError(`Invalid "logger" value: ${logger}`)
