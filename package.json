@@ -17,7 +17,7 @@
     "version:current": "echo $npm_package_version"
   },
   "engines": {
-    "node": ">=10.0.0 <=10.16.0"
+    "node": ">=10.0.0 <=10.16.1"
   },
   "keywords": [
     "eidoo",

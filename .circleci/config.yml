@@ -8,12 +8,13 @@ aliases:
     paths:
       - node_modules
     key: v2-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  - &docker-settings
+      - image: circleci/node:10.16.1
 
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/node:10
+    docker: *docker-settings
     steps:
       - checkout
       - restore-cache: *restore-cache
@@ -21,8 +22,7 @@ jobs:
       - save-cache: *save-cache
 
   test-node-10:
-    docker:
-      - image: circleci/node:10
+    docker: *docker-settings
     steps:
       - checkout
       - restore-cache: *restore-cache
