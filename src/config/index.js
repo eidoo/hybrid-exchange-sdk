@@ -3,7 +3,7 @@ const _ = require('lodash')
 let config = {
   exchange: {
     apiBaseUrl: 'https://eidoo-api-1.eidoo.io',
-    smartContractAddress: '0xf1c525a488a848b58b95d79da48c21ce434290f7',
+    smartContractAddress: '0x560d5afc42ad137dece2277fd75001c165cb9a22',
   },
   ethApi: {
     host: 'eidoo-api-1.eidoo.io',
